@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Field, inputClass } from "@/components/admin/AdminUI";
+import { Icon } from "@/components/ui/Icon";
 
 export function ImageField({
   label,
@@ -9,12 +10,14 @@ export function ImageField({
   fileName,
   defaultUrl,
   rounded = "rounded",
+  placeholderIcon = "person",
 }: {
   label: string;
   urlName: string;
   fileName: string;
   defaultUrl?: string | null;
   rounded?: string;
+  placeholderIcon?: string;
 }) {
   const [preview, setPreview] = useState<string | null>(defaultUrl ?? null);
 
@@ -25,8 +28,11 @@ export function ImageField({
           // eslint-disable-next-line @next/next/no-img-element
           <img src={preview} alt="" className={`h-14 w-14 ${rounded} object-cover border border-brand-gray-200`} />
         ) : (
-          <div className={`h-14 w-14 ${rounded} bg-brand-gray-100 flex items-center justify-center text-brand-gray-400 text-[10px] text-center`}>
-            No image
+          <div
+            className={`h-14 w-14 ${rounded} border-2 border-dashed border-brand-gray-300 bg-brand-gray-50 flex items-center justify-center text-brand-gray-400`}
+            title="No image yet"
+          >
+            <Icon name={placeholderIcon} size={26} />
           </div>
         )}
         <div className="flex-1 space-y-2">

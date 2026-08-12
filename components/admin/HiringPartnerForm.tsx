@@ -13,7 +13,13 @@ export function HiringPartnerForm({
 }) {
   return (
     <form action={action} className="max-w-xl space-y-4">
-      <ImageField label="Company logo" urlName="logoUrl" fileName="logoFile" defaultUrl={initial?.logoUrl} />
+      <ImageField
+        label="Company logo"
+        urlName="logoUrl"
+        fileName="logoFile"
+        defaultUrl={initial?.logoUrl}
+        placeholderIcon="domain"
+      />
       <Field label="Company name">
         <input required name="name" defaultValue={initial?.name} className={inputClass} placeholder="e.g. Amazon" />
       </Field>

@@ -8,10 +8,12 @@ import { BatchesSection } from "@/components/sections/BatchesSection";
 import { FaqLandingSection } from "@/components/sections/FaqLandingSection";
 import { EventsSection } from "@/components/sections/EventsSection";
 import { Footer } from "@/components/sections/Footer";
+import { WelcomeModal } from "@/components/console/WelcomeModal";
 
 export default function ConsolePage() {
   return (
     <>
+      <WelcomeModal />
       <HeroSection />
       <SuccessStoriesSection />
       <ProgramsSection />

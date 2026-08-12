@@ -100,3 +100,47 @@ body {
   transform: none !important;
   box-shadow: none !important;
 }
+
+/* Welcome popup — brand-red pop-in + a celebratory pulse ring on the icon badge. */
+@keyframes welcome-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes welcome-card-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.82) translateY(28px);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.03) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes welcome-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(228, 31, 38, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(228, 31, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(228, 31, 38, 0);
+  }
+}
+.animate-welcome-backdrop {
+  animation: welcome-backdrop-in 0.25s ease-out both;
+}
+.animate-welcome-card {
+  animation: welcome-card-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.animate-welcome-pulse {
+  animation: welcome-pulse-ring 2s ease-out infinite;
+}

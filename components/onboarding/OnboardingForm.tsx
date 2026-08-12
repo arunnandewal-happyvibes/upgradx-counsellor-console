@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { setWelcomeName } from "@/lib/welcome";
 
 type City = { id: string; name: string; slug: string };
 
@@ -40,6 +41,7 @@ export function OnboardingForm({ cities }: { cities: City[] }) {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error("Could not save details");
+      setWelcomeName(form.name.trim().split(/\s+/)[0] || form.name.trim());
       const city = cities.find((c) => c.id === form.cityId);
       router.push(`/console${city ? `?city=${city.slug}` : ""}`);
     } catch (err) {

@@ -30,7 +30,7 @@ function InstructorGrid({ instructors }: { instructors: Instructor[] }) {
               name={ins.name}
               size={64}
               rounded="rounded"
-              className="text-headline-sm border border-outline-variant shadow-sm"
+              className="text-headline-sm shadow-sm"
             />
             {ins.linkedinUrl && (
               <a
@@ -63,7 +63,7 @@ function InstructorGrid({ instructors }: { instructors: Instructor[] }) {
             {ins.tags.map((t) => (
               <span
                 key={t}
-                className="inline-block bg-surface-container-high text-on-surface-variant text-label-bold font-bold px-2 py-1 rounded-sm border border-outline-variant"
+                className="inline-block bg-surface-container-high text-on-surface-variant text-label-bold font-bold px-2 py-1 rounded border border-outline-variant"
               >
                 {t}
               </span>

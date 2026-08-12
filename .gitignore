@@ -9,3 +9,6 @@ next-env.d.ts
 .claude/scheduled_tasks.lock
 .vercel
 .env*
+.agents/
+.claude/skills/
+skills-lock.json

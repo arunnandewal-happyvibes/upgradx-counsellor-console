@@ -74,11 +74,13 @@ const config: Config = {
         },
       },
       borderRadius: {
-        DEFAULT: "0.125rem",
-        lg: "0.25rem",
-        xl: "0.5rem",
-        full: "0.75rem",
-        card: "0.5rem",
+        DEFAULT: "0.75rem",
+        lg: "1rem",
+        xl: "1.25rem",
+        "2xl": "1.5rem",
+        card: "1rem",
+        // `full` intentionally left unset so Tailwind's built-in 9999px pill/circle applies —
+        // an earlier override here broke every circular avatar/badge into a rounded square.
       },
       boxShadow: {
         card: "0 1px 2px rgba(20,20,20,0.06), 0 1px 1px rgba(20,20,20,0.04)",
