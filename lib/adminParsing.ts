@@ -15,3 +15,7 @@ export function linesToTuples(value: FormDataEntryValue | null, parts: number): 
 export function str(value: FormDataEntryValue | null): string {
   return String(value ?? "").trim();
 }
+
+export function strOrNull(value: FormDataEntryValue | null): string | null {
+  return str(value) || null;
+}

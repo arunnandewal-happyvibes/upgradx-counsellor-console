@@ -1,5 +1,6 @@
 import { Field, inputClass } from "@/components/admin/AdminUI";
 import { Button } from "@/components/ui/Button";
+import { ImageField } from "@/components/admin/ImageField";
 
 type City = { id: string; name: string };
 type Instructor = {
@@ -10,6 +11,7 @@ type Instructor = {
   experienceYears: number;
   tags: string[];
   cityId: string;
+  photoUrl?: string | null;
 };
 
 export function InstructorForm({
@@ -23,6 +25,7 @@ export function InstructorForm({
 }) {
   return (
     <form action={action} className="max-w-xl space-y-4">
+      <ImageField label="Headshot" urlName="photoUrl" fileName="photoFile" defaultUrl={initial?.photoUrl} />
       <Field label="Name">
         <input required name="name" defaultValue={initial?.name} className={inputClass} />
       </Field>

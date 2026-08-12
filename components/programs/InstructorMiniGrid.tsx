@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { Avatar } from "@/components/ui/Avatar";
 
 type Instructor = {
   id: string;
@@ -9,6 +10,7 @@ type Instructor = {
   experienceYears: number;
   tags: string[];
   linkedinUrl: string | null;
+  photoUrl?: string | null;
 };
 
 export function InstructorMiniGrid({ instructors }: { instructors: Instructor[] }) {
@@ -17,9 +19,7 @@ export function InstructorMiniGrid({ instructors }: { instructors: Instructor[] 
       {instructors.map((ins) => (
         <Card key={ins.id} className="p-card-padding">
           <div className="mb-2 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded bg-on-surface text-body-sm font-bold text-white">
-              {ins.name.charAt(0)}
-            </div>
+            <Avatar src={ins.photoUrl} name={ins.name} size={40} rounded="rounded" />
             <div>
               <div className="text-body-md font-bold text-on-surface">{ins.name}</div>
               <div className="text-body-sm text-secondary">{ins.subjectTaught}</div>

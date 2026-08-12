@@ -3,6 +3,7 @@
 import { useCityFetch } from "@/lib/useCityFetch";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Icon } from "@/components/ui/Icon";
+import { Avatar } from "@/components/ui/Avatar";
 
 type Instructor = {
   id: string;
@@ -12,6 +13,7 @@ type Instructor = {
   bio: string;
   experienceYears: number;
   tags: string[];
+  photoUrl?: string | null;
 };
 
 function InstructorGrid({ instructors }: { instructors: Instructor[] }) {
@@ -23,9 +25,13 @@ function InstructorGrid({ instructors }: { instructors: Instructor[] }) {
           className="elevate-3d bg-surface rounded border border-[#E0E0E0] hover:border-primary p-card-padding flex flex-col group"
         >
           <div className="flex justify-between items-start mb-4">
-            <div className="w-16 h-16 rounded bg-on-surface flex items-center justify-center text-white text-headline-sm font-bold border border-outline-variant shadow-sm">
-              {ins.name.charAt(0)}
-            </div>
+            <Avatar
+              src={ins.photoUrl}
+              name={ins.name}
+              size={64}
+              rounded="rounded"
+              className="text-headline-sm border border-outline-variant shadow-sm"
+            />
             {ins.linkedinUrl && (
               <a
                 aria-label="LinkedIn Profile"

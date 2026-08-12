@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { Avatar } from "@/components/ui/Avatar";
 
 export async function SuccessStoriesSection() {
   const stories = await prisma.successStory.findMany({ orderBy: { order: "asc" } });
@@ -15,9 +16,7 @@ export async function SuccessStoriesSection() {
             className="min-w-[260px] b2b-card elevate-3d hover:border-2 p-card-padding flex flex-col gap-3"
           >
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-on-surface flex items-center justify-center text-white font-bold">
-                {s.studentName.charAt(0)}
-              </div>
+              <Avatar src={s.avatarUrl} name={s.studentName} size={48} />
               <div className="flex flex-col min-w-0">
                 <h3 className="text-headline-sm text-on-surface truncate editable-field">{s.studentName}</h3>
                 <span className="text-label-bold font-bold text-tertiary truncate uppercase editable-field">

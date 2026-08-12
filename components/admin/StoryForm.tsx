@@ -1,5 +1,6 @@
 import { Field, inputClass } from "@/components/admin/AdminUI";
 import { Button } from "@/components/ui/Button";
+import { ImageField } from "@/components/admin/ImageField";
 
 type Story = {
   studentName: string;
@@ -8,6 +9,7 @@ type Story = {
   company: string;
   description: string;
   packageLabel: string;
+  avatarUrl?: string | null;
 };
 
 export function StoryForm({
@@ -19,6 +21,13 @@ export function StoryForm({
 }) {
   return (
     <form action={action} className="max-w-xl space-y-4">
+      <ImageField
+        label="Student photo"
+        urlName="avatarUrl"
+        fileName="avatarFile"
+        defaultUrl={initial?.avatarUrl}
+        rounded="rounded-full"
+      />
       <div className="grid grid-cols-2 gap-4">
         <Field label="Student name">
           <input required name="studentName" defaultValue={initial?.studentName} className={inputClass} />
