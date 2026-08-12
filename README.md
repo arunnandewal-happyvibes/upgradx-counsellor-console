@@ -5,11 +5,16 @@ city-aware, single-scroll product walkthrough (hero, success stories, programs, 
 works", instructors, industry leaders, placement drives, upcoming batches, FAQ, events, contact),
 backed by a real Postgres database and a basic admin panel for editing all content.
 
+- **Live app**: https://upgradx-counsellor-console.vercel.app
+- **Source**: https://github.com/arunnandewal-happyvibes/upgradx-counsellor-console
+
 ## Stack
 
 - **Next.js 14** (App Router, TypeScript) — frontend + backend (API routes & server actions) in one app
-- **Prisma + PostgreSQL** — data layer
+- **Prisma + PostgreSQL** (production: [Neon](https://neon.tech), serverless) — data layer
+- **Vercel Blob** — image storage for uploaded student photos, instructor headshots, and hiring-partner logos
 - **Tailwind CSS** — design system (white/red "variant 2" theme from the design brief)
+- **Hosting**: Vercel
 
 ## Setup
 
@@ -49,6 +54,16 @@ backed by a real Postgres database and a basic admin panel for editing all conte
    - Counsellor flow: [http://localhost:3000](http://localhost:3000) (onboarding → `/console`)
    - Admin panel: [http://localhost:3000/admin](http://localhost:3000/admin)
 
+## Deployment
+
+The production app runs on Vercel with a Neon Postgres database and a Vercel Blob store, both
+connected via Vercel's marketplace integrations (`vercel integration add neon`, `vercel blob
+create-store`). Environment variables (`DATABASE_URL`, `BLOB_READ_WRITE_TOKEN`, etc.) are managed
+in the Vercel project settings — pull them locally with `vercel env pull` if you need to run
+migrations or seed data against production.
+
+To redeploy after local changes: `vercel deploy --prod`.
+
 ## Project structure
 
 - `app/page.tsx` — Screen 1 onboarding capture
@@ -64,6 +79,10 @@ backed by a real Postgres database and a basic admin panel for editing all conte
 - `lib/city-context.tsx` — global city filter (persisted to `sessionStorage` + URL query param)
 - `lib/section-visibility.ts` — reusable per-section, optionally per-program visibility flag
 - `prisma/schema.prisma`, `prisma/seed.ts` — data model and seed data
+- `lib/blob.ts`, `components/admin/ImageField.tsx` — image upload helper + form field (student
+  photos, instructor headshots, hiring-partner logos); admin can upload a file or paste a URL —
+  uploading requires `BLOB_READ_WRITE_TOKEN` (set automatically in production; locally, run
+  `vercel env pull` or just paste image URLs instead)
 
 ## Build rules implemented
 
