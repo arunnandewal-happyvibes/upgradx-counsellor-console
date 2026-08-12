@@ -41,11 +41,11 @@ export function TopBar() {
           <Icon name="location_on" />
         </Link>
         <Link
-          href="/console/contact"
-          aria-label="Counsellor profile"
-          className="text-primary hover:opacity-80 transition-opacity"
+          href="/admin"
+          className="btn-3d inline-flex items-center gap-1.5 rounded border border-outline-variant px-3 py-1.5 text-label-bold font-bold uppercase tracking-wide text-on-surface-variant hover:border-primary hover:text-primary transition-colors"
         >
-          <Icon name="account_circle" fill />
+          <Icon name="admin_panel_settings" size={18} />
+          <span className="hidden sm:inline">Admin</span>
         </Link>
       </div>
     </header>

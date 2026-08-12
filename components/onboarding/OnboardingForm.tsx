@@ -109,10 +109,18 @@ export function OnboardingForm({ cities }: { cities: City[] }) {
 
       {error && <p className="text-body-sm text-primary">{error}</p>}
 
-      <div className="pt-4 mt-2 border-t border-surface-variant">
+      <div className="pt-4 mt-2 border-t border-surface-variant flex flex-col items-center gap-3">
         <Button type="submit" disabled={submitting} className="w-full py-3">
           {submitting ? "Loading..." : "Continue to upGrad X"}
         </Button>
+        <button
+          type="button"
+          disabled={submitting}
+          onClick={() => router.push("/console")}
+          className="text-body-sm font-semibold text-secondary hover:text-primary transition-colors disabled:opacity-50"
+        >
+          Prefer not to share? Skip for now →
+        </button>
       </div>
     </form>
   );

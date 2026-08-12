@@ -35,9 +35,11 @@ export async function SuccessStoriesSection() {
               {s.description}
             </p>
 
-            <div className="mt-auto pt-4 flex items-end justify-between border-t border-surface-container">
-              <span className="text-label-bold font-bold text-secondary uppercase">Placement Package</span>
-              <span className="text-stat-lg text-primary editable-field">{s.packageLabel}</span>
+            <div className="mt-auto pt-4 border-t border-surface-container">
+              <span className="text-label-bold font-bold text-secondary uppercase block mb-1">
+                Placement Package
+              </span>
+              <span className="text-headline-sm text-primary font-bold editable-field">{s.packageLabel}</span>
             </div>
           </article>
         ))}
