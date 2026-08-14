@@ -1,4 +1,5 @@
 import { HeroSection } from "@/components/sections/HeroSection";
+import { HiringPartnersSection } from "@/components/sections/HiringPartnersSection";
 import { SuccessStoriesSection } from "@/components/sections/SuccessStoriesSection";
 import { ProgramsSection } from "@/components/sections/ProgramsSection";
 import { HowLearningWorksSection } from "@/components/sections/HowLearningWorksSection";
@@ -15,6 +16,7 @@ export default function ConsolePage() {
     <>
       <WelcomeModal />
       <HeroSection />
+      <HiringPartnersSection />
       <SuccessStoriesSection />
       <ProgramsSection />
       <HowLearningWorksSection />

@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
-import { HiringPartnersMarquee } from "@/components/sections/HiringPartnersMarquee";
 
 function highestPackage(labels: string[]) {
   let max = 0;
@@ -13,8 +12,7 @@ function highestPackage(labels: string[]) {
 }
 
 export async function HeroSection() {
-  const [partners, cityCount, stories] = await Promise.all([
-    prisma.hiringPartner.findMany({ orderBy: { order: "asc" } }),
+  const [cityCount, stories] = await Promise.all([
     prisma.city.count(),
     prisma.successStory.findMany({ select: { packageLabel: true } }),
   ]);
@@ -23,19 +21,12 @@ export async function HeroSection() {
 
   return (
     <section id="hero" className="flex flex-col gap-section-gap">
-      {/* Top Strip: Global Stats & Hiring Partners */}
-      <div className="w-full bg-surface-container-lowest border-b border-surface-variant py-4 px-card-padding shadow-sm rounded flex flex-col gap-4">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex flex-col shrink-0">
-            <span className="text-stat-lg text-primary">{cityCount}+</span>
-            <span className="text-label-bold font-bold text-secondary uppercase tracking-wide">
-              Learning Centres Across India
-            </span>
-          </div>
-          <div className="hidden sm:block w-px h-12 bg-surface-variant mx-2" />
-          <span className="text-label-bold font-bold text-on-surface-variant">Top Hiring Partners</span>
-        </div>
-        <HiringPartnersMarquee partners={partners} />
+      {/* Top Strip: Global Stat */}
+      <div className="w-full bg-surface-container-lowest border-b border-surface-variant py-4 px-card-padding shadow-sm rounded flex items-center gap-4">
+        <span className="text-stat-lg text-primary">{cityCount}+</span>
+        <span className="text-label-bold font-bold text-secondary uppercase tracking-wide">
+          Learning Centres Across India
+        </span>
       </div>
 
       {/* Bento Hero */}

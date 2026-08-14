@@ -144,31 +144,3 @@ body {
 .animate-welcome-pulse {
   animation: welcome-pulse-ring 2s ease-out infinite;
 }
-
-/* Hiring-partner pill strip — a slow, continuous "flowing" scroll (paused on hover)
-   made of "floating" pill chips that lift slightly under the cursor. */
-@keyframes partners-flow {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-.partners-track {
-  animation: partners-flow 28s linear infinite;
-}
-.partners-track:hover {
-  animation-play-state: paused;
-}
-.partner-pill {
-  transition:
-    transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
-}
-.partner-pill:hover {
-  transform: translateY(-3px);
-  border-color: theme("colors.primary");
-  box-shadow: 0 10px 18px -8px rgba(228, 31, 38, 0.3);
-}
