@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
+import { HiringPartnersMarquee } from "@/components/sections/HiringPartnersMarquee";
 
 function highestPackage(labels: string[]) {
   let max = 0;
@@ -24,36 +24,18 @@ export async function HeroSection() {
   return (
     <section id="hero" className="flex flex-col gap-section-gap">
       {/* Top Strip: Global Stats & Hiring Partners */}
-      <div className="w-full bg-surface-container-lowest border-b border-surface-variant py-4 px-card-padding flex flex-col md:flex-row items-center justify-between gap-gutter shadow-sm rounded">
-        <div className="flex flex-col">
-          <span className="text-stat-lg text-primary">{cityCount}+</span>
-          <span className="text-label-bold font-bold text-secondary uppercase tracking-wide">
-            Learning Centres Across India
-          </span>
-        </div>
-        <div className="hidden md:block w-px h-12 bg-surface-variant mx-4" />
-        <div className="flex-1 flex flex-col items-start md:items-end w-full">
-          <span className="text-label-bold font-bold text-on-surface-variant mb-2">TOP HIRING PARTNERS</span>
-          <div className="flex flex-wrap gap-6 items-center justify-start md:justify-end">
-            {partners.map((p) =>
-              p.logoUrl ? (
-                <Image
-                  key={p.id}
-                  src={p.logoUrl}
-                  alt={p.name}
-                  width={96}
-                  height={28}
-                  className="h-7 w-auto object-contain grayscale hover:grayscale-0 transition-all"
-                  title={p.name}
-                />
-              ) : (
-                <span key={p.id} className="text-primary text-label-bold font-bold uppercase">
-                  {p.name}
-                </span>
-              ),
-            )}
+      <div className="w-full bg-surface-container-lowest border-b border-surface-variant py-4 px-card-padding shadow-sm rounded flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="flex flex-col shrink-0">
+            <span className="text-stat-lg text-primary">{cityCount}+</span>
+            <span className="text-label-bold font-bold text-secondary uppercase tracking-wide">
+              Learning Centres Across India
+            </span>
           </div>
+          <div className="hidden sm:block w-px h-12 bg-surface-variant mx-2" />
+          <span className="text-label-bold font-bold text-on-surface-variant">Top Hiring Partners</span>
         </div>
+        <HiringPartnersMarquee partners={partners} />
       </div>
 
       {/* Bento Hero */}

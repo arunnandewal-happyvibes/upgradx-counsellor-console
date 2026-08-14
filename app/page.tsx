@@ -16,7 +16,9 @@ export default async function OnboardingPage() {
     <div className="min-h-screen flex flex-col bg-background">
       <header className="sticky top-0 z-50 flex justify-between items-center w-full px-container-margin h-16 bg-surface border-b-2 border-primary shadow-sm">
         <div className="flex items-center gap-6">
-          <Logo height={28} priority />
+          <Link href="/" className="flex items-center">
+            <Logo height={28} priority />
+          </Link>
           <nav className="hidden md:flex items-center gap-gutter">
             {["Batches", "Instructors", "Leaders", "Programs"].map((item) => (
               <span key={item} className="text-secondary text-body-md">

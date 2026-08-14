@@ -5,7 +5,9 @@ export function Footer() {
   return (
     <footer className="w-full py-section-gap px-card-padding grid grid-cols-1 md:grid-cols-4 gap-gutter bg-surface-container-highest border-t-2 border-primary mt-section-gap rounded">
       <div className="flex flex-col gap-4">
-        <Logo height={26} />
+        <Link href="/console" className="w-fit">
+          <Logo height={26} />
+        </Link>
         <p className="text-body-sm text-secondary">
           © {new Date().getFullYear()} upGrad Education Pvt. Ltd. All rights reserved.
         </p>
