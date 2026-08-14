@@ -3,8 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { Card } from "@/components/ui/Card";
 
 export default async function AdminDashboard() {
-  const [programs, instructors, batches, drives, faqs, stories, events, suggested] =
+  const [cities, programs, instructors, batches, drives, faqs, stories, events, suggested] =
     await Promise.all([
+      prisma.city.count(),
       prisma.program.count(),
       prisma.instructor.count(),
       prisma.batch.count(),
@@ -16,6 +17,7 @@ export default async function AdminDashboard() {
     ]);
 
   const stats = [
+    { label: "Cities", value: cities, href: "/admin/cities" },
     { label: "Programs", value: programs, href: "/admin/courses" },
     { label: "Instructors", value: instructors, href: "/admin/instructors" },
     { label: "Batches", value: batches, href: "/admin/batches" },

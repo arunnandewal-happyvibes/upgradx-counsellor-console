@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export type CityOption = { id: string; name: string; slug: string };
+export type CityOption = { id: string; name: string; slug: string; monumentImageUrl?: string | null };
 
 type CityContextValue = {
   cities: CityOption[];

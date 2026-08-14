@@ -8,9 +8,10 @@ datasource db {
 }
 
 model City {
-  id   String @id @default(cuid())
-  name String @unique
-  slug String @unique
+  id                String  @id @default(cuid())
+  name              String  @unique
+  slug              String  @unique
+  monumentImageUrl  String?
 
   leads        Lead[]
   instructors  Instructor[]

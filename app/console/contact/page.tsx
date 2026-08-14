@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCityFetch } from "@/lib/useCityFetch";
 import { Icon } from "@/components/ui/Icon";
 
@@ -19,11 +20,22 @@ export default function ContactPage() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
         <div className="md:col-span-7 flex flex-col gap-6">
           <div className="elevate-3d bg-surface-container-lowest border border-surface-variant rounded shadow-sm overflow-hidden flex flex-col md:flex-row">
-            <div
-              className="w-full md:w-2/5 h-40 md:h-auto flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, #1a1c1c, #e41f26 160%)" }}
-            >
-              <Icon name="location_city" className="text-white opacity-80" size={56} fill />
+            <div className="relative w-full md:w-2/5 h-40 md:h-auto flex items-center justify-center overflow-hidden">
+              {selectedCity?.monumentImageUrl ? (
+                <Image
+                  src={selectedCity.monumentImageUrl}
+                  alt={`A landmark in ${selectedCity.name}`}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div
+                  className="absolute inset-0 flex items-center justify-center"
+                  style={{ background: "linear-gradient(135deg, #1a1c1c, #e41f26 160%)" }}
+                >
+                  <Icon name="location_city" className="text-white opacity-80" size={56} fill />
+                </div>
+              )}
             </div>
             <div className="w-full md:w-3/5 p-6 flex flex-col gap-4">
               <h2 className="text-headline-md text-on-surface">{selectedCity?.name ?? "Loading..."}</h2>
