@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
   const instructors = await prisma.instructor.findMany({
     where: { city: { slug: citySlug }, isIndustryLeader: leaderOnly },
     orderBy: { order: "asc" },
-    take: 3,
   });
 
   return NextResponse.json(instructors);

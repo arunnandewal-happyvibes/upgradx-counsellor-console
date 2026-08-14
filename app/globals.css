@@ -144,3 +144,19 @@ body {
 .animate-welcome-pulse {
   animation: welcome-pulse-ring 2s ease-out infinite;
 }
+
+/* Hiring-partner carousel — a slow, continuous single-line "float" (paused on hover). */
+@keyframes partners-flow {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.partners-track {
+  animation: partners-flow 32s linear infinite;
+}
+.partners-track:hover {
+  animation-play-state: paused;
+}
