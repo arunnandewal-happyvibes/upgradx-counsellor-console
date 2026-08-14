@@ -4,6 +4,14 @@
 
 html {
   color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+/* Every in-page jump target (nav anchors, "View Details" hashes, etc.) needs
+   breathing room above it so the sticky 64px top bar doesn't cover the
+   section heading it just scrolled to. */
+section[id] {
+  scroll-margin-top: 5rem;
 }
 
 body {
