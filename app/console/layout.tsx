@@ -15,7 +15,7 @@ export default async function ConsoleLayout({ children }: { children: React.Reac
     <Suspense>
       <CityProvider cities={cities}>
         <TopBar />
-        <main className="mx-auto max-w-[1280px] w-full flex flex-col gap-section-gap px-container-margin py-section-gap">
+        <main className="mx-auto max-w-[1600px] w-full flex flex-col gap-section-gap px-container-margin py-section-gap">
           {children}
         </main>
       </CityProvider>
