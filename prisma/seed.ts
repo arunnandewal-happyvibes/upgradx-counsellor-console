@@ -389,36 +389,8 @@ async function main() {
     await prisma.journeyStep.upsert({ where: { order: step.order }, update: step, create: step });
   }
 
-  // ---- Instructors (Pune deliberately sparse: 1 instructor) ----
+  // ---- Instructors: only the real rosters below (no fictional placeholders) ----
   await prisma.instructor.deleteMany();
-  const instructorDefs = [
-    { name: "Ananya Rao", subjectTaught: "Data Science Instructor", experienceYears: 9, tags: ["Ex-Microsoft", "IIT Alum"], city: bangalore, leader: false },
-    { name: "Karthik Iyer", subjectTaught: "Machine Learning Instructor", experienceYears: 7, tags: ["Ex-Flipkart"], city: bangalore, leader: false },
-    { name: "Divya Menon", subjectTaught: "Full Stack Instructor", experienceYears: 6, tags: ["Ex-Amazon"], city: bangalore, leader: false },
-    { name: "Rohit Malhotra", subjectTaught: "Digital Marketing Instructor", experienceYears: 8, tags: ["Ex-Google Ads Team"], city: delhi, leader: false },
-    { name: "Sana Khan", subjectTaught: "Banking Operations Instructor", experienceYears: 10, tags: ["CFA", "Ex-Deloitte"], city: delhi, leader: false },
-    { name: "Aditya Bhargava", subjectTaught: "Data Analytics Instructor", experienceYears: 5, tags: ["Ex-Ola"], city: delhi, leader: false },
-    { name: "Neha Kulkarni", subjectTaught: "Full Stack Instructor", experienceYears: 7, tags: ["Ex-Zomato"], city: mumbai, leader: false },
-    { name: "Vikram Shah", subjectTaught: "Banking Operations Instructor", experienceYears: 12, tags: ["Ex-ICICI", "CA"], city: mumbai, leader: false },
-    { name: "Priya Nambiar", subjectTaught: "Digital Marketing Instructor", experienceYears: 6, tags: ["TEDx Speaker"], city: mumbai, leader: false },
-    { name: "Arjun Desai", subjectTaught: "AI Pro Instructor", experienceYears: 4, tags: ["Kaggle Grandmaster"], city: pune, leader: false },
-  ];
-  for (const [i, d] of instructorDefs.entries()) {
-    await prisma.instructor.create({
-      data: {
-        name: d.name,
-        photoUrl: null,
-        linkedinUrl: "https://linkedin.com/in/example",
-        subjectTaught: d.subjectTaught,
-        bio: `${d.name.split(" ")[0]} brings deep industry experience into every classroom session, blending real case studies with core theory.`,
-        experienceYears: d.experienceYears,
-        tags: d.tags,
-        isIndustryLeader: d.leader,
-        cityId: d.city.id,
-        order: i,
-      },
-    });
-  }
 
   // ---- Industry Leaders: real guest-lecturer/SME roster from "Guest Lecturer
   // Details.xlsx" (see scripts/add-industry-leaders.ts for field-mapping notes).
@@ -435,7 +407,7 @@ async function main() {
         tags: leader.tags,
         isIndustryLeader: true,
         cityId: bangalore.id,
-        order: instructorDefs.length + i,
+        order: i,
       },
     });
   }
@@ -458,7 +430,7 @@ async function main() {
         tags: mentor.tags,
         isIndustryLeader: false,
         cityId: city.id,
-        order: instructorDefs.length + i,
+        order: i,
       },
     });
   }
