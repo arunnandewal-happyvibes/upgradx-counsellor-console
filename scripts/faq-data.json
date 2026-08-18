@@ -1,157 +1,384 @@
 [
   {
-    "name": "Common FAQs — Applicable to Most Offline Programs",
-    "slug": "common-offline-faqs",
-    "icon": "quiz",
+    "name": "Placements",
+    "slug": "placements",
+    "icon": "briefcase",
     "faqs": [
-      ["What is upGrad Offline Learning?", "upGrad Offline Centres provide 100% classroom training, hands-on learning and career support through Learning Support Centres."],
-      ["What is the advantage of offline learning?", "Learners get instructor-led classroom learning, hands-on projects, structured learning, mentorship and career support in a physical learning environment."],
-      ["Are the classes completely offline?", "The core classroom learning is delivered at the upGrad Learning Support Centre. Some programs also include online masterclasses by faculty/industry experts."],
-      ["Are morning/evening/weekend batches available?", "The website allows learners to choose from morning, evening and weekend batches, subject to centre/batch availability. (UpGrad)"],
-      ["Do I get career support?", "Yes. The website highlights career support including resume building, interview preparation, profile evaluation, mock interviews, soft-skills/GD preparation and placement assistance, depending on the program. (UpGrad)"],
-      ["Do I get Career Portal access?", "Most of the listed programs provide 3 years of Career Portal access. The portal provides access to jobs, internships and hiring drives. (UpGrad)"],
-      ["Do I get Learning Portal access?", "The program pages highlight 3 years of Learning Portal access, including access to learning resources and built-in tools for practice. (UpGrad)"],
-      ["Is placement guaranteed?", "No. Counsellors should say placement/career support or placement assistance, not guaranteed placement. The CGIBO FAQ explicitly states that placements are not guaranteed. (UpGrad)"],
-      ["Are scholarships available?", "The Offline Centres page advertises merit-based scholarships up to 50%*, subject to eligibility/criteria. (UpGrad)"],
-      ["How does the admission process work?", "Submit interest → speak with an Academic Counsellor → confirm your batch → complete enrolment/onboarding → start learning at the selected centre. (UpGrad)"]
+      [
+        "Do I get career support?",
+        "Yes. The website highlights career support including resume building, interview preparation, profile evaluation, mock interviews, soft-skills/GD preparation and placement assistance, depending on the program. (UpGrad)"
+      ],
+      [
+        "Do I get Career Portal access?",
+        "Most of the listed programs provide 3 years of Career Portal access. The portal provides access to jobs, internships and hiring drives. (UpGrad)"
+      ],
+      [
+        "Is placement guaranteed?",
+        "No. Counsellors should say placement/career support or placement assistance, not guaranteed placement. The CGIBO FAQ explicitly states that placements are not guaranteed. (UpGrad)"
+      ],
+      [
+        "What career support is provided?",
+        "Resume building, interview preparation, placement support and 3 years of Career Portal access are highlighted. (UpGrad)"
+      ],
+      [
+        "What career roles can this lead towards?",
+        "The website highlights roles such as Digital Marketing Executive, Performance Marketing Specialist, SEO Specialist and Social Media Manager. (UpGrad)"
+      ],
+      [
+        "What career support is provided?",
+        "Career support and placement assistance are highlighted, along with 3 years of Career Portal access. (UpGrad)"
+      ],
+      [
+        "What career support is available?",
+        "Career support, placement assistance, 3 years of Career Portal access and access to 1200+ hiring partners are highlighted. (UpGrad)"
+      ],
+      [
+        "What career support is included?",
+        "Aptitude training, resume building, LinkedIn profile evaluation, interview question bank, 1:1 mock interviews, technical learning, soft-skills training and GD/interview preparation. (UpGrad)"
+      ],
+      [
+        "What career support is included?",
+        "Aptitude training, resume building, LinkedIn profile evaluation, interview question bank, 1:1 mock interviews, technical learning, soft skills and GD/interview preparation. (UpGrad)"
+      ],
+      [
+        "What job roles can learners target?",
+        "Roles mentioned include Fund Accounting Analyst, Trade Operations Analyst, Corporate Actions Analyst, Portfolio Reporting Analyst and KYC/Client Onboarding Analyst. (UpGrad)"
+      ],
+      [
+        "Is placement guaranteed?",
+        "No. The website explicitly states that placement is not guaranteed, but learners receive career support, interview preparation, hiring-partner access and 3 years of Career Portal access. (UpGrad)"
+      ],
+      [
+        "Which programs have 3-year Career Portal access?",
+        "The program pages for Data Science, Full Stack, Data Analytics, AI Pro, Future Stack and CGIBO highlight 3-year Career Portal access. (UpGrad)"
+      ],
+      [
+        "Does upGrad guarantee a job?",
+        "No. The counsellor should say career support / placement assistance / hiring support, never guaranteed placement. (UpGrad)"
+      ]
     ]
   },
   {
-    "name": "Data Science & AI ML — iHUB DivyaSampark, IIT Roorkee",
-    "slug": "data-science-ai-ml-iit-roorkee",
-    "icon": "psychology",
+    "name": "Pricing",
+    "slug": "pricing",
+    "icon": "indian-rupee",
     "faqs": [
-      ["What is this program?", "It is a 6-month Gen AI-powered Data Science with Machine Learning program combining classroom learning, practical projects, AI/ML skills and career support. (UpGrad)"],
-      ["Who can join?", "Graduates from science/technology streams such as B.E., B.Tech, B.Sc. and BCA can apply. Students currently pursuing graduation in these streams can also apply. No prior coding background is required. (UpGrad)"],
-      ["What will I learn?", "Python, SQL, Statistics, Machine Learning, Deep Learning, Data Visualization, Power BI, Tableau, Generative AI, Prompt Engineering, LLMs, AI Agents, Feature Engineering, Model Deployment and Cloud-based Data Analytics. (UpGrad)"],
-      ["Will I work on projects?", "Yes. The program highlights 15+ live projects, including industry projects, capstone work, AI applications and business problem-solving. (UpGrad)"],
-      ["What AI exposure will I get?", "Learners work on GenAI, AI Agents, RAG applications and production-oriented AI applications. The program also highlights an additional 4 weeks dedicated to AI and workflow automation. (UpGrad)"],
-      ["What certification do I get?", "The program is offered in collaboration with iHUB DivyaSampark, IIT Roorkee, and successful completion provides the applicable credential/certification. (UpGrad)"],
-      ["Is there campus immersion?", "Yes, an optional campus immersion experience is mentioned on the program page. (UpGrad)"],
-      ["What career support is provided?", "Resume building, interview preparation, placement support and 3 years of Career Portal access are highlighted. (UpGrad)"]
+      [
+        "Are scholarships available?",
+        "The Offline Centres page advertises merit-based scholarships up to 50%*, subject to eligibility/criteria. (UpGrad)"
+      ]
     ]
   },
   {
-    "name": "Full Stack Development — iHUB DivyaSampark, IIT Roorkee",
-    "slug": "full-stack-development-iit-roorkee",
-    "icon": "code",
+    "name": "Certifications",
+    "slug": "certifications",
+    "icon": "award",
     "faqs": [
-      ["What is this program?", "A 6-month Advanced Certificate in Full Stack Development focused on building end-to-end web applications. (UpGrad)"],
-      ["What technologies are covered?", "Java, JavaScript, React, Redux, Bootstrap, Tailwind CSS, HTML, CSS, Spring Boot, Node.js, Express.js, MySQL and MongoDB. (UpGrad)"],
-      ["What will I build?", "Responsive frontend applications, dynamic SPAs, REST API-powered backend services, database-driven applications, full-stack applications and cloud-deployed applications. (UpGrad)"],
-      ["Do I need coding experience?", "The program page states that it is suitable for career switchers and that no coding background is needed; the program starts from the basics. (UpGrad)"],
-      ["Will I learn system design?", "Yes. System Design Workshops are included, focusing on scalable and high-performance systems. (UpGrad)"],
-      ["What certification do I receive?", "The program provides an iHUB DivyaSampark, IIT Roorkee credential upon successful completion and applicable course requirements. (UpGrad)"],
-      ["Are masterclasses conducted by IIT faculty?", "Yes, the program includes masterclasses by IIT faculty and senior industry experts; the website clarifies that these masterclasses are conducted virtually. (UpGrad)"],
-      ["Is campus immersion available?", "Yes, an optional campus immersion experience is mentioned. (UpGrad)"]
+      [
+        "What certification do I get?",
+        "The program is offered in collaboration with iHUB DivyaSampark, IIT Roorkee, and successful completion provides the applicable credential/certification. (UpGrad)"
+      ],
+      [
+        "What certification do I receive?",
+        "The program provides an iHUB DivyaSampark, IIT Roorkee credential upon successful completion and applicable course requirements. (UpGrad)"
+      ],
+      [
+        "What certificate do I get?",
+        "An upGrad Accelerated Digital Marketing Certificate is provided; the page also mentions a Guided Internship Certificate and NSDC Certificate. (UpGrad)"
+      ],
+      [
+        "What certification is available?",
+        "Learners can earn the upGrad Gen AI-Powered Data Analytics Certificate and an add-on IIIT-B certificate associated with the IIIT-B masterclass. (UpGrad)"
+      ],
+      [
+        "What certification will I receive?",
+        "Learners receive an upGrad certificate in AI Pro: Generative AI & Agentic AI. The program also mentions an add-on IIIT-B certificate through the IIIT-B masterclass. (UpGrad)"
+      ],
+      [
+        "Is there an internship certificate?",
+        "Yes. The program page mentions a Guided Internship Certificate from its elite partners. (UpGrad)"
+      ],
+      [
+        "Is there an NSDC certificate?",
+        "The program page also mentions an NSDC Course Completion Certificate from upGrad. (UpGrad)"
+      ],
+      [
+        "What certification is available?",
+        "The program provides an upGrad FutureStack certification with an add-on IIIT-B certification through the relevant masterclass. (UpGrad)"
+      ],
+      [
+        "What additional certification is available?",
+        "The program highlights an add-on certification from PwC Academy, along with two PwC Academy masterclasses. (UpGrad)"
+      ],
+      [
+        "Are there other certificates?",
+        "The page mentions a Guided Internship Certificate and an NSDC Course Completion Certificate from upGrad. (UpGrad)"
+      ]
     ]
   },
   {
-    "name": "Accelerated Digital Marketing Certification Program",
-    "slug": "accelerated-digital-marketing",
-    "icon": "campaign",
+    "name": "Quality of Teachers",
+    "slug": "quality-of-teachers",
+    "icon": "graduation-cap",
     "faqs": [
-      ["Who can join Digital Marketing?", "Graduates from any stream can apply, and students currently pursuing graduation are also eligible. It is suitable for freshers and working professionals. (UpGrad)"],
-      ["Do I need marketing experience?", "No. Prior marketing experience is not required. (UpGrad)"],
-      ["Do I need coding knowledge?", "No. The program does not require a technical/coding background. (UpGrad)"],
-      ["What will I learn?", "SEO, Paid Ads, Social Media Marketing, Email Marketing, Content Marketing, Marketing Analytics, campaign planning/execution and Generative AI applications. (UpGrad)"],
-      ["Will I work on live campaigns?", "Yes. The program page highlights 12+ live marketing campaigns and practical campaign-based assignments. (UpGrad)"],
-      ["Which tools will I work with?", "The website mentions tools such as Google Ads, Google Analytics, Meta Ads Manager, Meta Business Suite, Canva and SEO tools. (UpGrad)"],
-      ["What certificate do I get?", "An upGrad Accelerated Digital Marketing Certificate is provided; the page also mentions a Guided Internship Certificate and NSDC Certificate. (UpGrad)"],
-      ["What career roles can this lead towards?", "The website highlights roles such as Digital Marketing Executive, Performance Marketing Specialist, SEO Specialist and Social Media Manager. (UpGrad)"]
+      [
+        "Are masterclasses conducted by IIT faculty?",
+        "Yes, the program includes masterclasses by IIT faculty and senior industry experts; the website clarifies that these masterclasses are conducted virtually. (UpGrad)"
+      ]
     ]
   },
   {
-    "name": "Gen AI-Powered Data Analytics",
-    "slug": "gen-ai-powered-data-analytics-faq",
-    "icon": "query_stats",
+    "name": "Number of Classes",
+    "slug": "number-of-classes",
+    "icon": "calendar",
     "faqs": [
-      ["What is the program about?", "It is a 4-month Gen AI-Powered Data Analytics program focused on analysing real-world datasets and using AI to improve analytics workflows. (UpGrad)"],
-      ["What tools will I learn?", "Excel, SQL, Python, Power BI and Tableau, along with Generative AI applications. (UpGrad)"],
-      ["How is GenAI used in the program?", "Learners use Generative AI for data insights and workflow automation. (UpGrad)"],
-      ["Will I work on projects?", "Yes. The program highlights 10+ live projects using real datasets. Examples mentioned include Uber trip analysis, movie-data SQL case studies and loan approval analysis. (UpGrad)"],
-      ["Do I need a technical background?", "The Offline Centres eligibility information indicates that the Data Analytics program does not require a technical background. (UpGrad)"],
-      ["What certification is available?", "Learners can earn the upGrad Gen AI-Powered Data Analytics Certificate and an add-on IIIT-B certificate associated with the IIIT-B masterclass. (UpGrad)"],
-      ["What career support is provided?", "Career support and placement assistance are highlighted, along with 3 years of Career Portal access. (UpGrad)"],
-      ["Who is this best suited for?", "It is suitable for learners looking to build practical data analytics skills using Excel, SQL, Python, BI tools and GenAI."]
+      [
+        "Are morning/evening/weekend batches available?",
+        "The website allows learners to choose from morning, evening and weekend batches, subject to centre/batch availability. (UpGrad)"
+      ]
     ]
   },
   {
-    "name": "AI Pro: Generative AI & Agentic AI",
-    "slug": "ai-pro-genai-agentic-ai",
-    "icon": "smart_toy",
+    "name": "Course Structure",
+    "slug": "course-structure",
+    "icon": "layout-list",
     "faqs": [
-      ["What is AI Pro?", "It is a 3-month classroom-led Generative AI & Agentic AI program focused on building practical AI capabilities. (UpGrad)"],
-      ["What will I learn?", "The program focuses on Prompt Engineering, Generative AI, RAG systems, Agentic AI workflows and deployment. (UpGrad)"],
-      ["Will I learn tools such as ChatGPT and Claude?", "Yes. The program specifically mentions learning ChatGPT, Claude and other industry-focused AI tools. (UpGrad)"],
-      ["Will there be practical projects?", "Yes. The program highlights 15+ live projects. (UpGrad)"],
-      ["What certification will I receive?", "Learners receive an upGrad certificate in AI Pro: Generative AI & Agentic AI. The program also mentions an add-on IIIT-B certificate through the IIIT-B masterclass. (UpGrad)"],
-      ["Is there an internship certificate?", "Yes. The program page mentions a Guided Internship Certificate from its elite partners. (UpGrad)"],
-      ["Is there an NSDC certificate?", "The program page also mentions an NSDC Course Completion Certificate from upGrad. (UpGrad)"],
-      ["What career support is available?", "Career support, placement assistance, 3 years of Career Portal access and access to 1200+ hiring partners are highlighted. (UpGrad)"]
-    ]
-  },
-  {
-    "name": "Future Stack — Data Science & Gen AI",
-    "slug": "future-stack-data-science-genai",
-    "icon": "rocket_launch",
-    "faqs": [
-      ["What is Future Stack?", "It is a 3-month classroom-led Data Science & GenAI certification program combining data science foundations with Generative AI applications. (UpGrad)"],
-      ["Who can apply?", "Graduates from any stream and students currently pursuing graduation can apply. No prior coding or Data Science experience is required. (UpGrad)"],
-      ["Do I need coding experience?", "No. The course starts with foundational Python and SQL concepts. (UpGrad)"],
-      ["What does the curriculum cover?", "Python, SQL foundations, statistics, Machine Learning, Power BI dashboards, GenAI/RAG applications and full-stack deployment. (UpGrad)"],
-      ["What will I build?", "Learners work on real-world datasets, business insights, GenAI/RAG applications and full-stack Data Science & GenAI applications. (UpGrad)"],
-      ["What certification is available?", "The program provides an upGrad FutureStack certification with an add-on IIIT-B certification through the relevant masterclass. (UpGrad)"],
-      ["What career support is included?", "Aptitude training, resume building, LinkedIn profile evaluation, interview question bank, 1:1 mock interviews, technical learning, soft-skills training and GD/interview preparation. (UpGrad)"],
-      ["Who is this program best suited for?", "It is suitable for graduates/final-year students and learners wanting a faster path into Data Science + GenAI without requiring prior coding or Data Science experience."]
-    ]
-  },
-  {
-    "name": "Certificate in Full Stack Development — upGrad",
-    "slug": "full-stack-development-upgrad",
-    "icon": "terminal",
-    "faqs": [
-      ["What is this Full Stack program?", "It is an Advanced Certificate in Full Stack Development focused on building end-to-end web applications using modern frontend, backend, database and deployment technologies. (UpGrad)"],
-      ["What technologies are covered?", "Java, JavaScript, React, Redux, Bootstrap, Tailwind CSS, HTML/CSS, Spring Boot, Node.js, Express.js, MySQL and MongoDB. (UpGrad)"],
-      ["Do I need coding experience?", "No. The program states that foundational concepts are covered from scratch and prior coding experience is not required. (UpGrad)"],
-      ["What will I build?", "Learners work on full-stack applications, including a complete full-stack capstone application and Dockerized deployments. (UpGrad)"],
-      ["What additional certification is available?", "The program highlights an add-on certification from PwC Academy, along with two PwC Academy masterclasses. (UpGrad)"],
-      ["Are there other certificates?", "The page mentions a Guided Internship Certificate and an NSDC Course Completion Certificate from upGrad. (UpGrad)"],
-      ["What career support is included?", "Aptitude training, resume building, LinkedIn profile evaluation, interview question bank, 1:1 mock interviews, technical learning, soft skills and GD/interview preparation. (UpGrad)"],
-      ["Who can join?", "Graduates from any stream and final-year students can apply. Basic logical thinking/problem-solving skills are helpful, but prior coding experience is not required. (UpGrad)"]
-    ]
-  },
-  {
-    "name": "Certification in Global & Investment Banking Operations — CGIBO",
-    "slug": "cgibo-banking-operations",
-    "icon": "account_balance",
-    "faqs": [
-      ["What is CGIBO?", "It is a 4-month career-focused program for BFSI and GCC-oriented operations careers, covering Trade, AML/KYC and Lending Operations. (UpGrad)"],
-      ["Who is eligible?", "Fresh graduates from 2024 onwards in full-time Finance/Commerce programs such as B.Com, BBA, BMS, BBM, M.Com or MBA, and working professionals with 0–2 years of experience. (UpGrad)"],
-      ["Is prior work experience mandatory?", "No. Fresh graduates can apply; working professionals with up to 2 years of experience can also apply. (UpGrad)"],
-      ["Is there an academic/work-gap restriction?", "Yes. The website states a maximum 2-year gap in education/work. (UpGrad)"],
-      ["What will I learn?", "Financial systems, investment banking operations, KYC/AML processes, trade operations, lending lifecycle and AI-based workflow automation. (UpGrad)"],
-      ["What practical exposure is provided?", "The program includes 5+ live projects, 3 graded capstones and a Day 1 to Offer live project. (UpGrad)"],
-      ["What tools will I work with?", "The program highlights hands-on exposure to 5+ AI and domain tools and automation using Excel and AI tools. (UpGrad)"],
-      ["What job roles can learners target?", "Roles mentioned include Fund Accounting Analyst, Trade Operations Analyst, Corporate Actions Analyst, Portfolio Reporting Analyst and KYC/Client Onboarding Analyst. (UpGrad)"],
-      ["Is placement guaranteed?", "No. The website explicitly states that placement is not guaranteed, but learners receive career support, interview preparation, hiring-partner access and 3 years of Career Portal access. (UpGrad)"]
-    ]
-  },
-  {
-    "name": "MOST IMPORTANT: Comparison FAQs for Counsellors",
-    "slug": "comparison-faqs-for-counsellors",
-    "icon": "compare_arrows",
-    "faqs": [
-      ["Data Science vs Data Analytics?", "Data Analytics focuses more on analysing data, Excel/SQL/Python, Power BI/Tableau and GenAI-assisted analytics. Data Science & AI ML goes deeper into statistics, ML, Deep Learning, AI, model deployment and GenAI. (UpGrad)"],
-      ["Future Stack vs 6-month Data Science?", "Future Stack is a 3-month Data Science + GenAI program covering foundations through GenAI/RAG and deployment. The 6-month Data Science & AI ML program is more extensive, with deeper ML/AI coverage and 15+ live projects. (UpGrad)"],
-      ["AI Pro vs Future Stack?", "AI Pro is specifically focused on Generative AI, Agentic AI, prompt engineering, RAG and agentic workflows. Future Stack combines Data Science foundations with GenAI/RAG and deployment. (UpGrad)"],
-      ["Which program is better for someone with no coding background?", "Several programs explicitly state that prior coding is not required, including Data Science, Full Stack, Future Stack and AI Pro. The counsellor should still recommend based on the learner's career goal and eligibility. (UpGrad)"],
-      ["Full Stack iHUB vs Full Stack upGrad?", "The iHUB program is a 6-month program developed with iHUB DivyaSampark, IIT Roorkee, with its associated credential, system-design workshops and optional campus immersion. The other Full Stack program highlights an add-on PwC Academy certification, PwC masterclasses, Docker/cloud deployment and other certificates. (UpGrad)"],
-      ["Which program is best for a Finance/Commerce graduate?", "CGIBO is specifically designed for Finance/Commerce graduates and targets BFSI/GCC operations roles. (UpGrad)"],
-      ["Which program is best for someone interested in Marketing?", "Accelerated Digital Marketing, covering SEO, Paid Ads, Social Media, Email, Content, Analytics and GenAI-powered marketing. (UpGrad)"],
-      ["Which program is shortest?", "Among the programs shown, AI Pro and Future Stack are 3 months. (UpGrad)"],
-      ["Which programs have 3-year Career Portal access?", "The program pages for Data Science, Full Stack, Data Analytics, AI Pro, Future Stack and CGIBO highlight 3-year Career Portal access. (UpGrad)"],
-      ["Does upGrad guarantee a job?", "No. The counsellor should say career support / placement assistance / hiring support, never guaranteed placement. (UpGrad)"]
+      [
+        "What is upGrad Offline Learning?",
+        "upGrad Offline Centres provide 100% classroom training, hands-on learning and career support through Learning Support Centres."
+      ],
+      [
+        "What is the advantage of offline learning?",
+        "Learners get instructor-led classroom learning, hands-on projects, structured learning, mentorship and career support in a physical learning environment."
+      ],
+      [
+        "Are the classes completely offline?",
+        "The core classroom learning is delivered at the upGrad Learning Support Centre. Some programs also include online masterclasses by faculty/industry experts."
+      ],
+      [
+        "Do I get Learning Portal access?",
+        "The program pages highlight 3 years of Learning Portal access, including access to learning resources and built-in tools for practice. (UpGrad)"
+      ],
+      [
+        "How does the admission process work?",
+        "Submit interest \u2192 speak with an Academic Counsellor \u2192 confirm your batch \u2192 complete enrolment/onboarding \u2192 start learning at the selected centre. (UpGrad)"
+      ],
+      [
+        "What is this program?",
+        "It is a 6-month Gen AI-powered Data Science with Machine Learning program combining classroom learning, practical projects, AI/ML skills and career support. (UpGrad)"
+      ],
+      [
+        "Who can join?",
+        "Graduates from science/technology streams such as B.E., B.Tech, B.Sc. and BCA can apply. Students currently pursuing graduation in these streams can also apply. No prior coding background is required. (UpGrad)"
+      ],
+      [
+        "What will I learn?",
+        "Python, SQL, Statistics, Machine Learning, Deep Learning, Data Visualization, Power BI, Tableau, Generative AI, Prompt Engineering, LLMs, AI Agents, Feature Engineering, Model Deployment and Cloud-based Data Analytics. (UpGrad)"
+      ],
+      [
+        "Will I work on projects?",
+        "Yes. The program highlights 15+ live projects, including industry projects, capstone work, AI applications and business problem-solving. (UpGrad)"
+      ],
+      [
+        "What AI exposure will I get?",
+        "Learners work on GenAI, AI Agents, RAG applications and production-oriented AI applications. The program also highlights an additional 4 weeks dedicated to AI and workflow automation. (UpGrad)"
+      ],
+      [
+        "Is there campus immersion?",
+        "Yes, an optional campus immersion experience is mentioned on the program page. (UpGrad)"
+      ],
+      [
+        "What is this program?",
+        "A 6-month Advanced Certificate in Full Stack Development focused on building end-to-end web applications. (UpGrad)"
+      ],
+      [
+        "What technologies are covered?",
+        "Java, JavaScript, React, Redux, Bootstrap, Tailwind CSS, HTML, CSS, Spring Boot, Node.js, Express.js, MySQL and MongoDB. (UpGrad)"
+      ],
+      [
+        "What will I build?",
+        "Responsive frontend applications, dynamic SPAs, REST API-powered backend services, database-driven applications, full-stack applications and cloud-deployed applications. (UpGrad)"
+      ],
+      [
+        "Do I need coding experience?",
+        "The program page states that it is suitable for career switchers and that no coding background is needed; the program starts from the basics. (UpGrad)"
+      ],
+      [
+        "Will I learn system design?",
+        "Yes. System Design Workshops are included, focusing on scalable and high-performance systems. (UpGrad)"
+      ],
+      [
+        "Is campus immersion available?",
+        "Yes, an optional campus immersion experience is mentioned. (UpGrad)"
+      ],
+      [
+        "Who can join Digital Marketing?",
+        "Graduates from any stream can apply, and students currently pursuing graduation are also eligible. It is suitable for freshers and working professionals. (UpGrad)"
+      ],
+      [
+        "Do I need marketing experience?",
+        "No. Prior marketing experience is not required. (UpGrad)"
+      ],
+      [
+        "Do I need coding knowledge?",
+        "No. The program does not require a technical/coding background. (UpGrad)"
+      ],
+      [
+        "What will I learn?",
+        "SEO, Paid Ads, Social Media Marketing, Email Marketing, Content Marketing, Marketing Analytics, campaign planning/execution and Generative AI applications. (UpGrad)"
+      ],
+      [
+        "Will I work on live campaigns?",
+        "Yes. The program page highlights 12+ live marketing campaigns and practical campaign-based assignments. (UpGrad)"
+      ],
+      [
+        "Which tools will I work with?",
+        "The website mentions tools such as Google Ads, Google Analytics, Meta Ads Manager, Meta Business Suite, Canva and SEO tools. (UpGrad)"
+      ],
+      [
+        "What is the program about?",
+        "It is a 4-month Gen AI-Powered Data Analytics program focused on analysing real-world datasets and using AI to improve analytics workflows. (UpGrad)"
+      ],
+      [
+        "What tools will I learn?",
+        "Excel, SQL, Python, Power BI and Tableau, along with Generative AI applications. (UpGrad)"
+      ],
+      [
+        "How is GenAI used in the program?",
+        "Learners use Generative AI for data insights and workflow automation. (UpGrad)"
+      ],
+      [
+        "Will I work on projects?",
+        "Yes. The program highlights 10+ live projects using real datasets. Examples mentioned include Uber trip analysis, movie-data SQL case studies and loan approval analysis. (UpGrad)"
+      ],
+      [
+        "Do I need a technical background?",
+        "The Offline Centres eligibility information indicates that the Data Analytics program does not require a technical background. (UpGrad)"
+      ],
+      [
+        "Who is this best suited for?",
+        "It is suitable for learners looking to build practical data analytics skills using Excel, SQL, Python, BI tools and GenAI."
+      ],
+      [
+        "What is AI Pro?",
+        "It is a 3-month classroom-led Generative AI & Agentic AI program focused on building practical AI capabilities. (UpGrad)"
+      ],
+      [
+        "What will I learn?",
+        "The program focuses on Prompt Engineering, Generative AI, RAG systems, Agentic AI workflows and deployment. (UpGrad)"
+      ],
+      [
+        "Will I learn tools such as ChatGPT and Claude?",
+        "Yes. The program specifically mentions learning ChatGPT, Claude and other industry-focused AI tools. (UpGrad)"
+      ],
+      [
+        "Will there be practical projects?",
+        "Yes. The program highlights 15+ live projects. (UpGrad)"
+      ],
+      [
+        "What is Future Stack?",
+        "It is a 3-month classroom-led Data Science & GenAI certification program combining data science foundations with Generative AI applications. (UpGrad)"
+      ],
+      [
+        "Who can apply?",
+        "Graduates from any stream and students currently pursuing graduation can apply. No prior coding or Data Science experience is required. (UpGrad)"
+      ],
+      [
+        "Do I need coding experience?",
+        "No. The course starts with foundational Python and SQL concepts. (UpGrad)"
+      ],
+      [
+        "What does the curriculum cover?",
+        "Python, SQL foundations, statistics, Machine Learning, Power BI dashboards, GenAI/RAG applications and full-stack deployment. (UpGrad)"
+      ],
+      [
+        "What will I build?",
+        "Learners work on real-world datasets, business insights, GenAI/RAG applications and full-stack Data Science & GenAI applications. (UpGrad)"
+      ],
+      [
+        "Who is this program best suited for?",
+        "It is suitable for graduates/final-year students and learners wanting a faster path into Data Science + GenAI without requiring prior coding or Data Science experience."
+      ],
+      [
+        "What is this Full Stack program?",
+        "It is an Advanced Certificate in Full Stack Development focused on building end-to-end web applications using modern frontend, backend, database and deployment technologies. (UpGrad)"
+      ],
+      [
+        "What technologies are covered?",
+        "Java, JavaScript, React, Redux, Bootstrap, Tailwind CSS, HTML/CSS, Spring Boot, Node.js, Express.js, MySQL and MongoDB. (UpGrad)"
+      ],
+      [
+        "Do I need coding experience?",
+        "No. The program states that foundational concepts are covered from scratch and prior coding experience is not required. (UpGrad)"
+      ],
+      [
+        "What will I build?",
+        "Learners work on full-stack applications, including a complete full-stack capstone application and Dockerized deployments. (UpGrad)"
+      ],
+      [
+        "Who can join?",
+        "Graduates from any stream and final-year students can apply. Basic logical thinking/problem-solving skills are helpful, but prior coding experience is not required. (UpGrad)"
+      ],
+      [
+        "What is CGIBO?",
+        "It is a 4-month career-focused program for BFSI and GCC-oriented operations careers, covering Trade, AML/KYC and Lending Operations. (UpGrad)"
+      ],
+      [
+        "Who is eligible?",
+        "Fresh graduates from 2024 onwards in full-time Finance/Commerce programs such as B.Com, BBA, BMS, BBM, M.Com or MBA, and working professionals with 0\u20132 years of experience. (UpGrad)"
+      ],
+      [
+        "Is prior work experience mandatory?",
+        "No. Fresh graduates can apply; working professionals with up to 2 years of experience can also apply. (UpGrad)"
+      ],
+      [
+        "Is there an academic/work-gap restriction?",
+        "Yes. The website states a maximum 2-year gap in education/work. (UpGrad)"
+      ],
+      [
+        "What will I learn?",
+        "Financial systems, investment banking operations, KYC/AML processes, trade operations, lending lifecycle and AI-based workflow automation. (UpGrad)"
+      ],
+      [
+        "What practical exposure is provided?",
+        "The program includes 5+ live projects, 3 graded capstones and a Day 1 to Offer live project. (UpGrad)"
+      ],
+      [
+        "What tools will I work with?",
+        "The program highlights hands-on exposure to 5+ AI and domain tools and automation using Excel and AI tools. (UpGrad)"
+      ],
+      [
+        "Data Science vs Data Analytics?",
+        "Data Analytics focuses more on analysing data, Excel/SQL/Python, Power BI/Tableau and GenAI-assisted analytics. Data Science & AI ML goes deeper into statistics, ML, Deep Learning, AI, model deployment and GenAI. (UpGrad)"
+      ],
+      [
+        "Future Stack vs 6-month Data Science?",
+        "Future Stack is a 3-month Data Science + GenAI program covering foundations through GenAI/RAG and deployment. The 6-month Data Science & AI ML program is more extensive, with deeper ML/AI coverage and 15+ live projects. (UpGrad)"
+      ],
+      [
+        "AI Pro vs Future Stack?",
+        "AI Pro is specifically focused on Generative AI, Agentic AI, prompt engineering, RAG and agentic workflows. Future Stack combines Data Science foundations with GenAI/RAG and deployment. (UpGrad)"
+      ],
+      [
+        "Which program is better for someone with no coding background?",
+        "Several programs explicitly state that prior coding is not required, including Data Science, Full Stack, Future Stack and AI Pro. The counsellor should still recommend based on the learner's career goal and eligibility. (UpGrad)"
+      ],
+      [
+        "Full Stack iHUB vs Full Stack upGrad?",
+        "The iHUB program is a 6-month program developed with iHUB DivyaSampark, IIT Roorkee, with its associated credential, system-design workshops and optional campus immersion. The other Full Stack program highlights an add-on PwC Academy certification, PwC masterclasses, Docker/cloud deployment and other certificates. (UpGrad)"
+      ],
+      [
+        "Which program is best for a Finance/Commerce graduate?",
+        "CGIBO is specifically designed for Finance/Commerce graduates and targets BFSI/GCC operations roles. (UpGrad)"
+      ],
+      [
+        "Which program is best for someone interested in Marketing?",
+        "Accelerated Digital Marketing, covering SEO, Paid Ads, Social Media, Email, Content, Analytics and GenAI-powered marketing. (UpGrad)"
+      ],
+      [
+        "Which program is shortest?",
+        "Among the programs shown, AI Pro and Future Stack are 3 months. (UpGrad)"
+      ]
     ]
   }
 ]
