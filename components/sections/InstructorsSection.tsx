@@ -14,6 +14,7 @@ type Instructor = {
   experienceYears: number;
   tags: string[];
   photoUrl?: string | null;
+  city?: { name: string } | null;
 };
 
 function InstructorGrid({ instructors }: { instructors: Instructor[] }) {
@@ -51,9 +52,15 @@ function InstructorGrid({ instructors }: { instructors: Instructor[] }) {
             )}
           </div>
           <h3 className="text-headline-sm text-on-background mb-1">{ins.name}</h3>
-          <p className="text-label-bold font-bold text-tertiary mb-3 uppercase tracking-wider">
+          <p className="text-label-bold font-bold text-tertiary mb-1 uppercase tracking-wider">
             {ins.subjectTaught}
           </p>
+          {ins.city?.name && (
+            <p className="text-body-sm text-on-surface-variant mb-3 flex items-center gap-1">
+              <Icon name="location_on" size={14} className="text-secondary" />
+              {ins.city.name}
+            </p>
+          )}
           <p className="text-body-sm text-secondary line-clamp-2 mb-4 flex-grow editable-field">{ins.bio}</p>
           <p className="text-body-sm font-semibold text-on-surface-variant mb-3 flex items-center gap-1">
             <Icon name="workspace_premium" size={16} className="text-primary" />
