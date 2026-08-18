@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Arpendu Kumar Ganguly",
+    "linkedinUrl": "https://www.linkedin.com/in/arpenduganguly/",
+    "subjectTaught": "AI/ML & Data Science Leadership",
+    "bio": "Arpendu is a Senior Data Scientist at Pernod Ricard with deep expertise in AI/ML, cloud platforms, and applied GenAI, and a strong track record of corporate training in Python and data science leadership.",
+    "experienceYears": 12,
+    "tags": ["AI/ML", "Data Science", "GenAI", "Cloud"],
+    "currentCompany": "Pernod Ricard (Senior Data Scientist)"
+  },
+  {
+    "name": "Bingi Sai Venkata Naga Kishore",
+    "linkedinUrl": "https://www.linkedin.com/in/kishorebingi/",
+    "subjectTaught": "AI/ML Research & Applied Analytics",
+    "bio": "Kishore is a Faculty Lecturer in Electrical & Electronic Engineering at Universiti Teknologi PETRONAS, Malaysia, with an active AI/ML research background, multiple IEEE publications, and hands-on Python analytics experience.",
+    "experienceYears": 10,
+    "tags": ["AI/ML Research", "Python", "IEEE Published"],
+    "currentCompany": "Universiti Teknologi PETRONAS (Malaysia) – Faculty/Lecturer, EEE"
+  },
+  {
+    "name": "Bharat Rajvanshi",
+    "linkedinUrl": "https://www.linkedin.com/in/bharat-rajvanshi/",
+    "subjectTaught": "Data Science & AI/ML Practice",
+    "bio": "Bharat leads Data, Process & Systems at AtkinsRealis, bringing hands-on Data Science and AI/ML practitioner experience in Python and SQL, along with a track record of mentoring emerging talent.",
+    "experienceYears": 13,
+    "tags": ["Data Science", "AI/ML", "Python", "SQL"],
+    "currentCompany": "AtkinsRealis – Data, Process & Systems Lead"
+  },
+  {
+    "name": "Jyoti Dabass",
+    "linkedinUrl": "https://www.linkedin.com/in/jyoti-dabass-ph-d-2b747083/",
+    "subjectTaught": "AI Product Leadership & Applied ML Research",
+    "bio": "Jyoti (Ph.D.) is an independent AI Product Leader and Staff AI Engineer with a strong academic and applied ML research background, known for translating complex AI concepts into clear, actionable learning.",
+    "experienceYears": 11,
+    "tags": ["AI Product", "ML Research", "Applied AI"],
+    "currentCompany": "Independent AI Product Leader / Staff AI Engineer & Applied Researcher"
+  },
+  {
+    "name": "Kumar Vaibhav",
+    "linkedinUrl": "https://www.linkedin.com/in/kumarvaibhav2003/",
+    "subjectTaught": "GenAI, LLMs & Applied ML",
+    "bio": "Kumar is an independent AI/ML practitioner specialising in GenAI and LLMs, with hands-on Python expertise and an active focus on technical mentoring.",
+    "experienceYears": 6,
+    "tags": ["GenAI", "LLMs", "Python", "AI/ML"],
+    "currentCompany": "Freelancer"
+  },
+  {
+    "name": "Poorva Amit Sawant",
+    "linkedinUrl": "https://www.linkedin.com/in/poorva-puranik",
+    "subjectTaught": "Data Science, Analytics & AI Engineering",
+    "bio": "Poorva is an AI Engineering Manager at Accenture, combining strong Data Science and analytics expertise with hands-on mentoring experience for early-career learners.",
+    "experienceYears": 10,
+    "tags": ["Data Science", "Analytics", "AI Engineering"],
+    "currentCompany": "Accenture – AI Engineering Manager"
+  },
+  {
+    "name": "Rajan Chettri",
+    "linkedinUrl": "https://www.linkedin.com/in/rajan-chettri-26b04213b",
+    "subjectTaught": "Analytics & Python for Business",
+    "bio": "Rajan is a Global Corporate Educator and Technical Trainer at mthree, specialising in Analytics and Python instruction for corporate learners with growing exposure to applied AI.",
+    "experienceYears": 8,
+    "tags": ["Analytics", "Python", "Corporate Training"],
+    "currentCompany": "mthree – Global Corporate Educator / Technical Trainer"
+  },
+  {
+    "name": "Rajesh Hanmanthrao Kulkarni",
+    "linkedinUrl": "https://www.linkedin.com/in/rajeshhkulkarni/",
+    "subjectTaught": "Analytics, Python & SQL",
+    "bio": "Rajesh is a senior analytics professional with deep expertise in Python and SQL, and an established track record of mentoring learners through complex data problems.",
+    "experienceYears": 15,
+    "tags": ["Analytics", "Python", "SQL"],
+    "currentCompany": null
+  }
+]

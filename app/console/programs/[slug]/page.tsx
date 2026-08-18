@@ -17,7 +17,7 @@ export default async function ProgramDetailPage({ params }: { params: { slug: st
 
   const showIndustryLeaders = await isSectionVisible("industry-leaders", program.id);
   const leaders = showIndustryLeaders
-    ? await prisma.instructor.findMany({ where: { isIndustryLeader: true }, take: 3 })
+    ? await prisma.instructor.findMany({ where: { isIndustryLeader: true }, orderBy: { order: "asc" } })
     : [];
 
   return (

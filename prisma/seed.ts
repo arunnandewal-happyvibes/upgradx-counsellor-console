@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import industryLeaders from "../scripts/industry-leaders-data.json";
 
 const prisma = new PrismaClient();
 
@@ -400,9 +401,6 @@ async function main() {
     { name: "Vikram Shah", subjectTaught: "Banking Operations Instructor", experienceYears: 12, tags: ["Ex-ICICI", "CA"], city: mumbai, leader: false },
     { name: "Priya Nambiar", subjectTaught: "Digital Marketing Instructor", experienceYears: 6, tags: ["TEDx Speaker"], city: mumbai, leader: false },
     { name: "Arjun Desai", subjectTaught: "AI Pro Instructor", experienceYears: 4, tags: ["Kaggle Grandmaster"], city: pune, leader: false },
-    { name: "Meera Pillai", subjectTaught: "AI/ML Industry Leader", experienceYears: 14, tags: ["Ex-Microsoft AI Lead", "TEDx Speaker"], city: bangalore, leader: true },
-    { name: "Sanjay Verma", subjectTaught: "Engineering Industry Leader", experienceYears: 15, tags: ["Ex-Amazon Principal Engineer"], city: bangalore, leader: true },
-    { name: "Ritu Chawla", subjectTaught: "Data Science Industry Leader", experienceYears: 13, tags: ["Ex-Google AI"], city: delhi, leader: true },
   ];
   for (const [i, d] of instructorDefs.entries()) {
     await prisma.instructor.create({
@@ -417,6 +415,26 @@ async function main() {
         isIndustryLeader: d.leader,
         cityId: d.city.id,
         order: i,
+      },
+    });
+  }
+
+  // ---- Industry Leaders: real guest-lecturer/SME roster from "Guest Lecturer
+  // Details.xlsx" (see scripts/add-industry-leaders.ts for field-mapping notes).
+  // Shown across every city — cityId is a required-by-schema placeholder only.
+  for (const [i, leader] of (industryLeaders as any[]).entries()) {
+    await prisma.instructor.create({
+      data: {
+        name: leader.name,
+        photoUrl: null,
+        linkedinUrl: leader.linkedinUrl,
+        subjectTaught: leader.subjectTaught,
+        bio: leader.bio,
+        experienceYears: leader.experienceYears,
+        tags: leader.tags,
+        isIndustryLeader: true,
+        cityId: bangalore.id,
+        order: instructorDefs.length + i,
       },
     });
   }
