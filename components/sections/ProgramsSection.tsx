@@ -72,7 +72,7 @@ export async function ProgramsSection() {
                     View Details
                   </LinkButton>
                   <a
-                    href={p.certifications[0]?.brochureUrl ?? "#"}
+                    href={p.brochureUrl ?? p.certifications[0]?.brochureUrl ?? "#"}
                     download
                     className="btn-3d w-10 h-10 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-all"
                     aria-label="Download brochure"

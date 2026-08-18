@@ -1,5 +1,6 @@
 import { Field, inputClass } from "@/components/admin/AdminUI";
 import { Button } from "@/components/ui/Button";
+import { FileField } from "@/components/admin/FileField";
 
 type Program = {
   name: string;
@@ -8,6 +9,7 @@ type Program = {
   category: string;
   description: string;
   bullets: string[];
+  brochureUrl?: string | null;
   certifications: { name: string; partnerInstitution: string; brochureUrl: string }[];
   curriculumModules: { title: string; content: string }[];
 };
@@ -49,6 +51,13 @@ export function ProgramForm({
           className={inputClass}
         />
       </Field>
+      <FileField
+        label="Program brochure (PDF)"
+        urlName="brochureUrl"
+        fileName="brochureFile"
+        defaultUrl={initial?.brochureUrl}
+        hint="This is the single-click download shown on the program's tile and detail page."
+      />
       <Field label="Certifications" hint="One per line: Certification Name | Partner Institution | Brochure URL">
         <textarea
           name="certifications"

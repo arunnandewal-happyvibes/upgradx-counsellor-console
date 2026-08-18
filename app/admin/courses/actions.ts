@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { linesToArray, linesToTuples, str } from "@/lib/adminParsing";
+import { linesToArray, linesToTuples, str, strOrNull } from "@/lib/adminParsing";
+import { maybeUploadImage } from "@/lib/blob";
 
 function slugify(name: string) {
   return name
@@ -16,6 +17,7 @@ export async function createProgram(formData: FormData) {
   const name = str(formData.get("name"));
   const certs = linesToTuples(formData.get("certifications"), 3);
   const modules = linesToTuples(formData.get("modules"), 2);
+  const uploadedBrochure = await maybeUploadImage(formData, "brochureFile", "brochures");
 
   await prisma.program.create({
     data: {
@@ -26,6 +28,7 @@ export async function createProgram(formData: FormData) {
       category: str(formData.get("category")),
       description: str(formData.get("description")),
       bullets: linesToArray(formData.get("bullets")),
+      brochureUrl: uploadedBrochure ?? strOrNull(formData.get("brochureUrl")),
       certifications: {
         create: certs.map(([certName, partnerInstitution, brochureUrl]) => ({
           name: certName,
@@ -34,7 +37,7 @@ export async function createProgram(formData: FormData) {
         })),
       },
       curriculumModules: {
-        create: modules.map(([title, content], order) => ({ title, content, order })),
+        create: modules.map(([title, content], order) => ({ title, order, content })),
       },
     },
   });
@@ -47,6 +50,7 @@ export async function createProgram(formData: FormData) {
 export async function updateProgram(id: string, formData: FormData) {
   const certs = linesToTuples(formData.get("certifications"), 3);
   const modules = linesToTuples(formData.get("modules"), 2);
+  const uploadedBrochure = await maybeUploadImage(formData, "brochureFile", "brochures");
 
   await prisma.$transaction([
     prisma.certification.deleteMany({ where: { programId: id } }),
@@ -60,6 +64,7 @@ export async function updateProgram(id: string, formData: FormData) {
         category: str(formData.get("category")),
         description: str(formData.get("description")),
         bullets: linesToArray(formData.get("bullets")),
+        brochureUrl: uploadedBrochure ?? strOrNull(formData.get("brochureUrl")),
         certifications: {
           create: certs.map(([certName, partnerInstitution, brochureUrl]) => ({
             name: certName,
@@ -68,7 +73,7 @@ export async function updateProgram(id: string, formData: FormData) {
           })),
         },
         curriculumModules: {
-          create: modules.map(([title, content], order) => ({ title, content, order })),
+          create: modules.map(([title, content], order) => ({ title, order, content })),
         },
       },
     }),
