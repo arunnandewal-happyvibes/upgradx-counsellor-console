@@ -6,14 +6,28 @@ const BLOB = "https://wr1sc9ozwkffuq9w.public.blob.vercel-storage.com/brochures"
 
 async function main() {
   // ---- Cities (Pune deliberately sparse: no drives, no batches, 1 instructor) ----
+  // The four "core" cities below get full contact/instructor/batch/drive data;
+  // the rest are the remaining upGrad X learning-centre cities, seeded as
+  // presence-only entries (city dropdown + a Contact page placeholder) with no
+  // monument photo — upload one per city via /admin/cities.
   const [bangalore, delhi, mumbai, pune] = await Promise.all(
     [
-      { name: "Bangalore", slug: "bangalore" },
+      { name: "Bengaluru", slug: "bangalore" },
       { name: "Delhi NCR", slug: "delhi-ncr" },
       { name: "Mumbai", slug: "mumbai" },
       { name: "Pune", slug: "pune" },
-    ].map((c) => prisma.city.upsert({ where: { slug: c.slug }, update: {}, create: c })),
+    ].map((c) => prisma.city.upsert({ where: { slug: c.slug }, update: { name: c.name }, create: c })),
   );
+
+  const OTHER_CITIES = [
+    "Hyderabad", "Chennai", "Belagavi", "Bhopal", "Bhubaneswar", "Coimbatore",
+    "Dehradun", "Indore", "Gurugram", "Jabalpur", "Jaipur", "Kolkata",
+    "Mangalore", "Chandigarh", "Bilaspur", "Raipur", "Panipat", "Rajkot", "Sambhajinagar",
+  ];
+  for (const name of OTHER_CITIES) {
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    await prisma.city.upsert({ where: { slug }, update: {}, create: { name, slug } });
+  }
 
   await Promise.all([
     prisma.cityContact.upsert({
