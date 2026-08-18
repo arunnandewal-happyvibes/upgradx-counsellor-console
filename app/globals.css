@@ -168,3 +168,26 @@ body {
 .partners-track:hover {
   animation-play-state: paused;
 }
+
+/* People carousels (Instructors / Industry Leaders) — same technique as the
+   hiring-partner marquee, plus a reverse direction for visual variety
+   between the two rows. Duration is set per-instance via --marquee-duration
+   so speed stays consistent regardless of how many cards are in the list. */
+@keyframes marquee-flow-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.marquee-track {
+  animation: partners-flow var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-track-reverse {
+  animation: marquee-flow-reverse var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-track:hover,
+.marquee-track-reverse:hover {
+  animation-play-state: paused;
+}

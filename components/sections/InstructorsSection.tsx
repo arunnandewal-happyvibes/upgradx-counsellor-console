@@ -17,31 +17,29 @@ type Instructor = {
   city?: { name: string } | null;
 };
 
-function InstructorGrid({ instructors }: { instructors: Instructor[] }) {
+function InstructorCard({ ins }: { ins: Instructor }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-      {instructors.map((ins) => (
-        <article
-          key={ins.id}
-          className="elevate-3d bg-surface rounded border border-[#E0E0E0] hover:border-primary p-card-padding flex flex-col group"
-        >
-          <div className="flex justify-between items-start mb-4">
-            <Avatar
-              src={ins.photoUrl}
-              name={ins.name}
-              size={64}
-              rounded="rounded"
-              className="text-headline-sm shadow-sm"
-            />
+    <article className="elevate-3d flex w-[380px] flex-shrink-0 flex-col bg-surface rounded border border-[#E0E0E0] hover:border-primary p-card-padding group">
+      <div className="flex items-start gap-4 mb-3">
+        <Avatar
+          src={ins.photoUrl}
+          name={ins.name}
+          size={88}
+          rounded="rounded"
+          className="text-headline-md shadow-sm flex-shrink-0"
+        />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="text-headline-sm text-on-background leading-tight">{ins.name}</h3>
             {ins.linkedinUrl && (
               <a
                 aria-label="LinkedIn Profile"
-                className="text-secondary group-hover:text-primary transition-colors"
+                className="text-secondary group-hover:text-primary transition-colors flex-shrink-0"
                 href={ins.linkedinUrl}
                 target="_blank"
                 rel="noreferrer"
               >
-                <svg aria-hidden="true" className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path
                     fillRule="evenodd"
                     clipRule="evenodd"
@@ -51,33 +49,51 @@ function InstructorGrid({ instructors }: { instructors: Instructor[] }) {
               </a>
             )}
           </div>
-          <h3 className="text-headline-sm text-on-background mb-1">{ins.name}</h3>
-          <p className="text-label-bold font-bold text-tertiary mb-1 uppercase tracking-wider">
-            {ins.subjectTaught}
-          </p>
+          <p className="text-label-bold font-bold text-tertiary uppercase tracking-wider">{ins.subjectTaught}</p>
           {ins.city?.name && (
-            <p className="text-body-sm text-on-surface-variant mb-3 flex items-center gap-1">
+            <p className="text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
               <Icon name="location_on" size={14} className="text-secondary" />
               {ins.city.name}
             </p>
           )}
-          <p className="text-body-sm text-secondary line-clamp-2 mb-4 flex-grow editable-field">{ins.bio}</p>
-          <p className="text-body-sm font-semibold text-on-surface-variant mb-3 flex items-center gap-1">
-            <Icon name="workspace_premium" size={16} className="text-primary" />
-            {ins.experienceYears}+ years experience
-          </p>
-          <div className="flex flex-wrap gap-2 mt-auto">
-            {ins.tags.map((t) => (
-              <span
-                key={t}
-                className="inline-block bg-surface-container-high text-on-surface-variant text-label-bold font-bold px-2 py-1 rounded border border-outline-variant"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-        </article>
-      ))}
+        </div>
+      </div>
+      <p className="text-body-sm text-secondary line-clamp-2 mb-3 editable-field">{ins.bio}</p>
+      <div className="flex items-center justify-between gap-2 mt-auto">
+        <p className="text-body-sm font-semibold text-on-surface-variant flex items-center gap-1 flex-shrink-0">
+          <Icon name="workspace_premium" size={16} className="text-primary" />
+          {ins.experienceYears}+ yrs
+        </p>
+        <div className="flex flex-wrap justify-end gap-1.5 overflow-hidden">
+          {ins.tags.slice(0, 2).map((t) => (
+            <span
+              key={t}
+              className="inline-block bg-surface-container-high text-on-surface-variant text-label-bold font-bold px-2 py-1 rounded border border-outline-variant whitespace-nowrap"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function InstructorCarousel({ instructors, reverse }: { instructors: Instructor[]; reverse?: boolean }) {
+  const duration = `${Math.max(instructors.length * 6, 20)}s`;
+  return (
+    <div
+      className="w-full overflow-hidden"
+      style={{ maskImage: "linear-gradient(90deg, transparent, black 4%, black 96%, transparent)" }}
+    >
+      <div
+        className={`flex w-max items-stretch gap-gutter py-2 ${reverse ? "marquee-track-reverse" : "marquee-track"}`}
+        style={{ ["--marquee-duration" as string]: duration }}
+      >
+        {[...instructors, ...instructors].map((ins, i) => (
+          <InstructorCard key={`${ins.id}-${i}`} ins={ins} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -89,7 +105,7 @@ export function InstructorsSection() {
   return (
     <section id="instructors">
       <SectionHeader eyebrow="Faculty" title="Meet Your Instructors" />
-      <InstructorGrid instructors={data} />
+      <InstructorCarousel instructors={data} />
     </section>
   );
 }
@@ -101,7 +117,7 @@ export function IndustryLeadersSection() {
   return (
     <section id="leaders">
       <SectionHeader eyebrow="Mentorship" title="Industry Leaders" />
-      <InstructorGrid instructors={data} />
+      <InstructorCarousel instructors={data} reverse />
     </section>
   );
 }
