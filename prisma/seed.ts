@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import industryLeaders from "../scripts/industry-leaders-data.json";
 import starMentors from "../scripts/star-mentors-data.json";
 import faqData from "../scripts/faq-data.json";
+import successStories from "../scripts/success-stories-data.json";
 
 const prisma = new PrismaClient();
 
@@ -544,17 +545,22 @@ async function main() {
     }
   }
 
-  // ---- Success stories (global, unfiltered by city) — one per program ----
+  // ---- Success stories (global, unfiltered by city): real "Testimonials
+  // Given" roster from "Placements till date.xlsx" (see
+  // scripts/replace-success-stories.ts for field-mapping notes) ----
   await prisma.successStory.deleteMany();
   await prisma.successStory.createMany({
-    data: [
-      { studentName: "Rahul Sharma", courseName: "AI Pro: Generative AI & Agentic AI", roleLanded: "Software Engineer", company: "Amazon", description: "Went from a support role to writing production code in under 8 months, landing an SDE offer with Amazon.", packageLabel: "Support Exec to ₹12 LPA", order: 0 },
-      { studentName: "Priyanka Das", courseName: "Gen AI Powered Data Analytics", roleLanded: "Data Scientist", company: "Flipkart", description: "Made the leap from a non-tech background into a full-time data science role after building 3 capstone projects.", packageLabel: "Non-tech to ₹14 LPA", order: 1 },
-      { studentName: "Mohammed Ali", courseName: "Digital Marketing", roleLanded: "Performance Marketing Manager", company: "Accenture", description: "Turned a freelance marketing hustle into a structured, high-growth agency role.", packageLabel: "Freelancer to ₹9 LPA", order: 2 },
-      { studentName: "Ishita Verma", courseName: "Global & Investment Banking Operations", roleLanded: "Financial Analyst", company: "ICICI Bank", description: "Upskilled from a general commerce degree to a core banking operations analyst role.", packageLabel: "Graduate to ₹8 LPA", order: 3 },
-      { studentName: "Karan Mehta", courseName: "FutureStack: Data Science & GenAI", roleLanded: "Business Analyst", company: "Deloitte", description: "Accountant to analyst — used dashboards, ML and GenAI to move into a consulting BI role.", packageLabel: "Accountant to ₹12 LPA", order: 4 },
-      { studentName: "Sneha Reddy", courseName: "Full Stack Development with AI", roleLanded: "Frontend Developer", company: "Cognizant", description: "First job out of college, hired directly through an upGrad X placement drive.", packageLabel: "Fresher to ₹7 LPA", order: 5 },
-    ],
+    data: (successStories as any[]).map((s, order) => ({
+      studentName: s.studentName,
+      linkedinUrl: s.linkedinUrl,
+      courseName: s.courseName,
+      roleLanded: s.roleLanded,
+      company: s.company,
+      description: s.description,
+      packageLabel: s.packageLabel,
+      avatarUrl: null,
+      order,
+    })),
   });
 
   // ---- FAQ categories + FAQs: real content from "FAQs_X.docx" (see

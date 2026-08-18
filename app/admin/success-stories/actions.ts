@@ -16,6 +16,7 @@ async function data(formData: FormData) {
     description: str(formData.get("description")),
     packageLabel: str(formData.get("packageLabel")),
     avatarUrl: uploadedAvatar ?? strOrNull(formData.get("avatarUrl")),
+    linkedinUrl: strOrNull(formData.get("linkedinUrl")),
   };
 }
 

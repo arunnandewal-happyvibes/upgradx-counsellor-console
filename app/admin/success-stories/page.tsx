@@ -19,6 +19,7 @@ export default async function SuccessStoriesAdminPage() {
             <Th>Role</Th>
             <Th>Company</Th>
             <Th>Package</Th>
+            <Th>LinkedIn</Th>
             <Th></Th>
           </tr>
         </thead>
@@ -30,6 +31,20 @@ export default async function SuccessStoriesAdminPage() {
               <Td>{s.roleLanded}</Td>
               <Td>{s.company}</Td>
               <Td className="font-semibold text-brand-red">{s.packageLabel}</Td>
+              <Td>
+                {s.linkedinUrl ? (
+                  <a
+                    href={s.linkedinUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm font-semibold text-brand-red hover:underline"
+                  >
+                    Open profile ↗
+                  </a>
+                ) : (
+                  <span className="text-sm text-brand-gray-400">—</span>
+                )}
+              </Td>
               <Td>
                 <div className="flex gap-2">
                   <Link href={`/admin/success-stories/${s.id}`} className="text-sm font-semibold text-brand-red hover:underline">

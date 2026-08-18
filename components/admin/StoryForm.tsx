@@ -10,6 +10,7 @@ type Story = {
   description: string;
   packageLabel: string;
   avatarUrl?: string | null;
+  linkedinUrl?: string | null;
 };
 
 export function StoryForm({
@@ -44,6 +45,26 @@ export function StoryForm({
           <input required name="company" defaultValue={initial?.company} className={inputClass} />
         </Field>
       </div>
+      <Field
+        label="LinkedIn profile"
+        hint={
+          initial?.linkedinUrl ? (
+            <a href={initial.linkedinUrl} target="_blank" rel="noreferrer" className="text-brand-red hover:underline">
+              Open profile ↗ — grab their photo from here to upload above
+            </a>
+          ) : (
+            "Used to open their profile and grab a real headshot for the photo field above."
+          )
+        }
+      >
+        <input
+          type="url"
+          name="linkedinUrl"
+          defaultValue={initial?.linkedinUrl ?? ""}
+          placeholder="https://www.linkedin.com/in/..."
+          className={inputClass}
+        />
+      </Field>
       <Field label="Description (2-3 lines)">
         <textarea required name="description" defaultValue={initial?.description} rows={3} className={inputClass} />
       </Field>

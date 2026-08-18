@@ -45,6 +45,7 @@ model SuccessStory {
   id             String   @id @default(cuid())
   studentName    String
   avatarUrl      String?
+  linkedinUrl    String?
   courseName     String
   roleLanded     String
   company        String
