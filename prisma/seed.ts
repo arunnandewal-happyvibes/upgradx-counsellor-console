@@ -84,8 +84,9 @@ async function main() {
 
   // ---- Programs + certifications + curriculum ----
   // Content sourced directly from the upGrad X program E-Brochures. Durations for
-  // "Gen AI Powered Data Analytics" and "Digital Marketing" were not printed as an
-  // explicit "X Months" figure in their brochures (unlike the other four) — the
+  // "Gen AI Powered Data Analytics", "Digital Marketing", and "Gen AI Powered
+  // Data Science with Machine Learning" were not printed as an explicit
+  // "X Months" figure in their brochures (unlike the other four) — the
   // values below are reasonable placeholders and should be confirmed/edited here.
   const programDefs = [
     {
@@ -125,6 +126,54 @@ async function main() {
         [
           "Python for Data Analysis",
           "Python fundamentals, OOP, NumPy, Pandas and data visualization, plus GenAI-supported EDA. Build Credit Risk Analysis, Uber Trip Demand Analysis and stock market analysis projects.",
+        ],
+      ],
+    },
+    {
+      name: "Gen AI Powered Data Science with Machine Learning",
+      slug: "gen-ai-powered-data-science",
+      duration: "7 Months",
+      mode: "Offline",
+      category: "Data Science",
+      description:
+        "An end-to-end data science program spanning Excel, Power BI/Tableau, SQL, Python, statistics and machine learning — with Generative AI woven into every course, capped by an IIIT Bangalore add-on certification.",
+      bullets: [
+        "Excel, Power BI & Tableau dashboards with GenAI storytelling",
+        "SQL with cloud integration, Python, and AI-assisted statistics",
+        "18+ ML algorithms, deep learning, and GenAI/RAG/LLM workflows",
+      ],
+      brochureUrl: `${BLOB}/gen-ai-powered-data-science.pdf`,
+      certifications: [
+        {
+          name: "Gen AI Powered Data Science Certification",
+          partnerInstitution: "IIIT Bangalore",
+          brochureUrl: `${BLOB}/gen-ai-powered-data-science.pdf`,
+        },
+      ],
+      modules: [
+        [
+          "Excel & GenAI for Analytics",
+          "Advanced formulas, Goal Seek, Scenario Manager and Data Tables — plus GenAI for formula generation, KPI explanation and automated summaries. Build a Superstore Sales Dashboard with GPT and automated VBA + GenAI reports.",
+        ],
+        [
+          "Power BI & Tableau",
+          "End-to-end ETL and data modeling, DAX from fundamentals to advanced use cases, and GenAI-assisted data storytelling. Build a Home Loan Default dashboard, retail/superstore profitability dashboards, and dynamic Tableau dashboards with parameters and joins.",
+        ],
+        [
+          "SQL (with Cloud Integration)",
+          "Relational databases and ER modeling, advanced SQL joins/subqueries/window functions, query optimization using GenAI, and SQL + Azure cloud integration. Build an RSVP Movie Database and marketplace demand-supply analysis.",
+        ],
+        [
+          "Python for Data Analysis",
+          "Python fundamentals, functional programming, OOP, NumPy, Pandas and data visualization, plus GenAI-supported EDA. Build Credit Risk Analysis, Uber Trip Demand Analysis and stock market analysis projects.",
+        ],
+        [
+          "Statistics & Probability (AI-assisted)",
+          "Descriptive and inferential statistics, hypothesis testing, ANOVA and Chi-square, plus AI-assisted statistical interpretation. Build a Customer Churn Distribution Analysis and a Bank Credit Scoring statistical report.",
+        ],
+        [
+          "AI & Machine Learning",
+          "18+ ML algorithms and pipelines, feature engineering and hyperparameter tuning, model explainability (SHAP, LIME), deep learning (CNNs, RNNs, LSTMs), and Generative AI/RAG/LLM workflows with prompt engineering. Build Credit Risk & Churn Prediction models, a Demand Forecasting system, and LLM-powered apps deployed via Flask, Streamlit and Gradio.",
         ],
       ],
     },
