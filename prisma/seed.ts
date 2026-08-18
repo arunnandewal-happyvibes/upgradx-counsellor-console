@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import industryLeaders from "../scripts/industry-leaders-data.json";
+import starMentors from "../scripts/star-mentors-data.json";
 
 const prisma = new PrismaClient();
 
@@ -434,6 +435,29 @@ async function main() {
         tags: leader.tags,
         isIndustryLeader: true,
         cityId: bangalore.id,
+        order: instructorDefs.length + i,
+      },
+    });
+  }
+
+  // ---- Star Mentors: real city-based teaching staff from "Star mentor
+  // details.xlsx" (see scripts/add-star-mentors.ts for field-mapping notes).
+  const allCities = await prisma.city.findMany();
+  const cityBySlug = new Map(allCities.map((c) => [c.slug, c]));
+  for (const [i, mentor] of (starMentors as any[]).entries()) {
+    const city = cityBySlug.get(mentor.citySlug);
+    if (!city) continue;
+    await prisma.instructor.create({
+      data: {
+        name: mentor.name,
+        photoUrl: null,
+        linkedinUrl: mentor.linkedinUrl,
+        subjectTaught: mentor.subjectTaught,
+        bio: mentor.bio,
+        experienceYears: mentor.experienceYears,
+        tags: mentor.tags,
+        isIndustryLeader: false,
+        cityId: city.id,
         order: instructorDefs.length + i,
       },
     });

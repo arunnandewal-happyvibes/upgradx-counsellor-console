@@ -1,0 +1,83 @@
+[
+  {
+    "name": "Yashaswini R",
+    "linkedinUrl": "https://www.linkedin.com/in/yashaswinirnaik/",
+    "subjectTaught": "Data Science",
+    "bio": "Experienced Senior Data Analyst advancing into Data Science with over 10 years of experience.",
+    "experienceYears": 10,
+    "citySlug": "bangalore",
+    "tags": ["Senior Data Analyst"]
+  },
+  {
+    "name": "Munseena Zunaid",
+    "linkedinUrl": "https://www.linkedin.com/in/munseena-zunaid-68931b328/",
+    "subjectTaught": "Data Science and Full Stack Development",
+    "bio": "Technical mentor with over 7 years of experience — specializes in Java Full Stack, MERN Stack, React and Spring Boot.",
+    "experienceYears": 7,
+    "citySlug": "mangalore",
+    "tags": ["Java Full Stack", "MERN Stack"]
+  },
+  {
+    "name": "Anilkumar Manchikatla",
+    "linkedinUrl": "https://www.linkedin.com/in/anil-manchi/",
+    "subjectTaught": "Data Science, Data Analytics and AI",
+    "bio": "An IIT Roorkee Data Science & AI professional with 17 years of IT & EdTech experience, has built Enterprise Applications, AI/ML and GenAI solutions at Atos, Siemens, AstraZeneca, Ness, MouriTech, and CTE.",
+    "experienceYears": 17,
+    "citySlug": "hyderabad",
+    "tags": ["IIT Roorkee Alum", "Ex-Siemens", "Ex-AstraZeneca"]
+  },
+  {
+    "name": "Alhasan Mansuri",
+    "linkedinUrl": "https://www.linkedin.com/in/alhasan-mansuri-669356129/",
+    "subjectTaught": "Data Science",
+    "bio": "Business Intelligence Consultant with over 6 years of experience converting business problems into data-driven solutions in domains like consumer analytics, digital marketing, and engineering analytics.",
+    "experienceYears": 6,
+    "citySlug": "rajkot",
+    "tags": ["Business Intelligence", "Consumer Analytics"]
+  },
+  {
+    "name": "Nachiket Dixit",
+    "linkedinUrl": "https://www.linkedin.com/in/nachiket-dixit-data-scientist/",
+    "subjectTaught": "Data Science and Data Analytics",
+    "bio": "Data Scientist and Data Analytics Instructor with over 3 years of experience, passionate about transforming data into actionable business insights and building AI-powered solutions that create measurable impact.",
+    "experienceYears": 3,
+    "citySlug": "pune",
+    "tags": ["Data Analytics", "AI Solutions"]
+  },
+  {
+    "name": "Onkar Ghorpade",
+    "linkedinUrl": "https://www.linkedin.com/in/onkar-ghorpade-5172603b8/",
+    "subjectTaught": "Data Science",
+    "bio": "Data Science Trainer with experience in Data Science and Analytics with over 2 years of experience. Has experience simplifying complex concepts, mentoring learners, and using data-driven insights to solve real-world business problems.",
+    "experienceYears": 2,
+    "citySlug": "pune",
+    "tags": ["Data Science Trainer"]
+  },
+  {
+    "name": "Shubankar Reddy",
+    "linkedinUrl": "https://www.linkedin.com/in/shubhankar-reddy/",
+    "subjectTaught": "Data Science",
+    "bio": "Data Science Instructor, Python & SQL Trainer with over 5 years of experience. Focused on Data Analytics, Machine Learning, and practical problem-solving.",
+    "experienceYears": 5,
+    "citySlug": "sambhajinagar",
+    "tags": ["Python & SQL Trainer"]
+  },
+  {
+    "name": "Romit Bhalla",
+    "linkedinUrl": "https://www.linkedin.com/in/romit-bhalla9646/",
+    "subjectTaught": "Data Science and AI",
+    "bio": "AI & Data Science Instructor with over 5 years of experience and a passion for making complex technologies simple, practical, and industry-ready.",
+    "experienceYears": 5,
+    "citySlug": "jabalpur",
+    "tags": ["AI & Data Science"]
+  },
+  {
+    "name": "Sajjad Manzoor Mir",
+    "linkedinUrl": "https://www.linkedin.com/in/sajjad-manzoor-mir/",
+    "subjectTaught": "Data Science and AI",
+    "bio": "Data Science and AI instructor with 5+ years of experience in data-driven problem solving, technical training, and hands-on project mentoring.",
+    "experienceYears": 5,
+    "citySlug": "chandigarh",
+    "tags": ["Data-Driven Problem Solving"]
+  }
+]
