@@ -3,6 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { FaqSearchBar } from "@/components/faq/FaqSearchBar";
 import { Icon } from "@/components/ui/Icon";
 
+// FaqCategory.icon stores a Material Symbols icon name directly (e.g.
+// "quiz", "psychology") — this map only translates a few legacy short-key
+// values from before that change. Unrecognized values (the normal case now)
+// pass straight through to the Icon component.
 const ICONS: Record<string, string> = {
   briefcase: "work",
   "indian-rupee": "currency_rupee",
@@ -36,7 +40,7 @@ export default async function FaqIndexPage() {
           >
             <div>
               <div className="w-12 h-12 rounded bg-surface-container flex items-center justify-center mb-card-padding group-hover:bg-primary-fixed transition-colors">
-                <Icon name={ICONS[c.icon] ?? "help"} className="text-primary" />
+                <Icon name={ICONS[c.icon] ?? c.icon} className="text-primary" />
               </div>
               <h2 className="text-headline-sm text-on-surface mb-1 group-hover:text-primary transition-colors">
                 {c.name}

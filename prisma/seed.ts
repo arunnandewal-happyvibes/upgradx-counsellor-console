@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import industryLeaders from "../scripts/industry-leaders-data.json";
 import starMentors from "../scripts/star-mentors-data.json";
+import faqData from "../scripts/faq-data.json";
 
 const prisma = new PrismaClient();
 
@@ -556,62 +557,24 @@ async function main() {
     ],
   });
 
-  // ---- FAQ categories + FAQs ----
+  // ---- FAQ categories + FAQs: real content from "FAQs_X.docx" (see
+  // scripts/replace-faqs.ts for field-mapping notes) ----
   await prisma.faq.deleteMany();
   await prisma.faqCategory.deleteMany();
-  const faqDefs = [
-    {
-      name: "Placements", slug: "placements", icon: "briefcase",
-      faqs: [
-        ["Do you guarantee placement?", "We guarantee placement support — dedicated coordination, mock interviews, and drives — through 12 months of active job search, not a guaranteed offer."],
-        ["Which companies hire from upGrad X?", "Hiring partners include Amazon, Deloitte, TCS, Accenture, Flipkart, and more, varying by city and cohort."],
-        ["What's the average placement package?", "Packages vary by program and prior experience; recent outcomes range from ₹6 LPA to ₹15+ LPA."],
-      ],
-    },
-    {
-      name: "Pricing", slug: "pricing", icon: "indian-rupee",
-      faqs: [
-        ["Are EMI options available?", "Yes, no-cost EMI plans are available starting at 3 months, with longer tenures through partner NBFCs."],
-        ["Is there a refund policy?", "A full refund is available within the first 7 days of the program if you decide it isn't the right fit."],
-      ],
-    },
-    {
-      name: "Certifications", slug: "certifications", icon: "award",
-      faqs: [
-        ["Which certifications are recognized?", "Certifications are issued in partnership with institutions like IIIT Bangalore and PwC, depending on the program — see each program's brochure for its specific add-on certification."],
-        ["Can I download the program brochure?", "Yes — every program tile and detail page has a one-click brochure download with the full curriculum, tools covered and career outcomes."],
-      ],
-    },
-    {
-      name: "Quality of Teachers", slug: "quality-of-teachers", icon: "graduation-cap",
-      faqs: [
-        ["Who teaches the classes?", "Instructors are working professionals with 4+ years of industry experience, several from companies like Microsoft and Amazon."],
-        ["Are classes recorded?", "Classes are primarily live and offline; select sessions are recorded for revision only."],
-      ],
-    },
-    {
-      name: "Number of Classes", slug: "number-of-classes", icon: "calendar",
-      faqs: [
-        ["How many hours per week?", "Most programs run 9–12 hours per week across weekday evenings and weekend sessions."],
-        ["What happens if I miss a class?", "Missed sessions can be caught up through recap notes and a buddy-mentor system."],
-      ],
-    },
-    {
-      name: "Course Structure", slug: "course-structure", icon: "layout-list",
-      faqs: [
-        ["Is the course only theory?", "No — every program is built around hands-on modules, live projects and a final capstone application."],
-        ["Can I switch programs mid-way?", "Program switches are evaluated case-by-case with your counsellor within the first 2 weeks."],
-      ],
-    },
-  ];
-  for (const [i, cat] of faqDefs.entries()) {
+  for (const [i, cat] of (faqData as any[]).entries()) {
     await prisma.faqCategory.create({
       data: {
         name: cat.name,
         slug: cat.slug,
         icon: cat.icon,
         order: i,
-        faqs: { create: cat.faqs.map(([question, answer], order) => ({ question, answer, order })) },
+        faqs: {
+          create: cat.faqs.map(([question, answer]: [string, string], order: number) => ({
+            question,
+            answer,
+            order,
+          })),
+        },
       },
     });
   }
