@@ -7,18 +7,18 @@ type Partner = { id: string; name: string; logoUrl: string | null };
 
 function PartnerTile({ partner }: { partner: Partner }) {
   return (
-    <div className="elevate-3d flex flex-shrink-0 items-center gap-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 w-80">
-      <span className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-container-low">
+    <div className="elevate-3d flex flex-shrink-0 items-center gap-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 w-96">
+      <span className="flex h-24 w-24 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-container-low">
         {partner.logoUrl ? (
           <Image
             src={partner.logoUrl}
             alt={partner.name}
-            width={64}
-            height={64}
-            className="h-full w-full object-contain p-2"
+            width={96}
+            height={96}
+            className="h-full w-full object-contain p-1"
           />
         ) : (
-          <Icon name="domain" size={32} className="text-outline" />
+          <Icon name="domain" size={48} className="text-outline" />
         )}
       </span>
       <span className="text-headline-sm font-bold text-on-surface uppercase tracking-wide whitespace-nowrap">
