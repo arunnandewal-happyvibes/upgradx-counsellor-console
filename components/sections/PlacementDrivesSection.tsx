@@ -5,7 +5,7 @@ import { useCityFetch } from "@/lib/useCityFetch";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Icon } from "@/components/ui/Icon";
 
-type Drive = { id: string; company: string; role: string; date: string };
+type Drive = { id: string; company: string; role: string; date: string; city: { name: string } };
 
 export function PlacementDrivesSection() {
   const { data } = useCityFetch<Drive[]>("/api/drives");
@@ -29,6 +29,10 @@ export function PlacementDrivesSection() {
             <div className="flex items-center gap-1 text-body-sm text-secondary">
               <Icon name="work" size={16} />
               {d.role}
+            </div>
+            <div className="flex items-center gap-1 text-body-sm text-secondary">
+              <Icon name="location_on" size={16} />
+              {d.city.name}
             </div>
             <div className="flex items-center gap-1 text-body-sm text-secondary">
               <Icon name="calendar_today" size={16} />

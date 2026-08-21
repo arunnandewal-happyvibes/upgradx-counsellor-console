@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
-  const citySlug = req.nextUrl.searchParams.get("city");
   const all = req.nextUrl.searchParams.get("all") === "1";
-  if (!citySlug) return NextResponse.json([]);
 
+  // Shown across every centre (not filtered by city) — each drive carries
+  // its own city name so counsellors can still tell them apart.
   const drives = await prisma.placementDrive.findMany({
-    where: { city: { slug: citySlug } },
     orderBy: { date: "asc" },
     take: all ? undefined : 4,
+    include: { city: { select: { name: true } } },
   });
 
   return NextResponse.json(drives);

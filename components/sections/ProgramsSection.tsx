@@ -32,8 +32,8 @@ export async function ProgramsSection() {
                   background: `linear-gradient(135deg, ${i % 2 === 0 ? "#1a1c1c" : "#2f3131"}, #e41f26 150%)`,
                 }}
               />
-              <span className="relative text-white text-headline-md font-extrabold tracking-tight opacity-90">
-                {p.category}
+              <span className="relative text-white text-headline-sm font-extrabold tracking-tight opacity-90 text-center px-6 line-clamp-2">
+                {p.name}
               </span>
               <div className="absolute top-3 left-3 flex gap-2">
                 <span

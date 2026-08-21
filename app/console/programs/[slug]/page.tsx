@@ -54,6 +54,24 @@ export default async function ProgramDetailPage({ params }: { params: { slug: st
         <CurriculumAccordion modules={program.curriculumModules} />
       </section>
 
+      {program.certificateUrl && (
+        <section className="mb-section-gap">
+          <h2 className="mb-4 text-headline-sm text-on-surface">Certificate</h2>
+          <a
+            href={program.certificateUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="group flex w-full items-center justify-between rounded border border-surface-variant bg-surface-container-lowest px-card-padding py-4 hover:border-primary transition-colors"
+          >
+            <span className="flex items-center gap-2 text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors">
+              <Icon name="workspace_premium" className="text-primary" size={20} fill />
+              Certificate of Completion
+            </span>
+            <Icon name="open_in_new" className="text-primary shrink-0" size={20} />
+          </a>
+        </section>
+      )}
+
       {leaders.length > 0 && (
         <section>
           <h2 className="mb-4 text-headline-sm text-on-surface">Industry Leaders on this Track</h2>

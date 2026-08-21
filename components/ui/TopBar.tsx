@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CityDropdown } from "@/components/ui/CityDropdown";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 import { TopNavLinks } from "@/components/ui/TopNavLinks";
@@ -28,7 +27,6 @@ export function TopBar() {
         >
           <Logo height={30} priority />
         </Link>
-        <CityDropdown />
       </div>
 
       <TopNavLinks />

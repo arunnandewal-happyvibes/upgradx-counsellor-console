@@ -66,6 +66,7 @@ model Program {
   description String
   bullets     String[]
   brochureUrl String?
+  certificateUrl String?
   order       Int      @default(0)
 
   certifications    Certification[]

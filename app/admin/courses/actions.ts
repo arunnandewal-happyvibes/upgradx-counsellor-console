@@ -18,6 +18,7 @@ export async function createProgram(formData: FormData) {
   const certs = linesToTuples(formData.get("certifications"), 3);
   const modules = linesToTuples(formData.get("modules"), 2);
   const uploadedBrochure = await maybeUploadImage(formData, "brochureFile", "brochures");
+  const uploadedCertificate = await maybeUploadImage(formData, "certificateFile", "certificates");
 
   await prisma.program.create({
     data: {
@@ -29,6 +30,7 @@ export async function createProgram(formData: FormData) {
       description: str(formData.get("description")),
       bullets: linesToArray(formData.get("bullets")),
       brochureUrl: uploadedBrochure ?? strOrNull(formData.get("brochureUrl")),
+      certificateUrl: uploadedCertificate ?? strOrNull(formData.get("certificateUrl")),
       certifications: {
         create: certs.map(([certName, partnerInstitution, brochureUrl]) => ({
           name: certName,
@@ -51,6 +53,7 @@ export async function updateProgram(id: string, formData: FormData) {
   const certs = linesToTuples(formData.get("certifications"), 3);
   const modules = linesToTuples(formData.get("modules"), 2);
   const uploadedBrochure = await maybeUploadImage(formData, "brochureFile", "brochures");
+  const uploadedCertificate = await maybeUploadImage(formData, "certificateFile", "certificates");
 
   await prisma.$transaction([
     prisma.certification.deleteMany({ where: { programId: id } }),
@@ -65,6 +68,7 @@ export async function updateProgram(id: string, formData: FormData) {
         description: str(formData.get("description")),
         bullets: linesToArray(formData.get("bullets")),
         brochureUrl: uploadedBrochure ?? strOrNull(formData.get("brochureUrl")),
+        certificateUrl: uploadedCertificate ?? strOrNull(formData.get("certificateUrl")),
         certifications: {
           create: certs.map(([certName, partnerInstitution, brochureUrl]) => ({
             name: certName,

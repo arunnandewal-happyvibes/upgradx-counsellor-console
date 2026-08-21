@@ -10,6 +10,7 @@ type Program = {
   description: string;
   bullets: string[];
   brochureUrl?: string | null;
+  certificateUrl?: string | null;
   certifications: { name: string; partnerInstitution: string; brochureUrl: string }[];
   curriculumModules: { title: string; content: string }[];
 };
@@ -57,6 +58,13 @@ export function ProgramForm({
         fileName="brochureFile"
         defaultUrl={initial?.brochureUrl}
         hint="This is the single-click download shown on the program's tile and detail page."
+      />
+      <FileField
+        label="Completion certificate (PDF)"
+        urlName="certificateUrl"
+        fileName="certificateFile"
+        defaultUrl={initial?.certificateUrl}
+        hint="Sample of the certificate a student receives on completing this program — shown on the program page and opens in a new tab when clicked."
       />
       <Field label="Certifications" hint="One per line: Certification Name | Partner Institution | Brochure URL">
         <textarea

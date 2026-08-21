@@ -16,7 +16,7 @@ type Story = {
 
 function StoryCard({ s }: { s: Story }) {
   return (
-    <article className="min-w-[260px] w-[260px] flex-shrink-0 b2b-card elevate-3d hover:border-2 p-card-padding flex flex-col gap-3">
+    <article className="min-w-[260px] w-[260px] flex-shrink-0 elevate-3d bg-gradient-to-br from-surface-container-lowest to-primary-fixed/25 border-2 border-primary/20 hover:border-primary rounded-xl shadow-[0_6px_18px_-8px_rgba(228,31,38,0.35)] p-card-padding flex flex-col gap-3">
       <div className="flex items-start gap-3">
         <Avatar src={s.avatarUrl} name={s.studentName} size={48} />
         <div className="flex flex-1 min-w-0 items-start justify-between gap-2">
@@ -47,15 +47,16 @@ function StoryCard({ s }: { s: Story }) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 mt-2 border-l-2 border-outline-variant pl-3">
+      <div className="flex flex-col gap-1 mt-1 border-l-2 border-primary/30 pl-3">
         <span className="text-body-sm text-secondary">Landed Role</span>
-        <p className="text-body-lg font-semibold text-on-surface editable-field">{s.roleLanded}</p>
-        <p className="text-headline-sm text-primary font-bold mt-1 editable-field">{s.company}</p>
+        <p className="text-body-sm font-semibold text-on-surface truncate editable-field">
+          {s.roleLanded} <span className="text-primary font-bold">@ {s.company}</span>
+        </p>
       </div>
 
-      <p className="text-body-sm text-on-surface-variant line-clamp-3 mt-2 editable-field">{s.description}</p>
+      <p className="text-body-sm text-on-surface-variant line-clamp-3 mt-1 editable-field">{s.description}</p>
 
-      <div className="mt-auto pt-4 border-t border-surface-container">
+      <div className="mt-auto pt-4 border-t border-primary/15">
         <span className="text-label-bold font-bold text-secondary uppercase block mb-1">Placement Package</span>
         <span className="text-headline-sm text-primary font-bold editable-field">{s.packageLabel}</span>
       </div>
