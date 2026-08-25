@@ -73,6 +73,19 @@ model Program {
   curriculumModules CurriculumModule[]
   batches           Batch[]
   industryLeaderVisibility SectionVisibility[]
+  addOnCertificates AddOnCertificate[]
+
+  createdAt DateTime @default(now())
+}
+
+// A single add-on certificate PDF (e.g. an extra partner credential) that
+// can be earned via more than one program — admin uploads it once and picks
+// which programs it applies to, rather than re-uploading per program.
+model AddOnCertificate {
+  id       String    @id @default(cuid())
+  name     String
+  pdfUrl   String
+  programs Program[]
 
   createdAt DateTime @default(now())
 }

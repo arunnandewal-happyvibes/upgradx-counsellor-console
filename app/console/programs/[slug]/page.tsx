@@ -11,6 +11,7 @@ export default async function ProgramDetailPage({ params }: { params: { slug: st
     include: {
       certifications: true,
       curriculumModules: { orderBy: { order: "asc" } },
+      addOnCertificates: true,
     },
   });
   if (!program) notFound();
@@ -64,6 +65,29 @@ export default async function ProgramDetailPage({ params }: { params: { slug: st
         <h2 className="mb-4 text-headline-sm text-on-surface">Curriculum</h2>
         <CurriculumAccordion modules={program.curriculumModules} />
       </section>
+
+      {program.addOnCertificates.length > 0 && (
+        <section className="mb-section-gap">
+          <h2 className="mb-4 text-headline-sm text-on-surface">Additional Eligible Certificates</h2>
+          <div className="flex flex-col gap-2">
+            {program.addOnCertificates.map((ac) => (
+              <a
+                key={ac.id}
+                href={ac.pdfUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex w-full items-center justify-between rounded border border-surface-variant bg-surface-container-lowest px-card-padding py-4 hover:border-primary transition-colors"
+              >
+                <span className="flex items-center gap-2 text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors">
+                  <Icon name="verified" className="text-primary" size={20} fill />
+                  {ac.name}
+                </span>
+                <Icon name="open_in_new" className="text-primary shrink-0" size={20} />
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
 
       {leaders.length > 0 && (
         <section>

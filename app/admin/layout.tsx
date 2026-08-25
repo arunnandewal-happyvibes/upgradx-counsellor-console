@@ -7,6 +7,7 @@ const NAV = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/cities", label: "Cities" },
   { href: "/admin/courses", label: "Courses" },
+  { href: "/admin/addon-certificates", label: "Add-on Certificates" },
   { href: "/admin/hiring-partners", label: "Hiring Partners" },
   { href: "/admin/instructors", label: "Instructors" },
   { href: "/admin/industry-leaders", label: "Industry Leaders" },

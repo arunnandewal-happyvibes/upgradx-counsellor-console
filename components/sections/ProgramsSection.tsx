@@ -12,7 +12,7 @@ const MODE_BADGE: Record<string, string> = {
 export async function ProgramsSection() {
   const programs = await prisma.program.findMany({
     orderBy: { order: "asc" },
-    include: { certifications: true },
+    include: { certifications: true, addOnCertificates: true },
   });
   if (programs.length === 0) return null;
 
@@ -86,6 +86,19 @@ export async function ProgramsSection() {
                       </span>
                     ),
                   )}
+                  {p.addOnCertificates.map((ac) => (
+                    <a
+                      key={ac.id}
+                      href={ac.pdfUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn-3d inline-flex items-center gap-1.5 rounded-full border border-tertiary px-3 py-1.5 text-body-sm font-medium text-on-surface hover:border-primary hover:text-primary transition-colors"
+                      title={`Open ${ac.name}`}
+                    >
+                      <Icon name="verified" size={14} fill />
+                      {ac.name}
+                    </a>
+                  ))}
                 </div>
                 <div className="flex items-center gap-3">
                   <LinkButton href={`/console/programs/${p.slug}`} variant="surface" className="flex-1 justify-center">
