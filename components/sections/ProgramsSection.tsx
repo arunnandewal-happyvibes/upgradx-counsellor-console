@@ -61,12 +61,21 @@ export async function ProgramsSection() {
                 ))}
               </div>
               <div className="mt-auto pt-4 border-t border-surface-container border-dashed">
-                <p className="text-body-sm font-bold text-primary mb-4">
-                  Certifications Eligible:{" "}
-                  <span className="text-on-surface">
-                    {p.certifications.map((c) => c.partnerInstitution).join(", ")}
-                  </span>
-                </p>
+                <p className="text-body-sm font-bold text-primary mb-2">Eligible Add-ons:</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {p.certifications.map((c) => (
+                    <a
+                      key={c.id}
+                      href={c.brochureUrl}
+                      download
+                      className="btn-3d inline-flex items-center gap-1.5 rounded-full border border-outline-variant px-3 py-1.5 text-body-sm font-medium text-on-surface hover:border-primary hover:text-primary transition-colors"
+                      title={`Download ${c.name} brochure`}
+                    >
+                      <Icon name="download" size={14} />
+                      {c.partnerInstitution}
+                    </a>
+                  ))}
+                </div>
                 <div className="flex items-center gap-3">
                   <LinkButton href={`/console/programs/${p.slug}`} variant="surface" className="flex-1 justify-center">
                     View Details
@@ -75,8 +84,8 @@ export async function ProgramsSection() {
                     href={p.brochureUrl ?? p.certifications[0]?.brochureUrl ?? "#"}
                     download
                     className="btn-3d w-10 h-10 flex items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary transition-all"
-                    aria-label="Download brochure"
-                    title="Download brochure"
+                    aria-label="Download program brochure"
+                    title="Download program brochure"
                   >
                     <Icon name="download" size={20} />
                   </a>
