@@ -42,12 +42,32 @@ const DEFAULT_SETTINGS: NonNullable<Settings> = {
 
 const MATCH_LABELS = ["Best Match", "Also Great", "Worth Exploring"];
 
+const MOTIVATIONAL_LINES: Record<string, string> = {
+  "B.Tech": "Your technical foundation is strong — let's turn it into a career that matches your ambition.",
+  "B.Com": "Your commerce background is a launchpad — let's build the career you've been working towards.",
+  BCA: "You've already built the programming foundation — now let's build the career to match it.",
+  "BSc - CS": "Your CS foundation puts you ahead — let's turn that into real-world momentum.",
+  BBA: "Your business instincts are ready for the real world — let's put them to work.",
+  "MSc - CS": "Your advanced CS expertise deserves an equally advanced career path.",
+  Other: "Whatever your path so far, your next big career move starts right here.",
+};
+
 function findRecommendation(recommendations: Recommendation[], degree: string): Recommendation | null {
   return (
     recommendations.find((r) => r.degree.toLowerCase() === degree.toLowerCase()) ??
     recommendations.find((r) => r.degree === "Other") ??
     null
   );
+}
+
+function getGreeting(hour: number) {
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+}
+
+function getMotivationalLine(degree: string) {
+  return MOTIVATIONAL_LINES[degree] ?? MOTIVATIONAL_LINES.Other;
 }
 
 function RecommendationCard({
@@ -60,10 +80,18 @@ function RecommendationCard({
   why: string | null;
 }) {
   if (!program) return null;
+  const isBestMatch = rank === 0;
   return (
-    <div className="elevate-3d flex flex-col gap-2 rounded-lg border border-surface-variant bg-surface-container-lowest p-5 hover:border-primary transition-colors">
+    <div
+      className={`elevate-3d animate-rec-card flex flex-col gap-2.5 rounded-lg border p-[22px] transition-colors ${
+        isBestMatch
+          ? "border-primary bg-surface-container-lowest animate-best-match-glow"
+          : "border-surface-variant bg-surface-container-lowest hover:border-primary"
+      }`}
+      style={{ animationDelay: `${rank * 130}ms` }}
+    >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-label-bold font-bold uppercase tracking-wide text-primary">{MATCH_LABELS[rank]}</span>
+        <span className="text-[13px] font-bold uppercase tracking-wide text-primary">{MATCH_LABELS[rank]}</span>
         <span className="bg-surface-container-highest px-2 py-0.5 text-on-surface text-[10px] font-bold tracking-wider uppercase rounded-full">
           {program.duration}
         </span>
@@ -90,40 +118,48 @@ function PersonalizedHero({ profile, recommendations }: { profile: LeadProfile; 
         { program: rec.choice3Program, why: rec.choice3Why },
       ].filter((c) => c.program)
     : [];
+  const [greeting, setGreeting] = useState("Welcome");
+  const firstName = profile.name.split(" ")[0];
+
+  useEffect(() => {
+    setGreeting(getGreeting(new Date().getHours()));
+  }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-10 gap-gutter">
-      <div className="md:col-span-3 b2b-card elevate-3d p-6 flex flex-col justify-center relative overflow-hidden bg-surface-bright">
-        <div className="absolute top-0 right-0 w-40 h-40 bg-primary opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-        <span className="text-label-bold font-bold uppercase tracking-wide text-secondary mb-2">Welcome back</span>
-        <h1 className="text-headline-md text-on-surface mb-3 leading-tight">
-          Hi <span className="text-primary">{profile.name.split(" ")[0]}</span>!
+    <div className="grid grid-cols-1 md:grid-cols-10 gap-[18px]">
+      <div className="md:col-span-4 b2b-card elevate-3d p-[26px] flex flex-col justify-center relative overflow-hidden bg-surface-bright">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+        <span className="text-label-bold font-bold uppercase tracking-wide text-secondary mb-2">Welcome</span>
+        <h1 className="mb-3 leading-tight flex flex-col gap-0.5">
+          <span className="text-body-lg text-on-surface-variant font-medium">{greeting},</span>
+          <span className="text-[38px] leading-[1.1] font-extrabold text-primary tracking-tight">{firstName}!</span>
         </h1>
         {profile.degree && (
-          <p className="text-body-md text-on-surface-variant mb-3">
+          <p className="text-[15px] text-on-surface-variant mb-4">
             <span className="font-semibold text-on-surface">{profile.degree}</span> graduate
           </p>
         )}
         {profile.skills.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {profile.skills.slice(0, 6).map((s) => (
               <span
                 key={s}
-                className="bg-surface-container-high text-on-surface-variant text-label-bold font-bold px-2 py-1 rounded border border-outline-variant"
+                className="bg-surface-container-high text-on-surface-variant text-[13px] font-bold px-2.5 py-1.5 rounded border border-outline-variant"
               >
                 {s}
               </span>
             ))}
           </div>
         )}
+        <p className="mt-4 pt-4 border-t border-outline-variant text-[15px] leading-snug text-on-surface-variant italic">
+          {getMotivationalLine(profile.degree)}
+        </p>
       </div>
 
-      <div className="md:col-span-7 flex flex-col gap-3">
-        <span className="text-label-bold font-bold uppercase tracking-wide text-secondary">
-          Recommended for you
-        </span>
+      <div className="md:col-span-6 flex flex-col gap-[14px]">
+        <span className="text-[13px] font-bold uppercase tracking-wide text-secondary">Recommended for you</span>
         {choices.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-gutter">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-[18px]">
             {choices.map((c, i) => (
               <RecommendationCard key={i} rank={i} program={c.program} why={c.why} />
             ))}
