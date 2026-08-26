@@ -563,8 +563,8 @@ async function main() {
     })),
   });
 
-  // ---- FAQ categories + FAQs: real content from "FAQs_X.docx" (see
-  // scripts/replace-faqs.ts for field-mapping notes) ----
+  // ---- FAQ categories + FAQs: real content from "FAQs - 6 categories.docx"
+  // (see scripts/replace-faqs.ts for field-mapping notes) ----
   await prisma.faq.deleteMany();
   await prisma.faqCategory.deleteMany();
   for (const [i, cat] of (faqData as any[]).entries()) {

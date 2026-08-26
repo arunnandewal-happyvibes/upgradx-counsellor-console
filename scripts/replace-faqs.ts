@@ -4,22 +4,19 @@ import faqData from "./faq-data.json";
 const prisma = new PrismaClient();
 
 // Replaces the FAQ section with the real content from the user-supplied
-// "FAQs_X.docx". Every question and answer below is copied verbatim from
-// that document (including its "(UpGrad)" source tags) — nothing here is
-// invented. Per explicit request, FAQs are NOT grouped by program/section
-// header; instead every question from every program table is reasoned into
-// one of 6 fixed topical categories (Placements, Pricing, Certifications,
-// Quality of Teachers, Number of Classes, Course Structure — same set and
-// slugs as the original placeholder FAQ data). The source document is
-// almost entirely program-curriculum content, so the distribution across
-// these 6 buckets is naturally uneven: Course Structure absorbs most
-// questions (curriculum, tools, eligibility, projects), while Pricing,
-// Quality of Teachers, and Number of Classes each match only a single real
-// question in the whole document — no filler was added to pad them out.
-// One paragraph in the source doc (an editorial note introducing the
-// "Comparison FAQs" section, addressed to whoever builds the site) is not a
-// question/answer pair and has no home in the Faq/FaqCategory schema, so
-// it's intentionally omitted — see the docx section 10 intro line.
+// "FAQs - 6 categories.docx". That document is itself already organized
+// under 6 top-level headings — Placements, Pricing, Certifications, Quality
+// of Teachers, Number of Classes, Course Structure — so each question was
+// placed under its own doc heading with no re-bucketing needed. Every
+// question/answer is copied verbatim (including "(upGrad)" source tags
+// where the doc has them); a couple of multi-paragraph answers (e.g. the
+// additional-certificates list, the No-Cost vs Standard EMI comparison)
+// were joined with newlines to keep their original list structure. Course
+// Structure carries per-program sub-sections from the doc (Data Science,
+// Full Stack ×2, Digital Marketing, Data Analytics, AI Pro, FutureStack,
+// CGIBO) flattened into one category per the doc's own top-level grouping —
+// several near-duplicate questions (e.g. "How long is the program?")
+// appear multiple times with different real per-program answers.
 async function main() {
   await prisma.faq.deleteMany();
   await prisma.faqCategory.deleteMany();
