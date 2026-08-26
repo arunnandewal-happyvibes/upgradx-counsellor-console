@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { isSectionVisible } from "@/lib/section-visibility";
 import { CurriculumAccordion } from "@/components/programs/CurriculumAccordion";
@@ -60,6 +61,24 @@ export default async function ProgramDetailPage({ params }: { params: { slug: st
           )}
         </div>
       </header>
+
+      <div className="mb-section-gap elevate-3d flex items-start gap-3 rounded border border-surface-variant bg-surface-container-lowest p-card-padding">
+        <Icon name="policy" className="text-primary mt-0.5 shrink-0" size={22} />
+        <div>
+          <p className="mb-1 text-body-md font-semibold text-on-surface">Career Services &amp; Placement Assistance Policy</p>
+          <p className="mb-2 text-body-sm text-on-surface-variant">
+            Placement support is facilitative, not guaranteed — read the eligibility requirements, activation
+            process, learner responsibilities and disciplinary policy that apply to this program.
+          </p>
+          <Link
+            href="/console/career-services-policy"
+            className="inline-flex items-center gap-1 text-body-sm font-bold text-primary hover:underline"
+          >
+            View Full Policy
+            <Icon name="arrow_forward" size={16} />
+          </Link>
+        </div>
+      </div>
 
       <section className="mb-section-gap">
         <h2 className="mb-4 text-headline-sm text-on-surface">Curriculum</h2>
