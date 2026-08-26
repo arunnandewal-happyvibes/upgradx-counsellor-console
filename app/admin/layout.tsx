@@ -21,6 +21,8 @@ const NAV = [
   { href: "/admin/journey-steps", label: "Journey Steps" },
   { href: "/admin/section-visibility", label: "Section Visibility" },
   { href: "/admin/career-services-policy", label: "Career Services Policy" },
+  { href: "/admin/home-screen", label: "Home Screen (Default)" },
+  { href: "/admin/recommendations", label: "Recommendations" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

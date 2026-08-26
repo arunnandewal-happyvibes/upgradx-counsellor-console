@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 import { setWelcomeName } from "@/lib/welcome";
+import { setLeadProfile } from "@/lib/leadProfile";
 
 const DEGREE_TAGS = ["B.Tech", "B.Com", "BCA", "BSc - CS", "BBA", "MSc - CS"];
 const SKILL_TAGS = [
@@ -139,6 +140,7 @@ export function OnboardingForm() {
       });
       if (!res.ok) throw new Error("Could not save details");
       setWelcomeName(form.name.trim().split(/\s+/)[0] || form.name.trim());
+      setLeadProfile({ name: form.name.trim(), degree: form.degree, skills: form.skills });
       router.push("/console");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

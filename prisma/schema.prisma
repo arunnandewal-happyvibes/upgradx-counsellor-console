@@ -82,8 +82,49 @@ model Program {
   batches           Batch[]
   industryLeaderVisibility SectionVisibility[]
   addOnCertificates AddOnCertificate[]
+  degreeRecChoice1  DegreeRecommendation[] @relation("DegreeRecChoice1")
+  degreeRecChoice2  DegreeRecommendation[] @relation("DegreeRecChoice2")
+  degreeRecChoice3  DegreeRecommendation[] @relation("DegreeRecChoice3")
 
   createdAt DateTime @default(now())
+}
+
+// One row per degree (matches the onboarding flow's degree tags, plus
+// "Other" as the fallback bucket for a custom-typed degree). Admin-editable
+// as a single spreadsheet-style table at /admin/recommendations — each
+// degree recommends up to 3 programs with a short "why".
+model DegreeRecommendation {
+  id     String @id @default(cuid())
+  degree String @unique
+  order  Int    @default(0)
+
+  choice1Program   Program? @relation("DegreeRecChoice1", fields: [choice1ProgramId], references: [id])
+  choice1ProgramId String?
+  choice1Why       String?
+
+  choice2Program   Program? @relation("DegreeRecChoice2", fields: [choice2ProgramId], references: [id])
+  choice2ProgramId String?
+  choice2Why       String?
+
+  choice3Program   Program? @relation("DegreeRecChoice3", fields: [choice3ProgramId], references: [id])
+  choice3ProgramId String?
+  choice3Why       String?
+}
+
+// Singleton row (there is only ever one) holding the copy shown on the
+// console home hero when a student skips onboarding (no personalized
+// profile to show recommendations for) — admin-editable at
+// /admin/home-screen.
+model HomeScreenSettings {
+  id                     String   @id @default(cuid())
+  headline               String   @default("can transform your journey") // shown after a fixed, brand-red "upGrad X" prefix
+  subheadline            String   @default("Offline, mentor-led programs built with hiring partners — from classroom to career, in one connected track.")
+  primaryCtaLabel        String   @default("Explore Programs")
+  secondaryCtaLabel      String   @default("Book Counselling")
+  placementRecordPercent String   @default("85%")
+  placementRecordCaption String   @default("Avg. successful transitions within 6 months")
+  careerGrowthCaption    String   @default("Tailored pathways for senior roles.")
+  updatedAt              DateTime @updatedAt
 }
 
 // A single add-on certificate PDF (e.g. an extra partner credential) that
