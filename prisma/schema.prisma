@@ -26,12 +26,20 @@ model City {
 model Lead {
   id            String   @id @default(cuid())
   name          String
-  phone         String
-  email         String
-  qualification String
-  city          City     @relation(fields: [cityId], references: [id])
-  cityId        String
-  createdAt     DateTime @default(now())
+  // Legacy fields from the original single-page form — kept nullable rather
+  // than dropped so existing lead records aren't destroyed. The dynamic
+  // swipe-through onboarding no longer asks for these.
+  phone         String?
+  email         String?
+  qualification String?
+  city          City?    @relation(fields: [cityId], references: [id])
+  cityId        String?
+  // Fields captured by the dynamic onboarding flow.
+  graduation         String? // e.g. "B.Tech", or a custom-typed degree
+  graduationCategory String? // "Tech" | "Non-Tech" — only meaningful for a custom degree
+  cgpa               String?
+  skills             String[]
+  createdAt DateTime @default(now())
 }
 
 model HiringPartner {

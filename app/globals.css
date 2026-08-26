@@ -153,6 +153,34 @@ body {
   animation: welcome-pulse-ring 2s ease-out infinite;
 }
 
+/* Onboarding step transition — each new question "swipes up" into place. */
+@keyframes onboard-step-in {
+  0% {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes onboard-step-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-36px);
+  }
+}
+.animate-onboard-step-in {
+  animation: onboard-step-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.animate-onboard-step-out {
+  animation: onboard-step-out 0.22s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
 /* Hiring-partner carousel — a slow, continuous single-line "float" (paused on hover). */
 @keyframes partners-flow {
   from {
