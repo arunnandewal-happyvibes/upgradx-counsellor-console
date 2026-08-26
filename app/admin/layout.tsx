@@ -20,6 +20,7 @@ const NAV = [
   { href: "/admin/city-contacts", label: "City Contacts" },
   { href: "/admin/journey-steps", label: "Journey Steps" },
   { href: "/admin/section-visibility", label: "Section Visibility" },
+  { href: "/admin/career-services-policy", label: "Career Services Policy" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

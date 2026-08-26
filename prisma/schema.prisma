@@ -229,3 +229,24 @@ model SectionVisibility {
 
   @@unique([sectionKey, programId])
 }
+
+// Singleton row (there is only ever one) holding the editable content of the
+// public Career Services & Placement Assistance Policy page. `body` uses a
+// small line-based markup so the whole document can be edited in one
+// textarea, matching the admin panel's existing "plain text with light
+// syntax" convention (e.g. FAQ / curriculum forms) rather than a nested
+// block-editor UI:
+//   "## heading text"   -> section heading
+//   "### heading text"  -> sub-heading
+//   "**label**"         -> a standalone bold label line
+//   "- item"            -> bullet list item (consecutive lines group into one list)
+//   any other line      -> a paragraph
+// Blank lines are ignored (purely for readability in the textarea).
+model CareerServicesPolicy {
+  id            String   @id @default(cuid())
+  title         String   @default("Career Services & Placement Assistance Policy")
+  version       String   @default("Version 1.0")
+  effectiveDate String   @default("Effective Date: [DD/MM/YYYY]")
+  body          String
+  updatedAt     DateTime @updatedAt
+}

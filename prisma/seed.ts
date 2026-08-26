@@ -3,6 +3,7 @@ import industryLeaders from "../scripts/industry-leaders-data.json";
 import starMentors from "../scripts/star-mentors-data.json";
 import faqData from "../scripts/faq-data.json";
 import successStories from "../scripts/success-stories-data.json";
+import { CAREER_SERVICES_POLICY_SEED } from "../scripts/career-services-policy-seed-data";
 
 const prisma = new PrismaClient();
 
@@ -601,6 +602,14 @@ async function main() {
       date.setDate(date.getDate() + days);
       await prisma.eventOccurrence.create({ data: { eventId: event.id, cityId: city.id, date } });
     }
+  }
+
+  // ---- Career Services & Placement Assistance Policy (singleton row) ----
+  const existingPolicy = await prisma.careerServicesPolicy.findFirst();
+  if (existingPolicy) {
+    await prisma.careerServicesPolicy.update({ where: { id: existingPolicy.id }, data: CAREER_SERVICES_POLICY_SEED });
+  } else {
+    await prisma.careerServicesPolicy.create({ data: CAREER_SERVICES_POLICY_SEED });
   }
 
   console.log("Seed complete.");
