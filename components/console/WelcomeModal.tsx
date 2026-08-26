@@ -44,7 +44,7 @@ export function WelcomeModal() {
     >
       <div
         className={cn(
-          "relative w-full max-w-sm bg-surface-container-lowest rounded-2xl border-t-4 border-t-primary shadow-2xl p-8 text-center",
+          "relative w-[92vw] sm:w-[40vw] sm:min-w-[460px] max-w-2xl bg-surface-container-lowest rounded-2xl border-t-4 border-t-primary shadow-2xl p-12 text-center",
           closing ? "opacity-0 scale-95 transition-all duration-200" : "animate-welcome-card",
         )}
         onClick={(e) => e.stopPropagation()}
@@ -52,22 +52,22 @@ export function WelcomeModal() {
         <button
           onClick={close}
           aria-label="Close"
-          className="absolute top-3 right-3 text-secondary hover:text-primary transition-colors"
+          className="absolute top-4 right-4 text-secondary hover:text-primary transition-colors"
         >
-          <Icon name="close" size={20} />
+          <Icon name="close" size={24} />
         </button>
 
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white animate-welcome-pulse">
-          <Icon name="celebration" size={32} fill />
+        <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-primary text-white animate-welcome-pulse">
+          <Icon name="celebration" size={44} fill />
         </div>
 
-        <p className="text-label-bold font-bold uppercase tracking-wide text-primary mb-2">
+        <p className="text-[15px] font-bold uppercase tracking-wide text-primary mb-3">
           Welcome to upGrad X
         </p>
-        <h2 className="text-headline-md text-on-surface mb-3 leading-tight">
+        <h2 className="text-display-lg text-on-surface mb-4 leading-tight">
           Welcome, {name}!
         </h2>
-        <p className="text-body-lg text-on-surface-variant mb-6">
+        <p className="text-body-lg text-on-surface-variant mb-8">
           We're here to help you transform your life — let's find the program that gets you there.
         </p>
 
