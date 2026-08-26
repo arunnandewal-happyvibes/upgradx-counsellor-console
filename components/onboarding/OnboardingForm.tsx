@@ -51,7 +51,7 @@ function TagChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "btn-3d rounded-full border px-4 py-2 text-body-sm font-semibold transition-colors",
+        "btn-3d rounded-full border-2 px-6 py-3.5 text-body-lg font-semibold transition-colors",
         selected
           ? "border-primary bg-primary text-on-primary"
           : "border-outline-variant bg-white text-on-surface hover:border-primary hover:text-primary",
@@ -147,30 +147,30 @@ export function OnboardingForm() {
   };
 
   const inputClass =
-    "h-12 w-full px-4 text-body-lg rounded border border-surface-variant bg-white text-on-surface text-center transition-colors focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary";
+    "h-16 w-full px-6 text-headline-sm rounded-lg border-2 border-surface-variant bg-white text-on-surface text-center transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary";
 
   const animClass = leaving ? "animate-onboard-step-out" : "animate-onboard-step-in";
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-10">
       <div className="flex items-center justify-between">
-        <div className="flex gap-1.5">
+        <div className="flex gap-2">
           {Array.from({ length: STEP_COUNT }).map((_, i) => (
             <span
               key={i}
-              className={cn("h-1.5 w-6 rounded-full transition-colors", i <= step ? "bg-primary" : "bg-surface-variant")}
+              className={cn("h-2.5 w-12 rounded-full transition-colors", i <= step ? "bg-primary" : "bg-surface-variant")}
             />
           ))}
         </div>
-        <button type="button" onClick={skip} className="text-body-sm font-semibold text-secondary hover:text-primary transition-colors">
+        <button type="button" onClick={skip} className="text-body-lg font-semibold text-secondary hover:text-primary transition-colors">
           Skip for now →
         </button>
       </div>
 
-      <div className="min-h-[220px] flex flex-col justify-center overflow-hidden">
+      <div className="min-h-[380px] flex flex-col justify-center overflow-hidden">
         {step === 0 && (
-          <div key="step-0" className={cn("flex flex-col items-center gap-5 text-center", animClass)}>
-            <h2 className="text-headline-sm font-semibold text-on-surface">Hey, what should we call you?</h2>
+          <div key="step-0" className={cn("flex flex-col items-center gap-8 text-center", animClass)}>
+            <h2 className="text-display-lg font-semibold text-on-surface">Hey, what should we call you?</h2>
             <input
               autoFocus
               className={inputClass}
@@ -179,25 +179,25 @@ export function OnboardingForm() {
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               onKeyDown={(e) => e.key === "Enter" && form.name.trim() && goTo(1)}
             />
-            <Button type="button" disabled={!form.name.trim()} onClick={() => goTo(1)} className="w-full py-3">
+            <Button type="button" disabled={!form.name.trim()} onClick={() => goTo(1)} className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}>
               Continue
             </Button>
           </div>
         )}
 
         {step === 1 && (
-          <div key="step-1" className={cn("flex flex-col items-center gap-5 text-center", animClass)}>
-            <h2 className="text-headline-sm font-semibold text-on-surface">What is your graduation?</h2>
+          <div key="step-1" className={cn("flex flex-col items-center gap-8 text-center", animClass)}>
+            <h2 className="text-display-lg font-semibold text-on-surface">What is your graduation?</h2>
             {!showOtherDegree ? (
-              <div className="flex flex-wrap justify-center gap-2">
+              <div className="flex flex-wrap justify-center gap-3">
                 {DEGREE_TAGS.map((tag) => (
                   <TagChip key={tag} label={tag} selected={form.degree === tag} onClick={() => selectDegreeTag(tag)} />
                 ))}
                 <TagChip label="Other" selected={showOtherDegree} onClick={selectOtherDegree} />
               </div>
             ) : (
-              <div className="flex w-full flex-col items-center gap-4">
-                <div className="flex gap-2">
+              <div className="flex w-full flex-col items-center gap-6">
+                <div className="flex gap-3">
                   <TagChip
                     label="Tech"
                     selected={form.degreeCategory === "Tech"}
@@ -221,7 +221,7 @@ export function OnboardingForm() {
                   type="button"
                   disabled={!form.customDegree.trim() || !form.degreeCategory}
                   onClick={confirmCustomDegree}
-                  className="w-full py-3"
+                  className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}
                 >
                   Continue
                 </Button>
@@ -231,8 +231,8 @@ export function OnboardingForm() {
         )}
 
         {step === 2 && (
-          <div key="step-2" className={cn("flex flex-col items-center gap-5 text-center", animClass)}>
-            <h2 className="text-headline-sm font-semibold text-on-surface">What is your CGPA?</h2>
+          <div key="step-2" className={cn("flex flex-col items-center gap-8 text-center", animClass)}>
+            <h2 className="text-display-lg font-semibold text-on-surface">What is your CGPA?</h2>
             <input
               autoFocus
               type="number"
@@ -245,16 +245,16 @@ export function OnboardingForm() {
               onChange={(e) => setForm((f) => ({ ...f, cgpa: e.target.value }))}
               onKeyDown={(e) => e.key === "Enter" && form.cgpa.trim() && goTo(3)}
             />
-            <Button type="button" disabled={!form.cgpa.trim()} onClick={() => goTo(3)} className="w-full py-3">
+            <Button type="button" disabled={!form.cgpa.trim()} onClick={() => goTo(3)} className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}>
               Continue
             </Button>
           </div>
         )}
 
         {step === 3 && (
-          <div key="step-3" className={cn("flex flex-col items-center gap-4 text-center", animClass)}>
-            <h2 className="text-headline-sm font-semibold text-on-surface">Select the skills you're confident in</h2>
-            <div className="flex flex-wrap justify-center gap-2">
+          <div key="step-3" className={cn("flex flex-col items-center gap-6 text-center", animClass)}>
+            <h2 className="text-display-lg font-semibold text-on-surface">Select the skills you're confident in</h2>
+            <div className="flex flex-wrap justify-center gap-3">
               {SKILL_TAGS.map((tag) => (
                 <TagChip key={tag} label={tag} selected={form.skills.includes(tag)} onClick={() => toggleSkill(tag)} />
               ))}
@@ -263,18 +263,18 @@ export function OnboardingForm() {
                 .map((tag) => (
                   <span
                     key={tag}
-                    className="btn-3d inline-flex items-center gap-1 rounded-full border border-primary bg-primary px-4 py-2 text-body-sm font-semibold text-on-primary"
+                    className="btn-3d inline-flex items-center gap-2 rounded-full border-2 border-primary bg-primary px-6 py-3.5 text-body-lg font-semibold text-on-primary"
                   >
                     {tag}
                     <button type="button" onClick={() => removeSkill(tag)} aria-label={`Remove ${tag}`}>
-                      <Icon name="close" size={14} />
+                      <Icon name="close" size={18} />
                     </button>
                   </span>
                 ))}
             </div>
-            <div className="flex w-full gap-2">
+            <div className="flex w-full gap-3">
               <input
-                className={cn(inputClass, "h-10 text-body-md")}
+                className={cn(inputClass, "h-14 text-headline-sm")}
                 placeholder="Others — type a skill"
                 value={form.customSkillInput}
                 onChange={(e) => setForm((f) => ({ ...f, customSkillInput: e.target.value }))}
@@ -289,18 +289,18 @@ export function OnboardingForm() {
                 type="button"
                 onClick={addCustomSkill}
                 disabled={!form.customSkillInput.trim()}
-                className="btn-3d flex h-10 w-10 flex-shrink-0 items-center justify-center rounded border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary disabled:opacity-40"
+                className="btn-3d flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg border-2 border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary disabled:opacity-40"
                 aria-label="Add skill"
               >
-                <Icon name="add" size={20} />
+                <Icon name="add" size={26} />
               </button>
             </div>
-            {error && <p className="text-body-sm text-primary">{error}</p>}
+            {error && <p className="text-body-lg text-primary">{error}</p>}
             <Button
               type="button"
               disabled={submitting || form.skills.length === 0}
               onClick={handleFinish}
-              className="w-full py-3"
+              className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}
             >
               {submitting ? "Loading..." : "Continue to upGrad X"}
             </Button>

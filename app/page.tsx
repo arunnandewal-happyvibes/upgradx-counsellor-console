@@ -33,8 +33,8 @@ export default function OnboardingPage() {
       </header>
 
       <main className="flex-grow flex items-center justify-center px-container-margin py-section-gap">
-        <div className="w-full max-w-[440px] bg-surface-container-lowest border border-outline-variant border-t-4 border-t-primary rounded-lg shadow-sm p-8">
-          <p className="text-body-sm text-secondary text-center mb-6">
+        <div className="w-[94%] sm:w-[88%] md:w-[75%] lg:w-[68%] max-w-[1100px] bg-surface-container-lowest border border-outline-variant border-t-4 border-t-primary rounded-lg shadow-sm p-8 sm:p-12 md:p-16">
+          <p className="text-body-lg text-secondary text-center mb-10">
             Your counsellor is asking for these details on your behalf, to personalize today's session just for you.
           </p>
 
