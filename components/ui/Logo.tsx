@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 
 /**
  * Official upGrad X lockup (wordmark + "THE OFFLINE XPERIENCE" tagline).
- * Source aspect ratio is ~3.36:1 — always size via `height` so the mark
+ * Source aspect ratio is ~4.42:1 — always size via `height` so the mark
  * stays undistorted; `className` controls layout only.
  */
 export function Logo({
@@ -15,7 +15,7 @@ export function Logo({
   className?: string;
   priority?: boolean;
 }) {
-  const width = Math.round(height * (1322 / 393));
+  const width = Math.round(height * (3531 / 798));
   return (
     <Image
       src="/brand/upgradx-logo.png"

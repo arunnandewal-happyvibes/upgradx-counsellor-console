@@ -25,7 +25,7 @@ export function TopBar() {
             }
           }}
         >
-          <Logo height={30} priority />
+          <Logo height={40} priority />
         </Link>
       </div>
 
