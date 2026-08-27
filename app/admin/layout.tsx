@@ -23,6 +23,7 @@ const NAV = [
   { href: "/admin/career-services-policy", label: "Career Services Policy" },
   { href: "/admin/home-screen", label: "Home Screen (Default)" },
   { href: "/admin/recommendations", label: "Recommendations" },
+  { href: "/admin/backups", label: "Backups" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
