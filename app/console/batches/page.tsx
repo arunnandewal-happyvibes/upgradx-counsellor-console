@@ -1,10 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { BatchesListClient } from "@/components/console/BatchesListClient";
+import { startOfToday } from "@/lib/dateFilters";
 
 export const dynamic = "force-dynamic";
 
 export default async function AllBatchesPage() {
   const batches = await prisma.batch.findMany({
+    // Only batches a student could still actually join — applications still
+    // open (or opening today), regardless of when they start.
+    where: { applicationCloseDate: { gte: startOfToday() } },
     orderBy: { startDate: "asc" },
     include: { program: { select: { name: true } }, city: { select: { name: true, slug: true } } },
   });
