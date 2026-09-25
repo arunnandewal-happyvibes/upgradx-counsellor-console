@@ -114,23 +114,23 @@ function JourneyBanner({ profile }: { profile: LeadProfile }) {
   }, []);
 
   const milestones: Milestone[] = [
-    { icon: "school", label: profile.degree || "Graduate", x: 6, y: 70, color: "#22D3EE" },
-    { icon: "code", label: profile.skills[0] ?? "Skilled Up", x: 36, y: 30, color: "#A855F7" },
-    { icon: "rocket_launch", label: "Career Ready", x: 66, y: 62, color: "#FB7185" },
-    { icon: "emoji_events", label: "Success", x: 94, y: 18, color: "#F59E0B" },
+    { icon: "school", label: profile.degree || "Graduate", x: 6, y: 70, color: "#7A1015" },
+    { icon: "code", label: profile.skills[0] ?? "Skilled Up", x: 36, y: 30, color: "#A61319" },
+    { icon: "rocket_launch", label: "Career Ready", x: 66, y: 62, color: "#C81922" },
+    { icon: "emoji_events", label: "Success", x: 94, y: 18, color: "#E41F26" },
   ];
 
   return (
-    <div className="relative flex h-[18vh] min-h-[150px] w-full items-center overflow-hidden rounded-lg bg-gradient-to-r from-[#0B0F2B] via-[#181141] to-[#2B0F2E]">
-      <div className="pointer-events-none absolute -left-10 top-1/2 h-48 w-48 -translate-y-1/2 rounded-full bg-cyan-400 opacity-20 blur-3xl" />
-      <div className="pointer-events-none absolute -right-10 top-0 h-56 w-56 rounded-full bg-fuchsia-500 opacity-20 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 right-1/3 h-40 w-40 rounded-full bg-amber-400 opacity-10 blur-3xl" />
+    <div className="relative flex h-[18vh] min-h-[150px] w-full items-center overflow-hidden rounded-lg bg-gradient-to-r from-black via-[#141414] to-[#1A1C1C]">
+      <div className="pointer-events-none absolute -left-10 top-1/2 h-48 w-48 -translate-y-1/2 rounded-full bg-primary opacity-20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-10 top-0 h-56 w-56 rounded-full bg-white opacity-[0.06] blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 right-1/3 h-40 w-40 rounded-full bg-primary opacity-10 blur-3xl" />
 
       <div className="relative z-10 flex w-full items-center gap-6 px-6 md:px-10">
         <div className="shrink-0">
-          <span className="text-[10px] font-bold uppercase tracking-wide text-cyan-300">{greeting}</span>
+          <span className="text-[10px] font-bold uppercase tracking-wide text-white/60">{greeting}</span>
           <h1 className="text-[24px] font-extrabold leading-tight text-white md:text-[28px]">
-            <span className="bg-gradient-to-r from-cyan-300 via-fuchsia-300 to-amber-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white to-primary bg-clip-text text-transparent">
               {firstName}!
             </span>
           </h1>
@@ -155,10 +155,10 @@ function JourneyBanner({ profile }: { profile: LeadProfile }) {
           >
             <defs>
               <linearGradient id="journeyGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#22D3EE" />
-                <stop offset="36%" stopColor="#A855F7" />
-                <stop offset="66%" stopColor="#FB7185" />
-                <stop offset="100%" stopColor="#F59E0B" />
+                <stop offset="0%" stopColor="#4A4A4A" />
+                <stop offset="36%" stopColor="#7A1015" />
+                <stop offset="66%" stopColor="#C81922" />
+                <stop offset="100%" stopColor="#E41F26" />
               </linearGradient>
             </defs>
             <path
