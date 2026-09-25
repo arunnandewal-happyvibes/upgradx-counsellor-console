@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
+import { LogoutButton } from "@/components/admin/LogoutButton";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +54,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         >
           ← Back to Console
         </Link>
+        <LogoutButton />
       </aside>
       <main className="flex-1 p-8">{children}</main>
     </div>
