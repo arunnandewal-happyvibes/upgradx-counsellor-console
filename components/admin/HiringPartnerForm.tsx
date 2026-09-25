@@ -1,8 +1,10 @@
 import { Field, inputClass } from "@/components/admin/AdminUI";
 import { Button } from "@/components/ui/Button";
 import { ImageField } from "@/components/admin/ImageField";
+import { TagCheckboxGroup } from "@/components/admin/TagCheckboxGroup";
+import { DOMAIN_TAGS, MAX_HIRING_PARTNER_TAGS } from "@/lib/domainTags";
 
-type Partner = { name: string; logoUrl?: string | null };
+type Partner = { name: string; logoUrl?: string | null; tags?: string[] };
 
 export function HiringPartnerForm({
   action,
@@ -22,6 +24,9 @@ export function HiringPartnerForm({
       />
       <Field label="Company name">
         <input required name="name" defaultValue={initial?.name} className={inputClass} placeholder="e.g. Amazon" />
+      </Field>
+      <Field label={`Domain tags (pick up to ${MAX_HIRING_PARTNER_TAGS})`}>
+        <TagCheckboxGroup name="tags" options={DOMAIN_TAGS} initial={initial?.tags} max={MAX_HIRING_PARTNER_TAGS} />
       </Field>
       <Button type="submit">Save Company</Button>
     </form>

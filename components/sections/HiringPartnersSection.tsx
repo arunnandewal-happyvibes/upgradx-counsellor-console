@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
-import { prisma } from "@/lib/prisma";
+import { useEffect, useState } from "react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Icon } from "@/components/ui/Icon";
+import { getLeadProfile } from "@/lib/leadProfile";
 
 type Partner = { id: string; name: string; logoUrl: string | null };
 
@@ -28,9 +31,19 @@ function PartnerTile({ partner }: { partner: Partner }) {
   );
 }
 
-export async function HiringPartnersSection() {
-  const partners = await prisma.hiringPartner.findMany({ orderBy: { order: "asc" } });
-  if (partners.length === 0) return null;
+export function HiringPartnersSection() {
+  const [partners, setPartners] = useState<Partner[] | null>(null);
+
+  useEffect(() => {
+    const interests = getLeadProfile()?.interests ?? [];
+    const search = interests.length > 0 ? `?interests=${encodeURIComponent(interests.join(","))}` : "";
+    fetch(`/api/hiring-partners${search}`)
+      .then((r) => r.json())
+      .then(setPartners)
+      .catch(() => setPartners([]));
+  }, []);
+
+  if (!partners || partners.length === 0) return null;
 
   return (
     <section id="hiring-partners">

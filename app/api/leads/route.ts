@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { name, graduation, graduationCategory, cgpa, skills, cityId } = body ?? {};
+  const { name, graduation, graduationCategory, cgpa, skills, interests, cityId } = body ?? {};
 
   if (!name) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
       graduationCategory: graduationCategory || null,
       cgpa: cgpa || null,
       skills: Array.isArray(skills) ? skills : [],
+      interests: Array.isArray(interests) ? interests : [],
       cityId: cityId || null,
     },
   });

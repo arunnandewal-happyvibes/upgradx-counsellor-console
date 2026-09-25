@@ -5,12 +5,14 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { str, strOrNull } from "@/lib/adminParsing";
 import { maybeUploadImage } from "@/lib/blob";
+import { MAX_HIRING_PARTNER_TAGS } from "@/lib/domainTags";
 
 async function data(formData: FormData) {
   const uploadedLogo = await maybeUploadImage(formData, "logoFile", "hiring-partners");
   return {
     name: str(formData.get("name")),
     logoUrl: uploadedLogo ?? strOrNull(formData.get("logoUrl")),
+    tags: formData.getAll("tags").map(String).slice(0, MAX_HIRING_PARTNER_TAGS),
   };
 }
 

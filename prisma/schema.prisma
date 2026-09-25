@@ -40,6 +40,9 @@ model Lead {
   graduationCategory String? // "Tech" | "Non-Tech" — only meaningful for a custom degree
   cgpa               String?
   skills             String[]
+  // Up to 4 domain interests (see lib/domainTags.ts) picked during onboarding —
+  // used to show the student hiring partners relevant to what they're into.
+  interests          String[]
   createdAt DateTime @default(now())
 
   // Captured when a counsellor clicks "Close Session" at the end of a call —
@@ -61,6 +64,9 @@ model HiringPartner {
   name    String
   logoUrl String?
   order   Int    @default(0)
+  // Up to 3 domain tags (see lib/domainTags.ts) — matched against a student's
+  // onboarding interests to decide which partners to show them in the console.
+  tags    String[]
 }
 
 model SuccessStory {

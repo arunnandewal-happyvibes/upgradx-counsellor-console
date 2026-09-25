@@ -4,6 +4,7 @@ export type LeadProfile = {
   name: string;
   degree: string;
   skills: string[];
+  interests: string[];
 };
 
 const KEY = "upgradx.leadProfile";

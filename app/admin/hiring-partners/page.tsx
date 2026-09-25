@@ -19,6 +19,7 @@ export default async function HiringPartnersAdminPage() {
           <tr>
             <Th>Logo</Th>
             <Th>Name</Th>
+            <Th>Tags</Th>
             <Th></Th>
           </tr>
         </thead>
@@ -34,6 +35,7 @@ export default async function HiringPartnersAdminPage() {
                 )}
               </Td>
               <Td className="font-semibold text-brand-ink">{p.name}</Td>
+              <Td className="text-brand-ink2">{p.tags.length > 0 ? p.tags.join(", ") : "—"}</Td>
               <Td>
                 <div className="flex gap-2">
                   <Link href={`/admin/hiring-partners/${p.id}`} className="text-sm font-semibold text-brand-red hover:underline">
