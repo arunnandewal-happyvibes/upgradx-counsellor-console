@@ -5,11 +5,13 @@ export function sessionSummaryHtml({
   programName,
   programDuration,
   counsellorName,
+  rating,
 }: {
   studentName: string;
   programName: string | null;
   programDuration: string | null;
   counsellorName: string | null;
+  rating: number | null;
 }) {
   const firstName = studentName.trim().split(/\s+/)[0] || studentName;
   return `<!doctype html>
@@ -73,6 +75,19 @@ export function sessionSummaryHtml({
                     .join("")}
                 </table>
 
+                ${
+                  rating
+                    ? `<div style="margin-bottom:28px;">
+                  <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:#1a1c1c;text-transform:uppercase;margin-bottom:8px;">
+                    Your Session Rating
+                  </div>
+                  <div style="font-size:24px;letter-spacing:2px;">
+                    ${[1, 2, 3, 4, 5].map((n) => `<span style="color:${n <= rating ? "#e41f26" : "#e2e2e2"};">&#9733;</span>`).join("")}
+                  </div>
+                </div>`
+                    : ""
+                }
+
                 <div style="border-top:1px solid #e2e2e2;padding-top:20px;font-size:13px;color:#9a9a9a;">
                   ${counsellorName ? `Session hosted by <strong style="color:#603e3a;">${escapeHtml(counsellorName)}</strong>.<br/>` : ""}
                   Questions in the meantime? Just reply to this email.
@@ -109,6 +124,7 @@ export async function sendSessionSummaryEmail(params: {
   programName: string | null;
   programDuration: string | null;
   counsellorName: string | null;
+  rating: number | null;
 }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;

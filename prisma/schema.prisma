@@ -52,6 +52,8 @@ model Lead {
   // by counsellor and city.
   counsellorName String?
   counsellorCity String?
+  // 1-5 star rating the student gives the session when closing it.
+  rating         Int?
 }
 
 model HiringPartner {

@@ -12,6 +12,7 @@ export type CloseSessionInput = {
   programId: string | null;
   counsellorName: string | null;
   counsellorCity: string | null;
+  rating: number;
 };
 
 export type CloseSessionResult = { ok: true; emailSent: boolean } | { ok: false; error: string };
@@ -31,6 +32,7 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
     recommendedProgramId: input.programId || null,
     counsellorName: input.counsellorName?.trim() || null,
     counsellorCity: input.counsellorCity?.trim() || null,
+    rating: Number.isInteger(input.rating) && input.rating >= 1 && input.rating <= 5 ? input.rating : null,
     sessionClosedAt: new Date(),
   };
 
@@ -60,6 +62,7 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
     programName,
     programDuration,
     counsellorName: data.counsellorName,
+    rating: data.rating,
   });
 
   revalidatePath("/admin/sessions");

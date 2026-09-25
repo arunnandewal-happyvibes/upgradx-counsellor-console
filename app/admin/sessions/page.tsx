@@ -101,6 +101,7 @@ export default async function SessionsAdminPage({
             <Th>Recommended Program</Th>
             <Th>Counsellor</Th>
             <Th>City</Th>
+            <Th>Rating</Th>
           </tr>
         </thead>
         <tbody>
@@ -115,11 +116,21 @@ export default async function SessionsAdminPage({
               <Td>{s.recommendedProgram?.name ?? "—"}</Td>
               <Td>{s.counsellorName ?? "—"}</Td>
               <Td>{s.counsellorCity ?? "—"}</Td>
+              <Td className="whitespace-nowrap">
+                {s.rating ? (
+                  <span aria-label={`${s.rating} out of 5 stars`}>
+                    <span className="text-brand-red">{"★".repeat(s.rating)}</span>
+                    <span className="text-brand-gray-200">{"★".repeat(5 - s.rating)}</span>
+                  </span>
+                ) : (
+                  "—"
+                )}
+              </Td>
             </tr>
           ))}
           {sessions.length === 0 && (
             <tr>
-              <td colSpan={7} className="px-3 py-2 text-sm text-brand-gray-400">
+              <td colSpan={8} className="px-3 py-2 text-sm text-brand-gray-400">
                 No closed sessions match these filters yet.
               </td>
             </tr>
