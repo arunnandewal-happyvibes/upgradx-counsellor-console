@@ -121,26 +121,26 @@ function JourneyBanner({ profile }: { profile: LeadProfile }) {
   ];
 
   return (
-    <div className="relative flex h-[18vh] min-h-[150px] w-full items-center overflow-hidden rounded-lg bg-gradient-to-r from-black via-[#141414] to-[#1A1C1C]">
+    <div className="relative flex min-h-[150px] w-full items-center overflow-hidden rounded-lg bg-gradient-to-r from-black via-[#141414] to-[#1A1C1C] py-5 md:h-[18vh] md:py-0">
       <div className="pointer-events-none absolute -left-10 top-1/2 h-48 w-48 -translate-y-1/2 rounded-full bg-primary opacity-20 blur-3xl" />
       <div className="pointer-events-none absolute -right-10 top-0 h-56 w-56 rounded-full bg-white opacity-[0.06] blur-3xl" />
       <div className="pointer-events-none absolute bottom-0 right-1/3 h-40 w-40 rounded-full bg-primary opacity-10 blur-3xl" />
 
       <div className="relative z-10 flex w-full items-center gap-6 px-6 md:px-10">
-        <div className="shrink-0">
-          <span className="text-[10px] font-bold uppercase tracking-wide text-white/60">{greeting}</span>
-          <h1 className="text-[24px] font-extrabold leading-tight text-white md:text-[28px]">
+        <div className="w-full min-w-0 md:w-auto md:shrink-0">
+          <span className="text-[13px] font-bold uppercase tracking-wide text-white/60">{greeting}</span>
+          <h1 className="break-words text-[32px] font-extrabold leading-[1.05] text-white md:text-[54px]">
             <span className="bg-gradient-to-r from-white to-primary bg-clip-text text-transparent">
               {firstName}!
             </span>
           </h1>
           {profile.degree && (
-            <p className="text-[12px] font-medium text-white/70">
+            <p className="text-[17px] font-semibold text-white/70">
               {profile.degree} graduate
               {profile.skills[0] ? ` · ${profile.skills[0]}` : ""}
             </p>
           )}
-          <p className="mt-1 hidden max-w-[220px] truncate text-[10px] italic text-white/45 lg:block">
+          <p className="mt-1 hidden max-w-[280px] truncate text-[13px] italic text-white/45 lg:block">
             {getMotivationalLine(profile.degree)}
           </p>
         </div>
@@ -179,15 +179,15 @@ function JourneyBanner({ profile }: { profile: LeadProfile }) {
               style={{ left: `${m.x}%`, top: `${m.y}%`, animationDelay: `${700 + i * 200}ms` }}
             >
               <div
-                className={`flex h-9 w-9 items-center justify-center rounded-full text-white ${
+                className={`flex h-10 w-10 items-center justify-center rounded-full text-white ${
                   i === milestones.length - 1 ? "animate-welcome-pulse" : ""
                 }`}
                 style={{ backgroundColor: m.color, boxShadow: `0 0 16px 2px ${m.color}99` }}
               >
-                <Icon name={m.icon} size={17} />
+                <Icon name={m.icon} size={19} />
               </div>
               <span
-                className="whitespace-nowrap rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white backdrop-blur-sm"
+                className="whitespace-nowrap rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-sm"
                 style={{ boxShadow: `0 0 0 1px ${m.color}55` }}
               >
                 {m.label}
