@@ -14,7 +14,7 @@ export function TopBar() {
       <div className="flex items-center gap-gutter">
         <Link
           href="/console"
-          className="flex items-center"
+          className="flex items-center gap-2"
           onClick={(e) => {
             // Always land at the top of the console home page — including
             // when we're already there but scrolled down or hash-anchored.
@@ -26,6 +26,9 @@ export function TopBar() {
           }}
         >
           <Logo height={40} priority />
+          <span className="hidden text-xs font-semibold leading-tight text-secondary lg:block">
+            Expert Counselling Portal
+          </span>
         </Link>
       </div>
 

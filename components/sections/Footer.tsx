@@ -8,6 +8,7 @@ export function Footer() {
         <Link href="/console" className="w-fit">
           <Logo height={34} />
         </Link>
+        <span className="text-xs font-semibold leading-tight text-secondary">Expert Counselling Portal</span>
         <p className="text-body-sm text-secondary">
           © {new Date().getFullYear()} upGrad Education Pvt. Ltd. All rights reserved.
         </p>
