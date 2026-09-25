@@ -103,7 +103,7 @@ function RecommendationCard({
   );
 }
 
-type Milestone = { icon: string; label: string; x: number; y: number };
+type Milestone = { icon: string; label: string; x: number; y: number; color: string };
 
 function JourneyBanner({ profile }: { profile: LeadProfile }) {
   const [greeting, setGreeting] = useState("Welcome");
@@ -114,90 +114,87 @@ function JourneyBanner({ profile }: { profile: LeadProfile }) {
   }, []);
 
   const milestones: Milestone[] = [
-    { icon: "school", label: profile.degree || "Graduate", x: 46, y: 82 },
-    { icon: "code", label: profile.skills[0] ?? "Skilled Up", x: 60, y: 62 },
-    { icon: "rocket_launch", label: "Career Ready", x: 76, y: 40 },
-    { icon: "emoji_events", label: "Success", x: 90, y: 16 },
+    { icon: "school", label: profile.degree || "Graduate", x: 6, y: 70, color: "#22D3EE" },
+    { icon: "code", label: profile.skills[0] ?? "Skilled Up", x: 36, y: 30, color: "#A855F7" },
+    { icon: "rocket_launch", label: "Career Ready", x: 66, y: 62, color: "#FB7185" },
+    { icon: "emoji_events", label: "Success", x: 94, y: 18, color: "#F59E0B" },
   ];
 
   return (
-    <div className="relative flex min-h-[70vh] w-full items-center overflow-hidden rounded-lg border border-surface-variant bg-gradient-to-br from-surface-bright via-white to-surface-container-low md:min-h-[88vh]">
-      <div className="pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full bg-primary opacity-5 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-on-surface opacity-[0.03] blur-3xl" />
+    <div className="relative flex h-[18vh] min-h-[150px] w-full items-center overflow-hidden rounded-lg bg-gradient-to-r from-[#0B0F2B] via-[#181141] to-[#2B0F2E]">
+      <div className="pointer-events-none absolute -left-10 top-1/2 h-48 w-48 -translate-y-1/2 rounded-full bg-cyan-400 opacity-20 blur-3xl" />
+      <div className="pointer-events-none absolute -right-10 top-0 h-56 w-56 rounded-full bg-fuchsia-500 opacity-20 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 right-1/3 h-40 w-40 rounded-full bg-amber-400 opacity-10 blur-3xl" />
 
-      {/* "Path to success" infographic — desktop only; mobile keeps a clean centered card. */}
-      <div className="pointer-events-none absolute inset-0 hidden md:block">
-        <svg
-          className="absolute inset-0 h-full w-full"
-          viewBox="0 0 1000 600"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <defs>
-            <linearGradient id="journeyGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#603E3A" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#E41F26" stopOpacity="0.9" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M460,492 C520,470 560,410 600,372 C660,318 700,280 760,240 C810,208 850,150 900,96"
-            fill="none"
-            stroke="url(#journeyGradient)"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeDasharray="6 10"
-            className="animate-path-draw"
-          />
-        </svg>
-
-        {milestones.map((m, i) => (
-          <div
-            key={m.label}
-            className="animate-milestone-in absolute flex flex-col items-center gap-2"
-            style={{ left: `${m.x}%`, top: `${m.y}%`, animationDelay: `${900 + i * 220}ms` }}
-          >
-            <div
-              className={`flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg ring-4 ring-white ${
-                i === milestones.length - 1 ? "animate-welcome-pulse" : ""
-              }`}
-            >
-              <Icon name={m.icon} size={22} />
-            </div>
-            <span className="whitespace-nowrap rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-on-surface shadow-sm">
-              {m.label}
+      <div className="relative z-10 flex w-full items-center gap-6 px-6 md:px-10">
+        <div className="shrink-0">
+          <span className="text-[10px] font-bold uppercase tracking-wide text-cyan-300">{greeting}</span>
+          <h1 className="text-[24px] font-extrabold leading-tight text-white md:text-[28px]">
+            <span className="bg-gradient-to-r from-cyan-300 via-fuchsia-300 to-amber-300 bg-clip-text text-transparent">
+              {firstName}!
             </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="relative z-10 w-full px-8 py-16 text-center md:w-[46%] md:px-16 md:text-left">
-        <span className="text-[13px] font-bold uppercase tracking-wide text-secondary">Welcome</span>
-        <h1 className="mb-4 mt-3 leading-[1.05]">
-          <span className="block text-[22px] font-medium text-on-surface-variant">{greeting},</span>
-          <span className="block text-[64px] font-extrabold leading-[1.05] tracking-tight text-primary">
-            {firstName}!
-          </span>
-        </h1>
-        {profile.degree && (
-          <p className="mb-4 text-[18px] text-on-surface-variant">
-            <span className="font-semibold text-on-surface">{profile.degree}</span> graduate
+          </h1>
+          {profile.degree && (
+            <p className="text-[12px] font-medium text-white/70">
+              {profile.degree} graduate
+              {profile.skills[0] ? ` · ${profile.skills[0]}` : ""}
+            </p>
+          )}
+          <p className="mt-1 hidden max-w-[220px] truncate text-[10px] italic text-white/45 lg:block">
+            {getMotivationalLine(profile.degree)}
           </p>
-        )}
-        {profile.skills.length > 0 && (
-          <div className="mb-6 flex flex-wrap justify-center gap-2 md:justify-start">
-            {profile.skills.slice(0, 6).map((s) => (
-              <span
-                key={s}
-                className="rounded border border-outline-variant bg-surface-container-high px-3 py-1.5 text-[13px] font-bold text-on-surface-variant"
+        </div>
+
+        {/* "Path to success" infographic — desktop only; mobile keeps the compact identity block alone. */}
+        <div className="relative hidden h-full flex-1 md:block">
+          <svg
+            className="absolute inset-0 h-full w-full"
+            viewBox="0 0 1000 200"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <linearGradient id="journeyGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#22D3EE" />
+                <stop offset="36%" stopColor="#A855F7" />
+                <stop offset="66%" stopColor="#FB7185" />
+                <stop offset="100%" stopColor="#F59E0B" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M60,140 C160,140 220,60 360,60 C480,60 520,124 660,124 C780,124 840,36 940,36"
+              fill="none"
+              stroke="url(#journeyGradient)"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeDasharray="1 9"
+              className="animate-path-draw"
+            />
+          </svg>
+
+          {milestones.map((m, i) => (
+            <div
+              key={m.label}
+              className="animate-milestone-in absolute flex flex-col items-center gap-1.5"
+              style={{ left: `${m.x}%`, top: `${m.y}%`, animationDelay: `${700 + i * 200}ms` }}
+            >
+              <div
+                className={`flex h-9 w-9 items-center justify-center rounded-full text-white ${
+                  i === milestones.length - 1 ? "animate-welcome-pulse" : ""
+                }`}
+                style={{ backgroundColor: m.color, boxShadow: `0 0 16px 2px ${m.color}99` }}
               >
-                {s}
+                <Icon name={m.icon} size={17} />
+              </div>
+              <span
+                className="whitespace-nowrap rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-white backdrop-blur-sm"
+                style={{ boxShadow: `0 0 0 1px ${m.color}55` }}
+              >
+                {m.label}
               </span>
-            ))}
-          </div>
-        )}
-        <p className="mx-auto max-w-md border-t border-outline-variant pt-4 text-[17px] italic leading-snug text-on-surface-variant md:mx-0">
-          {getMotivationalLine(profile.degree)}
-        </p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
