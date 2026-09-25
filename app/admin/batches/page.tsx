@@ -1,7 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { Table, Th, Td } from "@/components/admin/AdminUI";
 import { BatchForm } from "@/components/admin/BatchForm";
-import { createBatch, deleteBatch } from "@/app/admin/batches/actions";
+import { BatchUploadForm } from "@/components/admin/BatchUploadForm";
+import { createBatch, deleteBatch, uploadBatchesExcel } from "@/app/admin/batches/actions";
 import Link from "next/link";
 
 export default async function BatchesAdminPage() {
@@ -15,6 +16,10 @@ export default async function BatchesAdminPage() {
     <div>
       <h1 className="mb-6 text-2xl font-extrabold text-brand-ink">Batches</h1>
 
+      <h2 className="mb-3 text-lg font-bold text-brand-ink">Bulk Upload</h2>
+      <BatchUploadForm action={uploadBatchesExcel} />
+
+      <h2 className="mb-4 mt-10 text-lg font-bold text-brand-ink">All Batches</h2>
       <Table>
         <thead>
           <tr>

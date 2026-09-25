@@ -1,10 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { Icon } from "@/components/ui/Icon";
+import { startOfToday } from "@/lib/dateFilters";
 
 export const dynamic = "force-dynamic";
 
 export default async function AllDrivesPage() {
   const drives = await prisma.placementDrive.findMany({
+    where: { date: { gte: startOfToday() } },
     orderBy: { date: "asc" },
     include: { city: { select: { name: true } } },
   });
