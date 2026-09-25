@@ -92,7 +92,13 @@ export function CloseSessionClient({
 
   function startNextSession() {
     try {
-      sessionStorage.clear();
+      // Clear every per-student key, but keep the counsellor's check-in
+      // (upgradx.counsellorEmail) — they stay logged in across sessions.
+      for (const key of Object.keys(sessionStorage)) {
+        if (key.startsWith("upgradx.") && key !== "upgradx.counsellorEmail") {
+          sessionStorage.removeItem(key);
+        }
+      }
     } catch {
       // ignore — private-browsing / storage-blocked contexts
     }
