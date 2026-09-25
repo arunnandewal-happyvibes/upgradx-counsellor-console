@@ -25,8 +25,10 @@ const SKILL_TAGS = [
   "Artificial Intelligence",
 ];
 
-const STEP_COUNT = 4;
+const STEP_COUNT = 5;
 const OUT_DURATION = 220;
+
+type CityOption = { id: string; name: string; slug: string };
 
 type FormState = {
   name: string;
@@ -36,6 +38,7 @@ type FormState = {
   cgpa: string;
   skills: string[];
   customSkillInput: string;
+  cityId: string;
 };
 
 function TagChip({
@@ -63,7 +66,7 @@ function TagChip({
   );
 }
 
-export function OnboardingForm() {
+export function OnboardingForm({ cities }: { cities: CityOption[] }) {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [leaving, setLeaving] = useState(false);
@@ -78,6 +81,7 @@ export function OnboardingForm() {
     cgpa: "",
     skills: [],
     customSkillInput: "",
+    cityId: "",
   });
 
   const goTo = (next: number) => {
@@ -123,7 +127,12 @@ export function OnboardingForm() {
 
   const skip = () => router.push("/console");
 
-  const handleFinish = async () => {
+  const selectCity = (cityId: string) => {
+    setForm((f) => ({ ...f, cityId }));
+    handleFinish(cityId);
+  };
+
+  const handleFinish = async (cityId: string) => {
     setSubmitting(true);
     setError(null);
     try {
@@ -136,12 +145,17 @@ export function OnboardingForm() {
           graduationCategory: form.degreeCategory || null,
           cgpa: form.cgpa,
           skills: form.skills,
+          cityId: cityId || null,
         }),
       });
       if (!res.ok) throw new Error("Could not save details");
       const lead = await res.json();
       setWelcomeName(form.name.trim().split(/\s+/)[0] || form.name.trim());
       setLeadProfile({ id: lead.id ?? null, name: form.name.trim(), degree: form.degree, skills: form.skills });
+      const selectedCity = cities.find((c) => c.id === cityId);
+      if (selectedCity) {
+        window.sessionStorage.setItem("upgradx.selectedCitySlug", selectedCity.slug);
+      }
       router.push("/console");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -298,15 +312,34 @@ export function OnboardingForm() {
                 <Icon name="add" size={26} />
               </button>
             </div>
-            {error && <p className="text-body-lg text-primary">{error}</p>}
             <Button
               type="button"
-              disabled={submitting || form.skills.length === 0}
-              onClick={handleFinish}
+              disabled={form.skills.length === 0}
+              onClick={() => goTo(4)}
               className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}
             >
-              {submitting ? "Loading..." : "Continue to upGrad X"}
+              Continue
             </Button>
+          </div>
+        )}
+
+        {step === 4 && (
+          <div key="step-4" className={cn("flex flex-col items-center gap-8 text-center", animClass)}>
+            <h2 className="text-display-lg font-semibold text-on-surface">Which city works best for you?</h2>
+            <div className="flex flex-wrap justify-center gap-3">
+              {cities.map((c) => (
+                <TagChip key={c.id} label={c.name} selected={form.cityId === c.id} onClick={() => selectCity(c.id)} />
+              ))}
+            </div>
+            {error && <p className="text-body-lg text-primary">{error}</p>}
+            <button
+              type="button"
+              disabled={submitting}
+              onClick={() => selectCity("")}
+              className="text-body-lg font-semibold text-secondary hover:text-primary transition-colors disabled:opacity-40"
+            >
+              {submitting ? "Loading..." : "No preference — skip this →"}
+            </button>
           </div>
         )}
       </div>

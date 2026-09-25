@@ -19,6 +19,7 @@ model City {
   batches      Batch[]
   contact      CityContact?
   eventOccurrences EventOccurrence[]
+  successStories SuccessStory[]
 
   createdAt DateTime @default(now())
 }
@@ -73,6 +74,12 @@ model SuccessStory {
   packageLabel   String
   order          Int      @default(0)
   createdAt      DateTime @default(now())
+
+  // The city this student was placed from — lets the console show
+  // city-relevant success stories to a student who gave a city preference
+  // during onboarding.
+  city   City?   @relation(fields: [cityId], references: [id])
+  cityId String?
 }
 
 model Program {

@@ -1,11 +1,17 @@
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 import { OnboardingForm } from "@/components/onboarding/OnboardingForm";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 
 export const dynamic = "force-dynamic";
 
-export default function OnboardingPage() {
+export default async function OnboardingPage() {
+  const cities = await prisma.city.findMany({
+    orderBy: { name: "asc" },
+    select: { id: true, name: true, slug: true },
+  });
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <header className="sticky top-0 z-50 flex justify-between items-center w-full px-container-margin h-16 bg-surface border-b-2 border-primary shadow-sm">
@@ -38,7 +44,7 @@ export default function OnboardingPage() {
             Your counsellor is asking for these details on your behalf, to personalize today's session just for you.
           </p>
 
-          <OnboardingForm />
+          <OnboardingForm cities={cities} />
         </div>
       </main>
     </div>

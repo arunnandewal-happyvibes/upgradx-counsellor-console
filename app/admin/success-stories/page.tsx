@@ -5,7 +5,10 @@ import { StoryForm } from "@/components/admin/StoryForm";
 import { createStory, deleteStory } from "@/app/admin/success-stories/actions";
 
 export default async function SuccessStoriesAdminPage() {
-  const stories = await prisma.successStory.findMany({ orderBy: { order: "asc" } });
+  const [stories, cities] = await Promise.all([
+    prisma.successStory.findMany({ orderBy: { order: "asc" }, include: { city: { select: { name: true } } } }),
+    prisma.city.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+  ]);
 
   return (
     <div>
@@ -18,6 +21,7 @@ export default async function SuccessStoriesAdminPage() {
             <Th>Course</Th>
             <Th>Role</Th>
             <Th>Company</Th>
+            <Th>City</Th>
             <Th>Package</Th>
             <Th>LinkedIn</Th>
             <Th></Th>
@@ -30,6 +34,7 @@ export default async function SuccessStoriesAdminPage() {
               <Td>{s.courseName}</Td>
               <Td>{s.roleLanded}</Td>
               <Td>{s.company}</Td>
+              <Td>{s.city?.name ?? <span className="text-brand-gray-400">—</span>}</Td>
               <Td className="font-semibold text-brand-red">{s.packageLabel}</Td>
               <Td>
                 {s.linkedinUrl ? (
@@ -61,7 +66,7 @@ export default async function SuccessStoriesAdminPage() {
       </Table>
 
       <h2 className="mb-4 mt-10 text-lg font-bold text-brand-ink">Add Story</h2>
-      <StoryForm action={createStory} />
+      <StoryForm action={createStory} cities={cities} />
     </div>
   );
 }

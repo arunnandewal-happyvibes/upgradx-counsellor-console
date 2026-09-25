@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+"use client";
+
+import { useCityFetch } from "@/lib/useCityFetch";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Avatar } from "@/components/ui/Avatar";
 
@@ -83,9 +85,10 @@ function StoryCarousel({ stories, reverse }: { stories: Story[]; reverse?: boole
   );
 }
 
-export async function SuccessStoriesSection() {
-  const stories = await prisma.successStory.findMany({ orderBy: { order: "asc" } });
-  if (stories.length === 0) return null;
+export function SuccessStoriesSection() {
+  const { data } = useCityFetch<Story[]>("/api/success-stories");
+  if (!data || data.length === 0) return null;
+  const stories = data;
 
   const mid = Math.ceil(stories.length / 2);
   const topRow = stories.slice(0, mid);

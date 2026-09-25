@@ -11,14 +11,17 @@ type Story = {
   packageLabel: string;
   avatarUrl?: string | null;
   linkedinUrl?: string | null;
+  cityId?: string | null;
 };
 
 export function StoryForm({
   action,
   initial,
+  cities,
 }: {
   action: (formData: FormData) => void;
   initial?: Story;
+  cities: { id: string; name: string }[];
 }) {
   return (
     <form action={action} className="max-w-xl space-y-4">
@@ -45,6 +48,16 @@ export function StoryForm({
           <input required name="company" defaultValue={initial?.company} className={inputClass} />
         </Field>
       </div>
+      <Field label="Placed from city" hint="Used to show this story to students who prefer this city.">
+        <select name="cityId" defaultValue={initial?.cityId ?? ""} className={inputClass}>
+          <option value="">— No city —</option>
+          {cities.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name}
+            </option>
+          ))}
+        </select>
+      </Field>
       <Field
         label="LinkedIn profile"
         hint={
