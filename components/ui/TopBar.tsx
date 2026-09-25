@@ -39,6 +39,15 @@ export function TopBar() {
         >
           <Icon name="location_on" />
         </Link>
+        {!pathname.startsWith("/console/close-session") && (
+          <Link
+            href="/console/close-session"
+            className="btn-3d inline-flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-label-bold font-bold uppercase tracking-wide text-on-primary hover:bg-primary-container transition-colors"
+          >
+            <Icon name="task_alt" size={18} />
+            <span className="hidden sm:inline">Close Session</span>
+          </Link>
+        )}
         <Link
           href="/admin"
           className="btn-3d inline-flex items-center gap-1.5 rounded border border-outline-variant px-3 py-1.5 text-label-bold font-bold uppercase tracking-wide text-on-surface-variant hover:border-primary hover:text-primary transition-colors"

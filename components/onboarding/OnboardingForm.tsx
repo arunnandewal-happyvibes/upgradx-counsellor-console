@@ -139,8 +139,9 @@ export function OnboardingForm() {
         }),
       });
       if (!res.ok) throw new Error("Could not save details");
+      const lead = await res.json();
       setWelcomeName(form.name.trim().split(/\s+/)[0] || form.name.trim());
-      setLeadProfile({ name: form.name.trim(), degree: form.degree, skills: form.skills });
+      setLeadProfile({ id: lead.id ?? null, name: form.name.trim(), degree: form.degree, skills: form.skills });
       router.push("/console");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");

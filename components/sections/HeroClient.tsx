@@ -5,12 +5,14 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { getLeadProfile, type LeadProfile } from "@/lib/leadProfile";
+import { findRecommendationForDegree } from "@/lib/recommendationMatch";
 
 type ProgramRef = { name: string; slug: string; duration: string; mode: string } | null;
 
 type Recommendation = {
   id: string;
   degree: string;
+  choice1ProgramId: string | null;
   choice1Program: ProgramRef;
   choice1Why: string | null;
   choice2Program: ProgramRef;
@@ -51,14 +53,6 @@ const MOTIVATIONAL_LINES: Record<string, string> = {
   "MSc - CS": "Your advanced CS expertise deserves an equally advanced career path.",
   Other: "Whatever your path so far, your next big career move starts right here.",
 };
-
-function findRecommendation(recommendations: Recommendation[], degree: string): Recommendation | null {
-  return (
-    recommendations.find((r) => r.degree.toLowerCase() === degree.toLowerCase()) ??
-    recommendations.find((r) => r.degree === "Other") ??
-    null
-  );
-}
 
 function getGreeting(hour: number) {
   if (hour < 12) return "Good morning";
@@ -110,7 +104,7 @@ function RecommendationCard({
 }
 
 function PersonalizedHero({ profile, recommendations }: { profile: LeadProfile; recommendations: Recommendation[] }) {
-  const rec = findRecommendation(recommendations, profile.degree);
+  const rec = findRecommendationForDegree(recommendations, profile.degree);
   const choices = rec
     ? [
         { program: rec.choice1Program, why: rec.choice1Why },

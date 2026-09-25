@@ -1,4 +1,6 @@
 export type LeadProfile = {
+  id: string | null; // the Lead row's id, when onboarding saved successfully — lets
+  // Close Session update that same row instead of creating a duplicate.
   name: string;
   degree: string;
   skills: string[];

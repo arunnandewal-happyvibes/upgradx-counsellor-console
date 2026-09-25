@@ -40,6 +40,17 @@ model Lead {
   cgpa               String?
   skills             String[]
   createdAt DateTime @default(now())
+
+  // Captured when a counsellor clicks "Close Session" at the end of a call —
+  // confirms the student's contact details and the program they were
+  // recommended, so the team can follow up.
+  recommendedProgram   Program?  @relation(fields: [recommendedProgramId], references: [id])
+  recommendedProgramId String?
+  sessionClosedAt       DateTime?
+  // Optional — whoever ran the call, so admin can filter/sort closed sessions
+  // by counsellor and city.
+  counsellorName String?
+  counsellorCity String?
 }
 
 model HiringPartner {
@@ -85,6 +96,7 @@ model Program {
   degreeRecChoice1  DegreeRecommendation[] @relation("DegreeRecChoice1")
   degreeRecChoice2  DegreeRecommendation[] @relation("DegreeRecChoice2")
   degreeRecChoice3  DegreeRecommendation[] @relation("DegreeRecChoice3")
+  recommendedForLeads Lead[]
 
   createdAt DateTime @default(now())
 }
