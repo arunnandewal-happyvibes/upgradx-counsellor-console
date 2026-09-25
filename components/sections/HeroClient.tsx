@@ -140,7 +140,7 @@ function JourneyBanner({ profile }: { profile: LeadProfile }) {
               {profile.skills[0] ? ` · ${profile.skills[0]}` : ""}
             </p>
           )}
-          <p className="mt-1 hidden max-w-[280px] truncate text-[13px] italic text-white/45 lg:block">
+          <p className="mt-1 line-clamp-2 max-w-md text-[13px] italic leading-snug text-white/60">
             {getMotivationalLine(profile.degree)}
           </p>
         </div>
