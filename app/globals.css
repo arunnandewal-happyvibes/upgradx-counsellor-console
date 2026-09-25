@@ -246,7 +246,7 @@ body {
   }
 }
 .partners-track {
-  animation: partners-flow 32s linear infinite;
+  animation: partners-flow var(--marquee-duration, 32s) linear infinite;
 }
 .partners-track:hover {
   animation-play-state: paused;

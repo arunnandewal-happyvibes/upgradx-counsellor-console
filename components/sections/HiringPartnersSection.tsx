@@ -10,8 +10,8 @@ type Partner = { id: string; name: string; logoUrl: string | null };
 
 function PartnerTile({ partner }: { partner: Partner }) {
   return (
-    <div className="elevate-3d flex flex-shrink-0 items-center gap-3 bg-gradient-to-br from-primary-fixed/50 via-surface-container-lowest to-surface-container-lowest border border-outline-variant rounded-xl p-4">
-      <span className="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-container-low">
+    <div className="elevate-3d flex flex-shrink-0 items-center gap-3 bg-gradient-to-br from-primary-fixed/50 via-surface-container-lowest to-surface-container-lowest border border-outline-variant rounded-2xl p-4">
+      <span className="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-surface-container-low">
         {partner.logoUrl ? (
           <Image
             src={partner.logoUrl}
@@ -45,6 +45,11 @@ export function HiringPartnersSection() {
 
   if (!partners || partners.length === 0) return null;
 
+  // Keeps the per-card speed constant regardless of how many partners there
+  // are — the track doubles in width for a longer list, so its scroll
+  // duration must grow with it or every card would fly past.
+  const duration = `${Math.max(partners.length * 4, 20)}s`;
+
   return (
     <section id="hiring-partners">
       <SectionHeader eyebrow="Trusted By" title="Hiring Partners" />
@@ -52,7 +57,10 @@ export function HiringPartnersSection() {
         className="w-full overflow-hidden"
         style={{ maskImage: "linear-gradient(90deg, transparent, black 6%, black 94%, transparent)" }}
       >
-        <div className="partners-track flex w-max items-center gap-4 py-2">
+        <div
+          className="partners-track flex w-max items-center gap-4 py-2"
+          style={{ ["--marquee-duration" as string]: duration }}
+        >
           {[...partners, ...partners].map((p, i) => (
             <PartnerTile key={`${p.id}-${i}`} partner={p} />
           ))}
