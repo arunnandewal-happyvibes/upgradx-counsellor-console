@@ -209,6 +209,33 @@ body {
   animation: best-match-glow 2.4s ease-in-out infinite;
 }
 
+/* Personalized hero — the "path to success" infographic: the connecting line
+   draws itself in, then each milestone marker pops in along it. */
+@keyframes path-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.animate-path-draw {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: path-draw 1.6s ease-out 0.2s forwards;
+}
+@keyframes milestone-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+.animate-milestone-in {
+  opacity: 0;
+  animation: milestone-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 /* Hiring-partner carousel — a slow, continuous single-line "float" (paused on hover). */
 @keyframes partners-flow {
   from {

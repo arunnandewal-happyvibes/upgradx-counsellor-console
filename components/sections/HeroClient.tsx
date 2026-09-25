@@ -103,6 +103,106 @@ function RecommendationCard({
   );
 }
 
+type Milestone = { icon: string; label: string; x: number; y: number };
+
+function JourneyBanner({ profile }: { profile: LeadProfile }) {
+  const [greeting, setGreeting] = useState("Welcome");
+  const firstName = profile.name.split(" ")[0];
+
+  useEffect(() => {
+    setGreeting(getGreeting(new Date().getHours()));
+  }, []);
+
+  const milestones: Milestone[] = [
+    { icon: "school", label: profile.degree || "Graduate", x: 46, y: 82 },
+    { icon: "code", label: profile.skills[0] ?? "Skilled Up", x: 60, y: 62 },
+    { icon: "rocket_launch", label: "Career Ready", x: 76, y: 40 },
+    { icon: "emoji_events", label: "Success", x: 90, y: 16 },
+  ];
+
+  return (
+    <div className="relative flex min-h-[70vh] w-full items-center overflow-hidden rounded-lg border border-surface-variant bg-gradient-to-br from-surface-bright via-white to-surface-container-low md:min-h-[88vh]">
+      <div className="pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full bg-primary opacity-5 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-on-surface opacity-[0.03] blur-3xl" />
+
+      {/* "Path to success" infographic — desktop only; mobile keeps a clean centered card. */}
+      <div className="pointer-events-none absolute inset-0 hidden md:block">
+        <svg
+          className="absolute inset-0 h-full w-full"
+          viewBox="0 0 1000 600"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="journeyGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#603E3A" stopOpacity="0.35" />
+              <stop offset="100%" stopColor="#E41F26" stopOpacity="0.9" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M460,492 C520,470 560,410 600,372 C660,318 700,280 760,240 C810,208 850,150 900,96"
+            fill="none"
+            stroke="url(#journeyGradient)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray="6 10"
+            className="animate-path-draw"
+          />
+        </svg>
+
+        {milestones.map((m, i) => (
+          <div
+            key={m.label}
+            className="animate-milestone-in absolute flex flex-col items-center gap-2"
+            style={{ left: `${m.x}%`, top: `${m.y}%`, animationDelay: `${900 + i * 220}ms` }}
+          >
+            <div
+              className={`flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg ring-4 ring-white ${
+                i === milestones.length - 1 ? "animate-welcome-pulse" : ""
+              }`}
+            >
+              <Icon name={m.icon} size={22} />
+            </div>
+            <span className="whitespace-nowrap rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-on-surface shadow-sm">
+              {m.label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div className="relative z-10 w-full px-8 py-16 text-center md:w-[46%] md:px-16 md:text-left">
+        <span className="text-[13px] font-bold uppercase tracking-wide text-secondary">Welcome</span>
+        <h1 className="mb-4 mt-3 leading-[1.05]">
+          <span className="block text-[22px] font-medium text-on-surface-variant">{greeting},</span>
+          <span className="block text-[64px] font-extrabold leading-[1.05] tracking-tight text-primary">
+            {firstName}!
+          </span>
+        </h1>
+        {profile.degree && (
+          <p className="mb-4 text-[18px] text-on-surface-variant">
+            <span className="font-semibold text-on-surface">{profile.degree}</span> graduate
+          </p>
+        )}
+        {profile.skills.length > 0 && (
+          <div className="mb-6 flex flex-wrap justify-center gap-2 md:justify-start">
+            {profile.skills.slice(0, 6).map((s) => (
+              <span
+                key={s}
+                className="rounded border border-outline-variant bg-surface-container-high px-3 py-1.5 text-[13px] font-bold text-on-surface-variant"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        )}
+        <p className="mx-auto max-w-md border-t border-outline-variant pt-4 text-[17px] italic leading-snug text-on-surface-variant md:mx-0">
+          {getMotivationalLine(profile.degree)}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function PersonalizedHero({ profile, recommendations }: { profile: LeadProfile; recommendations: Recommendation[] }) {
   const rec = findRecommendationForDegree(recommendations, profile.degree);
   const choices = rec
@@ -112,45 +212,12 @@ function PersonalizedHero({ profile, recommendations }: { profile: LeadProfile; 
         { program: rec.choice3Program, why: rec.choice3Why },
       ].filter((c) => c.program)
     : [];
-  const [greeting, setGreeting] = useState("Welcome");
-  const firstName = profile.name.split(" ")[0];
-
-  useEffect(() => {
-    setGreeting(getGreeting(new Date().getHours()));
-  }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-10 gap-[18px]">
-      <div className="md:col-span-4 b2b-card elevate-3d p-[26px] flex flex-col justify-center relative overflow-hidden bg-surface-bright">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-primary opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-        <span className="text-label-bold font-bold uppercase tracking-wide text-secondary mb-2">Welcome</span>
-        <h1 className="mb-3 leading-tight flex flex-col gap-0.5">
-          <span className="text-body-lg text-on-surface-variant font-medium">{greeting},</span>
-          <span className="text-[38px] leading-[1.1] font-extrabold text-primary tracking-tight">{firstName}!</span>
-        </h1>
-        {profile.degree && (
-          <p className="text-[15px] text-on-surface-variant mb-4">
-            <span className="font-semibold text-on-surface">{profile.degree}</span> graduate
-          </p>
-        )}
-        {profile.skills.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {profile.skills.slice(0, 6).map((s) => (
-              <span
-                key={s}
-                className="bg-surface-container-high text-on-surface-variant text-[13px] font-bold px-2.5 py-1.5 rounded border border-outline-variant"
-              >
-                {s}
-              </span>
-            ))}
-          </div>
-        )}
-        <p className="mt-4 pt-4 border-t border-outline-variant text-[15px] leading-snug text-on-surface-variant italic">
-          {getMotivationalLine(profile.degree)}
-        </p>
-      </div>
+    <div className="flex flex-col gap-[22px]">
+      <JourneyBanner profile={profile} />
 
-      <div className="md:col-span-6 flex flex-col gap-[14px]">
+      <div className="flex flex-col gap-[14px]">
         <span className="text-[13px] font-bold uppercase tracking-wide text-secondary">Recommended for you</span>
         {choices.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-[18px]">
