@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Table, Th, Td } from "@/components/admin/AdminUI";
-import type { Prisma } from "@prisma/client";
+import { buildSessionsWhere } from "@/lib/sessionFilters";
 
 export const dynamic = "force-dynamic";
 
@@ -17,15 +17,7 @@ export default async function SessionsAdminPage({
   const from = searchParams.from?.trim() || "";
   const to = searchParams.to?.trim() || "";
   const sort = searchParams.sort === "date_asc" ? "asc" : "desc";
-
-  const where: Prisma.LeadWhereInput = {
-    sessionClosedAt: {
-      not: null,
-      ...(from ? { gte: new Date(`${from}T00:00:00`) } : {}),
-      ...(to ? { lte: new Date(`${to}T23:59:59`) } : {}),
-    },
-    ...(city ? { counsellorCity: city } : {}),
-  };
+  const where = buildSessionsWhere({ city, from, to });
 
   const [sessions, cityRows] = await Promise.all([
     prisma.lead.findMany({
@@ -89,6 +81,17 @@ export default async function SessionsAdminPage({
             Clear filters
           </Link>
         )}
+        <a
+          href={`/admin/sessions/export?${new URLSearchParams({
+            ...(city ? { city } : {}),
+            ...(from ? { from } : {}),
+            ...(to ? { to } : {}),
+            sort: sort === "asc" ? "date_asc" : "date_desc",
+          }).toString()}`}
+          className="ml-auto flex h-10 items-center gap-1.5 rounded-lg border border-brand-red px-4 text-sm font-bold text-brand-red hover:bg-brand-redLight"
+        >
+          Export to Excel
+        </a>
       </form>
 
       <Table>
