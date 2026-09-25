@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { StarRating } from "@/components/ui/StarRating";
 import { getLeadProfile, type LeadProfile } from "@/lib/leadProfile";
+import { getCounsellorEmail } from "@/lib/counsellor";
 import { findRecommendationForDegree } from "@/lib/recommendationMatch";
 import { closeSession } from "@/app/console/close-session/actions";
 
@@ -72,6 +73,7 @@ export function CloseSessionClient({
         programId: form.programId || null,
         counsellorName: form.counsellorName || null,
         counsellorCity: form.counsellorCity || null,
+        counsellorEmail: getCounsellorEmail(),
         rating,
       });
       if (!result.ok) {

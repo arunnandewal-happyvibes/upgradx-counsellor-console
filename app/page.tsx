@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { OnboardingForm } from "@/components/onboarding/OnboardingForm";
+import { CounsellorCheckIn } from "@/components/console/CounsellorCheckIn";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 
@@ -14,6 +15,7 @@ export default async function OnboardingPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <CounsellorCheckIn />
       <header className="sticky top-0 z-50 flex justify-between items-center w-full px-container-margin h-16 bg-surface border-b-2 border-primary shadow-sm">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2">

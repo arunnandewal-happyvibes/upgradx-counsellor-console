@@ -55,8 +55,22 @@ model Lead {
   // by counsellor and city.
   counsellorName String?
   counsellorCity String?
+  // Captured automatically from the counsellor's check-in email (see
+  // CounsellorLogin) — lets admin count completed sessions per counsellor
+  // reliably, independent of what they typed into counsellorName.
+  counsellorEmail String?
   // 1-5 star rating the student gives the session when closing it.
   rating         Int?
+}
+
+// One row per counsellor check-in (once per browser session on the console) —
+// powers the admin telemetry view of logins and completed sessions per email.
+model CounsellorLogin {
+  id         String   @id @default(cuid())
+  email      String
+  loggedInAt DateTime @default(now())
+
+  @@index([email])
 }
 
 model HiringPartner {

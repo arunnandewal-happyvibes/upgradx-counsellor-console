@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import { CityProvider } from "@/lib/city-context";
 import { TopBar } from "@/components/ui/TopBar";
+import { CounsellorCheckIn } from "@/components/console/CounsellorCheckIn";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,7 @@ export default async function ConsoleLayout({ children }: { children: React.Reac
   return (
     <Suspense>
       <CityProvider cities={cities}>
+        <CounsellorCheckIn />
         <TopBar />
         <main className="mx-auto max-w-[1600px] w-full flex flex-col gap-section-gap px-container-margin py-section-gap">
           {children}

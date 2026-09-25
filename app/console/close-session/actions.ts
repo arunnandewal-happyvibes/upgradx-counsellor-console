@@ -12,6 +12,7 @@ export type CloseSessionInput = {
   programId: string | null;
   counsellorName: string | null;
   counsellorCity: string | null;
+  counsellorEmail: string | null;
   rating: number;
 };
 
@@ -32,6 +33,7 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
     recommendedProgramId: input.programId || null,
     counsellorName: input.counsellorName?.trim() || null,
     counsellorCity: input.counsellorCity?.trim() || null,
+    counsellorEmail: input.counsellorEmail?.trim().toLowerCase() || null,
     rating: Number.isInteger(input.rating) && input.rating >= 1 && input.rating <= 5 ? input.rating : null,
     sessionClosedAt: new Date(),
   };
