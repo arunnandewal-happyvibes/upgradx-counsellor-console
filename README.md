@@ -1,4 +1,4 @@
-# upGrad X Counsellor Console
+# Expert Counselling Portal by upGrad X
 
 Internal counselling web tool for upGrad X: an onboarding capture screen followed by a
 city-aware, single-scroll product walkthrough (hero, success stories, programs, "how learning

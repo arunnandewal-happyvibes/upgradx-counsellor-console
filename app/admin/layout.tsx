@@ -33,7 +33,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-60 flex-shrink-0 border-r border-brand-gray-200 bg-white p-4">
         <Link href="/admin" className="mb-6 flex items-center gap-2">
           <Logo height={22} />
-          <span className="text-xs font-semibold text-brand-gray-400">Admin</span>
+          <span className="text-xs font-semibold text-brand-gray-400">Expert Counselling Portal</span>
         </Link>
         <nav className="space-y-1">
           {NAV.map((item) => (

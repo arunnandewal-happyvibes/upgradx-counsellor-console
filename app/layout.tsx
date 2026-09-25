@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "upGrad X Counsellor Console",
-  description: "Internal counselling tool for upGrad X call sessions",
+  title: "Expert Counselling Portal by upGrad X",
+  description: "The Expert Counselling Portal by upGrad X — internal counselling tool for upGrad X call sessions",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
