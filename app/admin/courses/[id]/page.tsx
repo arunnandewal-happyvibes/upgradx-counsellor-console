@@ -6,7 +6,7 @@ import { updateProgram } from "@/app/admin/courses/actions";
 export default async function EditCoursePage({ params }: { params: { id: string } }) {
   const program = await prisma.program.findUnique({
     where: { id: params.id },
-    include: { certifications: true, curriculumModules: { orderBy: { order: "asc" } } },
+    include: { certifications: true, addOnCertificates: true, curriculumModules: { orderBy: { order: "asc" } } },
   });
   if (!program) notFound();
 

@@ -1,10 +1,16 @@
 import { Field, inputClass } from "@/components/admin/AdminUI";
 import { Button } from "@/components/ui/Button";
 import { FileField } from "@/components/admin/FileField";
+import {
+  ADD_ON_DESCRIPTION_MAX,
+  ADD_ON_DESCRIPTION_MIN,
+  ADD_ON_DESCRIPTION_PLACEHOLDER,
+} from "@/lib/addOnCertificate";
 
 type AddOnCertificate = {
   name: string;
   pdfUrl?: string | null;
+  description?: string | null;
   programs: { id: string }[];
 };
 
@@ -33,6 +39,18 @@ export function AddOnCertificateForm({
         defaultUrl={initial?.pdfUrl}
         hint="A sample of this add-on certificate — opens in a new tab wherever it's shown."
       />
+      <Field label="Description (required)" hint="2-3 lines on the additional masterclasses or projects this certificate adds. Shown to the counsellor and student with the certificate.">
+        <textarea
+          required
+          name="description"
+          rows={3}
+          minLength={ADD_ON_DESCRIPTION_MIN}
+          maxLength={ADD_ON_DESCRIPTION_MAX}
+          defaultValue={initial?.description ?? ""}
+          placeholder={ADD_ON_DESCRIPTION_PLACEHOLDER}
+          className={inputClass}
+        />
+      </Field>
       <Field label="Eligible programs" hint="Select every program a student can earn this certificate through.">
         <div className="max-h-64 space-y-2 overflow-y-auto rounded-lg border border-brand-gray-200 p-3">
           {programs.map((p) => (

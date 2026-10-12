@@ -93,7 +93,7 @@ export async function ProgramsSection() {
                       target="_blank"
                       rel="noreferrer"
                       className="btn-3d inline-flex items-center gap-1.5 rounded-full border border-tertiary px-3 py-1.5 text-body-sm font-medium text-on-surface hover:border-primary hover:text-primary transition-colors"
-                      title={`Open ${ac.name}`}
+                      title={ac.description ? `${ac.name} — ${ac.description}` : `Open ${ac.name}`}
                     >
                       <Icon name="verified" size={14} fill />
                       {ac.name}

@@ -5,6 +5,18 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { linesToArray, linesToTuples, str, strOrNull } from "@/lib/adminParsing";
 import { maybeUploadImage } from "@/lib/blob";
+import { requireAddOnDescription } from "@/lib/addOnCertificate";
+
+/** Reads the optional "additional certificate" block; returns null when it's left entirely empty. */
+async function additionalCertificateFrom(formData: FormData) {
+  const name = str(formData.get("addOnName"));
+  const uploaded = await maybeUploadImage(formData, "addOnPdfFile", "addon-certificates");
+  const pdfUrl = uploaded ?? strOrNull(formData.get("addOnPdfUrl"));
+  const rawDescription = str(formData.get("addOnDescription"));
+  if (!name && !pdfUrl && !rawDescription) return null;
+  if (!name || !pdfUrl) throw new Error("An additional certificate needs both a name and a PDF.");
+  return { name, pdfUrl, description: requireAddOnDescription(rawDescription) };
+}
 
 function slugify(name: string) {
   return name
@@ -19,6 +31,7 @@ export async function createProgram(formData: FormData) {
   const modules = linesToTuples(formData.get("modules"), 2);
   const uploadedBrochure = await maybeUploadImage(formData, "brochureFile", "brochures");
   const uploadedCertificate = await maybeUploadImage(formData, "certificateFile", "certificates");
+  const addOn = await additionalCertificateFrom(formData);
 
   await prisma.program.create({
     data: {
@@ -42,10 +55,12 @@ export async function createProgram(formData: FormData) {
       curriculumModules: {
         create: modules.map(([title, content], order) => ({ title, order, content })),
       },
+      ...(addOn ? { addOnCertificates: { create: addOn } } : {}),
     },
   });
 
   revalidatePath("/admin/courses");
+  revalidatePath("/admin/addon-certificates");
   revalidatePath("/console");
   redirect("/admin/courses");
 }
@@ -55,6 +70,7 @@ export async function updateProgram(id: string, formData: FormData) {
   const modules = linesToTuples(formData.get("modules"), 2);
   const uploadedBrochure = await maybeUploadImage(formData, "brochureFile", "brochures");
   const uploadedCertificate = await maybeUploadImage(formData, "certificateFile", "certificates");
+  const addOn = await additionalCertificateFrom(formData);
 
   await prisma.$transaction([
     prisma.certification.deleteMany({ where: { programId: id } }),
@@ -81,6 +97,7 @@ export async function updateProgram(id: string, formData: FormData) {
         curriculumModules: {
           create: modules.map(([title, content], order) => ({ title, order, content })),
         },
+        ...(addOn ? { addOnCertificates: { create: addOn } } : {}),
       },
     }),
   ]);

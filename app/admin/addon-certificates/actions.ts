@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { str, strOrNull } from "@/lib/adminParsing";
 import { maybeUploadImage } from "@/lib/blob";
+import { requireAddOnDescription } from "@/lib/addOnCertificate";
 
 function programIdsFrom(formData: FormData) {
   return formData.getAll("programIds").map(String).filter(Boolean);
@@ -19,6 +20,7 @@ export async function createAddOnCertificate(formData: FormData) {
     data: {
       name: str(formData.get("name")),
       pdfUrl,
+      description: requireAddOnDescription(formData.get("description")),
       programs: { connect: programIdsFrom(formData).map((id) => ({ id })) },
     },
   });
@@ -38,6 +40,7 @@ export async function updateAddOnCertificate(id: string, formData: FormData) {
     data: {
       name: str(formData.get("name")),
       pdfUrl,
+      description: requireAddOnDescription(formData.get("description")),
       programs: { set: programIdsFrom(formData).map((pid) => ({ id: pid })) },
     },
   });

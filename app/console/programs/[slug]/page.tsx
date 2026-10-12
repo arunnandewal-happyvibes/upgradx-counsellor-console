@@ -108,9 +108,14 @@ export default async function ProgramDetailPage({ params }: { params: { slug: st
                 rel="noreferrer"
                 className="group flex w-full items-center justify-between rounded border border-surface-variant bg-surface-container-lowest px-card-padding py-4 hover:border-primary transition-colors"
               >
-                <span className="flex items-center gap-2 text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors">
-                  <Icon name="verified" className="text-primary" size={20} fill />
-                  {ac.name}
+                <span className="flex flex-col gap-1">
+                  <span className="flex items-center gap-2 text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors">
+                    <Icon name="verified" className="text-primary" size={20} fill />
+                    {ac.name}
+                  </span>
+                  {ac.description && (
+                    <span className="pl-7 text-body-sm font-normal text-on-surface-variant">{ac.description}</span>
+                  )}
                 </span>
                 <Icon name="open_in_new" className="text-primary shrink-0" size={20} />
               </a>

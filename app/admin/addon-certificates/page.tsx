@@ -27,6 +27,7 @@ export default async function AddOnCertificatesAdminPage() {
           <tr>
             <Th>Name</Th>
             <Th>Eligible Programs</Th>
+            <Th>Description</Th>
             <Th>PDF</Th>
             <Th></Th>
           </tr>
@@ -36,6 +37,13 @@ export default async function AddOnCertificatesAdminPage() {
             <tr key={c.id} className="border-t border-brand-gray-100">
               <Td className="font-semibold text-brand-ink">{c.name}</Td>
               <Td>{c.programs.length > 0 ? c.programs.map((p) => p.name).join(", ") : "—"}</Td>
+              <Td className="max-w-xs">
+                {c.description ? (
+                  <span className="line-clamp-2">{c.description}</span>
+                ) : (
+                  <span className="font-semibold text-brand-red">Missing — edit to add</span>
+                )}
+              </Td>
               <Td>
                 <a href={c.pdfUrl} target="_blank" rel="noreferrer" className="text-brand-red hover:underline">
                   View PDF ↗

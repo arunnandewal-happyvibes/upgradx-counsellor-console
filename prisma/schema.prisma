@@ -177,6 +177,10 @@ model AddOnCertificate {
   id       String    @id @default(cuid())
   name     String
   pdfUrl   String
+  // 2-3 line note on the extra masterclasses/projects this certificate adds.
+  // Required for every new/edited certificate; nullable only so rows created
+  // before this field existed keep working.
+  description String?
   programs Program[]
 
   createdAt DateTime @default(now())

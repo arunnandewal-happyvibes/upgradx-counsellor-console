@@ -1,6 +1,7 @@
 import { Field, inputClass } from "@/components/admin/AdminUI";
 import { Button } from "@/components/ui/Button";
 import { FileField } from "@/components/admin/FileField";
+import { AdditionalCertificateFields } from "@/components/admin/AdditionalCertificateFields";
 
 type Program = {
   name: string;
@@ -14,6 +15,7 @@ type Program = {
   courseUrl?: string | null;
   certifications: { name: string; partnerInstitution: string; brochureUrl: string }[];
   curriculumModules: { title: string; content: string }[];
+  addOnCertificates?: { id: string; name: string; pdfUrl: string; description: string | null }[];
 };
 
 export function ProgramForm({
@@ -70,6 +72,7 @@ export function ProgramForm({
         defaultUrl={initial?.certificateUrl}
         hint="Sample of the certificate a student receives on completing this program — shown on the program page and opens in a new tab when clicked."
       />
+      <AdditionalCertificateFields existing={initial?.addOnCertificates} />
       <Field label="Certifications" hint="One per line: Certification Name | Partner Institution | Brochure URL">
         <textarea
           name="certifications"
