@@ -1,10 +1,15 @@
+"use client";
+
+import { useState } from "react";
 import { Field, inputClass } from "@/components/admin/AdminUI";
 import { Button } from "@/components/ui/Button";
+import { BATCH_MODES, normalizeBatchMode, type BatchMode } from "@/lib/batchMode";
 
 type Option = { id: string; name: string };
 type Batch = {
   programId: string;
-  cityId: string;
+  cityId: string | null;
+  mode: string;
   startDate: Date;
   applicationCloseDate: Date;
   timing: string;
@@ -26,6 +31,9 @@ export function BatchForm({
   cities: Option[];
   initial?: Batch;
 }) {
+  const [mode, setMode] = useState<BatchMode>(normalizeBatchMode(initial?.mode));
+  const offline = mode === "Offline";
+
   return (
     <form action={action} className="max-w-xl space-y-4">
       <Field label="Program">
@@ -37,8 +45,29 @@ export function BatchForm({
           ))}
         </select>
       </Field>
-      <Field label="City">
-        <select required name="cityId" defaultValue={initial?.cityId} className={inputClass}>
+      <Field label="Mode" hint="Online batches are open to every student, so a city is optional for them.">
+        <select
+          required
+          name="mode"
+          value={mode}
+          onChange={(e) => setMode(normalizeBatchMode(e.target.value))}
+          className={inputClass}
+        >
+          {BATCH_MODES.map((m) => (
+            <option key={m} value={m}>
+              {m}
+            </option>
+          ))}
+        </select>
+      </Field>
+      <Field label={offline ? "City (required for offline)" : "City (optional for online)"}>
+        <select
+          required={offline}
+          name="cityId"
+          defaultValue={initial?.cityId ?? ""}
+          className={inputClass}
+        >
+          <option value="">{offline ? "— Select a city —" : "— No city (open to all) —"}</option>
           {cities.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
@@ -57,8 +86,14 @@ export function BatchForm({
       <Field label="Timing">
         <input required name="timing" defaultValue={initial?.timing ?? "Mon–Fri, 6:00 PM – 9:00 PM"} className={inputClass} />
       </Field>
-      <Field label="Location">
-        <input required name="location" defaultValue={initial?.location} className={inputClass} />
+      <Field label={offline ? "Location" : "Location (optional for online)"}>
+        <input
+          required={offline}
+          name="location"
+          defaultValue={initial?.location}
+          placeholder={offline ? "" : "Online"}
+          className={inputClass}
+        />
       </Field>
       <Button type="submit">Save Batch</Button>
     </form>

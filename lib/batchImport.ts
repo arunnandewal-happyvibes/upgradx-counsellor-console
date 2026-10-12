@@ -1,4 +1,5 @@
 import ExcelJS from "exceljs";
+import { normalizeBatchMode, type BatchMode } from "@/lib/batchMode";
 
 export const BATCH_TEMPLATE_HEADERS = [
   "Program Name",
@@ -7,20 +8,23 @@ export const BATCH_TEMPLATE_HEADERS = [
   "Application Close Date",
   "Timing",
   "Location",
+  "Mode (Online/Offline)",
 ] as const;
 
 type ProgramRef = { id: string; name: string };
 type CityRef = { id: string; name: string };
 type ExistingBatch = {
   programId: string;
-  cityId: string;
+  cityId: string | null;
+  mode: string;
   startDate: Date;
   applicationCloseDate: Date;
 };
 
 export type ParsedBatchRow = {
   programId: string;
-  cityId: string;
+  cityId: string | null;
+  mode: BatchMode;
   startDate: Date;
   applicationCloseDate: Date;
   timing: string;
@@ -48,6 +52,7 @@ export async function buildBatchTemplate(programs: ProgramRef[], cities: CityRef
     { header: BATCH_TEMPLATE_HEADERS[3], key: "applicationCloseDate", width: 20 },
     { header: BATCH_TEMPLATE_HEADERS[4], key: "timing", width: 26 },
     { header: BATCH_TEMPLATE_HEADERS[5], key: "location", width: 30 },
+    { header: BATCH_TEMPLATE_HEADERS[6], key: "mode", width: 22 },
   ];
   sheet.getRow(1).font = { bold: true };
   sheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFEDEDED" } };
@@ -59,11 +64,17 @@ export async function buildBatchTemplate(programs: ProgramRef[], cities: CityRef
     applicationCloseDate: new Date(),
     timing: "Mon–Fri, 6:00 PM – 9:00 PM",
     location: "upGrad X Centre, Bangalore",
+    mode: "Offline",
   });
   exampleRow.font = { italic: true, color: { argb: "FF9A9A9A" } };
   exampleRow.getCell("startDate").numFmt = "yyyy-mm-dd";
   exampleRow.getCell("applicationCloseDate").numFmt = "yyyy-mm-dd";
   sheet.getCell("A2").note = "This row is an example — replace or delete it before uploading.";
+  sheet.getCell("G1").note =
+    "Offline (default if left blank) needs a City and a Location. Online batches can leave City and Location blank.";
+  for (let r = 2; r <= 500; r++) {
+    sheet.getCell(`G${r}`).dataValidation = { type: "list", allowBlank: true, formulae: ['"Offline,Online"'] };
+  }
 
   const refSheet = workbook.addWorksheet("Valid Names (reference)");
   refSheet.columns = [
@@ -138,6 +149,9 @@ export async function parseBatchUpload(
     const applicationCloseDate = cellToDate(values[4]);
     const timing = cellToString(values[5]);
     const location = cellToString(values[6]);
+    // Older templates have no Mode column — a blank value means Offline, as before.
+    const rawMode = cellToString(values[7]);
+    const mode = normalizeBatchMode(rawMode);
 
     const isBlankRow = !programName && !cityName && !timing && !location && !startDate && !applicationCloseDate;
     if (isBlankRow) return;
@@ -149,9 +163,14 @@ export async function parseBatchUpload(
     if (!programName) rowErrors.push("Program Name is missing");
     else if (!program) rowErrors.push(`Program "${programName}" doesn't match any existing program — check the "Valid Names" sheet`);
 
+    if (rawMode && !["online", "offline"].includes(rawMode.trim().toLowerCase())) {
+      rowErrors.push(`Mode "${rawMode}" must be Online or Offline`);
+    }
+
     const city = cityName ? cityByName.get(cityName.trim().toLowerCase()) : undefined;
-    if (!cityName) rowErrors.push("City Name is missing");
-    else if (!city) rowErrors.push(`City "${cityName}" doesn't match any existing city — check the "Valid Names" sheet`);
+    if (!cityName) {
+      if (mode === "Offline") rowErrors.push("City Name is missing (required for offline batches)");
+    } else if (!city) rowErrors.push(`City "${cityName}" doesn't match any existing city — check the "Valid Names" sheet`);
 
     if (!startDate) rowErrors.push("Start Date is missing or not a valid date");
     if (!applicationCloseDate) rowErrors.push("Application Close Date is missing or not a valid date");
@@ -159,7 +178,7 @@ export async function parseBatchUpload(
       rowErrors.push("Application Close Date is after Start Date");
     }
     if (!timing) rowErrors.push("Timing is missing");
-    if (!location) rowErrors.push("Location is missing");
+    if (!location && mode === "Offline") rowErrors.push("Location is missing (required for offline batches)");
 
     if (rowErrors.length > 0) {
       errors.push(`Row ${rowNumber}: ${rowErrors.join("; ")}`);
@@ -169,7 +188,8 @@ export async function parseBatchUpload(
     const duplicate = existingBatches.some(
       (b) =>
         b.programId === program!.id &&
-        b.cityId === city!.id &&
+        b.cityId === (city?.id ?? null) &&
+        normalizeBatchMode(b.mode) === mode &&
         b.startDate.toDateString() === startDate!.toDateString() &&
         b.applicationCloseDate.toDateString() === applicationCloseDate!.toDateString(),
     );
@@ -180,11 +200,12 @@ export async function parseBatchUpload(
 
     toInsert.push({
       programId: program!.id,
-      cityId: city!.id,
+      cityId: city?.id ?? null,
+      mode,
       startDate: startDate!,
       applicationCloseDate: applicationCloseDate!,
       timing,
-      location,
+      location: location || "Online",
     });
   });
 

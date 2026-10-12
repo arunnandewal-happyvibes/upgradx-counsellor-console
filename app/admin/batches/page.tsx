@@ -24,6 +24,7 @@ export default async function BatchesAdminPage() {
         <thead>
           <tr>
             <Th>Program</Th>
+            <Th>Mode</Th>
             <Th>City</Th>
             <Th>Start</Th>
             <Th>Apply By</Th>
@@ -34,7 +35,8 @@ export default async function BatchesAdminPage() {
           {batches.map((b) => (
             <tr key={b.id} className="border-t border-brand-gray-100">
               <Td className="font-semibold text-brand-ink">{b.program.name}</Td>
-              <Td>{b.city.name}</Td>
+              <Td>{b.mode}</Td>
+              <Td>{b.city?.name ?? "—"}</Td>
               <Td>{b.startDate.toLocaleDateString("en-IN")}</Td>
               <Td>{b.applicationCloseDate.toLocaleDateString("en-IN")}</Td>
               <Td>

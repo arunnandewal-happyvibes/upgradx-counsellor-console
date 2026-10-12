@@ -5,15 +5,23 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { str } from "@/lib/adminParsing";
 import { parseBatchUpload, type BatchUploadResult } from "@/lib/batchImport";
+import { normalizeBatchMode } from "@/lib/batchMode";
 
 function data(formData: FormData) {
+  const mode = normalizeBatchMode(formData.get("mode"));
+  const cityId = str(formData.get("cityId")) || null;
+  const location = str(formData.get("location"));
+  // Offline batches are tied to a city and a venue; online ones can be open to everyone.
+  if (mode === "Offline" && !cityId) throw new Error("A city is required for offline batches.");
+  if (mode === "Offline" && !location) throw new Error("A location is required for offline batches.");
   return {
     programId: str(formData.get("programId")),
-    cityId: str(formData.get("cityId")),
+    mode,
+    cityId,
     startDate: new Date(str(formData.get("startDate"))),
     applicationCloseDate: new Date(str(formData.get("applicationCloseDate"))),
     timing: str(formData.get("timing")),
-    location: str(formData.get("location")),
+    location: location || "Online",
   };
 }
 
@@ -46,7 +54,7 @@ export async function uploadBatchesExcel(formData: FormData): Promise<BatchUploa
   const [programs, cities, existingBatches] = await Promise.all([
     prisma.program.findMany({ select: { id: true, name: true } }),
     prisma.city.findMany({ select: { id: true, name: true } }),
-    prisma.batch.findMany({ select: { programId: true, cityId: true, startDate: true, applicationCloseDate: true } }),
+    prisma.batch.findMany({ select: { programId: true, cityId: true, mode: true, startDate: true, applicationCloseDate: true } }),
   ]);
 
   let parsed;

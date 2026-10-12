@@ -12,13 +12,14 @@ export async function GET(req: NextRequest) {
 
   if (citySlug) {
     const cityFiltered = await prisma.batch.findMany({
-      where: { city: { slug: citySlug }, ...activeOnly },
+      // Online batches aren't tied to a city, so they're relevant to every student.
+      where: { OR: [{ city: { slug: citySlug } }, { mode: "Online" }], ...activeOnly },
       orderBy: { startDate: "asc" },
       take: all ? undefined : 5,
       include: { program: true, city: { select: { name: true } } },
     });
-    // Prefer batches in the student's chosen city, but never show an empty
-    // section — fall back to every city if theirs has none scheduled yet.
+    // Prefer batches in the student's chosen city (plus online ones), but never
+    // show an empty section — fall back to every city if theirs has none yet.
     if (cityFiltered.length > 0) {
       return NextResponse.json(cityFiltered);
     }

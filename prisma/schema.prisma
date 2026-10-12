@@ -247,8 +247,10 @@ model Batch {
   applicationCloseDate  DateTime
   timing                String
   location              String
-  city                  City     @relation(fields: [cityId], references: [id])
-  cityId                String
+  // Offline batches belong to a city; Online batches are open to everyone, so city is optional.
+  mode                  String   @default("Offline")
+  city                  City?    @relation(fields: [cityId], references: [id], onDelete: Restrict)
+  cityId                String?
   createdAt             DateTime @default(now())
 }
 

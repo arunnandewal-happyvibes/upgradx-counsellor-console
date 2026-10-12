@@ -12,7 +12,8 @@ type Batch = {
   timing: string;
   location: string;
   program: { name: string };
-  city: { name: string };
+  mode: string;
+  city: { name: string } | null;
 };
 
 export function BatchesSection() {
@@ -31,6 +32,7 @@ export function BatchesSection() {
             <thead>
               <tr className="bg-surface-container-low text-secondary border-b border-surface-variant text-label-bold font-bold uppercase">
                 <th className="px-card-padding py-3">Course Name</th>
+                <th className="px-card-padding py-3">Mode</th>
                 <th className="px-card-padding py-3">City</th>
                 <th className="px-card-padding py-3">Start Date</th>
                 <th className="px-card-padding py-3">App Closing</th>
@@ -44,7 +46,8 @@ export function BatchesSection() {
                   <td className="px-card-padding py-3 font-medium text-on-surface group-hover:text-primary transition-colors">
                     {b.program.name}
                   </td>
-                  <td className="px-card-padding py-3 text-secondary">{b.city.name}</td>
+                  <td className="px-card-padding py-3 font-medium">{b.mode}</td>
+                  <td className="px-card-padding py-3 text-secondary">{b.city?.name ?? "Anywhere"}</td>
                   <td className="px-card-padding py-3">{fmt(b.startDate)}</td>
                   <td className="px-card-padding py-3 text-primary font-medium">{fmt(b.applicationCloseDate)}</td>
                   <td className="px-card-padding py-3 text-secondary">{b.timing}</td>

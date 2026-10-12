@@ -6,7 +6,8 @@ import { useCity } from "@/lib/city-context";
 type Batch = {
   id: string;
   program: { name: string };
-  city: { name: string; slug: string };
+  mode: string;
+  city: { name: string; slug: string } | null;
   startDate: string;
   applicationCloseDate: string;
   timing: string;
@@ -27,7 +28,7 @@ export function BatchesListClient({ batches }: { batches: Batch[] }) {
     if (selectedCity) setFilterSlug(selectedCity.slug);
   }, [selectedCity]);
 
-  const filtered = filterSlug === "all" ? batches : batches.filter((b) => b.city.slug === filterSlug);
+  const filtered = filterSlug === "all" ? batches : batches.filter((b) => b.mode === "Online" || b.city?.slug === filterSlug);
 
   return (
     <div>
@@ -61,6 +62,7 @@ export function BatchesListClient({ batches }: { batches: Batch[] }) {
               <thead>
                 <tr className="bg-surface-container-low text-secondary border-b border-surface-variant text-label-bold font-bold uppercase">
                   <th className="px-card-padding py-3">Course</th>
+                  <th className="px-card-padding py-3">Mode</th>
                   <th className="px-card-padding py-3">City</th>
                   <th className="px-card-padding py-3">Start</th>
                   <th className="px-card-padding py-3">Apply By</th>
@@ -72,7 +74,8 @@ export function BatchesListClient({ batches }: { batches: Batch[] }) {
                 {filtered.map((b) => (
                   <tr key={b.id} className="border-b border-surface-variant last:border-0 hover:bg-surface-container-lowest transition-colors">
                     <td className="px-card-padding py-3 font-medium text-on-surface">{b.program.name}</td>
-                    <td className="px-card-padding py-3 text-secondary">{b.city.name}</td>
+                    <td className="px-card-padding py-3 font-medium">{b.mode}</td>
+                    <td className="px-card-padding py-3 text-secondary">{b.city?.name ?? "Anywhere"}</td>
                     <td className="px-card-padding py-3 text-secondary">{fmt(b.startDate)}</td>
                     <td className="px-card-padding py-3 font-medium text-primary">{fmt(b.applicationCloseDate)}</td>
                     <td className="px-card-padding py-3 text-secondary">{b.timing}</td>
