@@ -25,7 +25,7 @@ for (const p of programs) {
     console.log(`SKIPPED (no confident match): ${p.name}`);
     continue;
   }
-  await prisma.program.update({ where: { id: p.id }, data: { courseUrl: BASE + rule.url } });
+  if (!process.env.DRY_RUN) await prisma.program.update({ where: { id: p.id }, data: { courseUrl: BASE + rule.url } });
   console.log(`${p.name} -> ${BASE + rule.url}`);
 }
 await prisma.$disconnect();
