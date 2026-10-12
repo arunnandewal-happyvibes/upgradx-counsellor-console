@@ -36,6 +36,9 @@ model Lead {
   city          City?    @relation(fields: [cityId], references: [id])
   cityId        String?
   // Fields captured by the dynamic onboarding flow.
+  // "Student" | "Working Professional", and (for the latter) years of experience.
+  occupation         String?
+  yearsOfExperience  Float?
   graduation         String? // e.g. "B.Tech", or a custom-typed degree
   graduationCategory String? // "Tech" | "Non-Tech" — only meaningful for a custom degree
   cgpa               String?

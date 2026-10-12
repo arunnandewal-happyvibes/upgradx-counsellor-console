@@ -26,7 +26,7 @@ const SKILL_TAGS = [
   "Artificial Intelligence",
 ];
 
-const STEP_COUNT = 6;
+const STEP_COUNT = 7;
 const OUT_DURATION = 220;
 
 type CityOption = { id: string; name: string; slug: string };
@@ -36,6 +36,8 @@ type FormState = {
   degree: string; // resolved: a preset tag, or the custom-typed value
   degreeCategory: string; // "Tech" | "Non-Tech", only set when degree is custom
   customDegree: string;
+  occupation: string; // "Student" | "Working Professional"
+  yearsOfExperience: string;
   cgpa: string;
   skills: string[];
   customSkillInput: string;
@@ -80,12 +82,17 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
     degree: "",
     degreeCategory: "",
     customDegree: "",
+    occupation: "",
+    yearsOfExperience: "",
     cgpa: "",
     skills: [],
     customSkillInput: "",
     interests: [],
     cityId: "",
   });
+
+  const experience = Number(form.yearsOfExperience);
+  const experienceValid = form.yearsOfExperience.trim() !== "" && Number.isFinite(experience) && experience >= 0 && experience <= 60;
 
   const goTo = (next: number) => {
     setLeaving(true);
@@ -98,7 +105,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
   const selectDegreeTag = (tag: string) => {
     setForm((f) => ({ ...f, degree: tag, degreeCategory: "", customDegree: "" }));
     setShowOtherDegree(false);
-    goTo(2);
+    goTo(3);
   };
 
   const selectOtherDegree = () => {
@@ -108,7 +115,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
   const confirmCustomDegree = () => {
     if (!form.customDegree.trim() || !form.degreeCategory) return;
     setForm((f) => ({ ...f, degree: f.customDegree.trim() }));
-    goTo(2);
+    goTo(3);
   };
 
   const toggleSkill = (skill: string) => {
@@ -156,6 +163,8 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
           name: form.name,
           graduation: form.degree,
           graduationCategory: form.degreeCategory || null,
+          occupation: form.occupation || null,
+          yearsOfExperience: form.occupation === "Working Professional" ? form.yearsOfExperience : null,
           cgpa: form.cgpa,
           skills: form.skills,
           interests: form.interests,
@@ -171,6 +180,11 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
         degree: form.degree,
         skills: form.skills,
         interests: form.interests,
+        occupation: form.occupation || null,
+        yearsOfExperience:
+          form.occupation === "Working Professional" && form.yearsOfExperience !== ""
+            ? Number(form.yearsOfExperience)
+            : null,
       });
       const selectedCity = cities.find((c) => c.id === cityId);
       if (selectedCity) {
@@ -224,6 +238,53 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
 
         {step === 1 && (
           <div key="step-1" className={cn("flex flex-col items-center gap-8 text-center", animClass)}>
+            <h2 className="text-display-lg font-semibold text-on-surface">Are you a student or a working professional?</h2>
+            <div className="flex flex-wrap justify-center gap-3">
+              <TagChip
+                label="Student"
+                selected={form.occupation === "Student"}
+                onClick={() => {
+                  setForm((f) => ({ ...f, occupation: "Student", yearsOfExperience: "" }));
+                  goTo(2);
+                }}
+              />
+              <TagChip
+                label="Working Professional"
+                selected={form.occupation === "Working Professional"}
+                onClick={() => setForm((f) => ({ ...f, occupation: "Working Professional" }))}
+              />
+            </div>
+            {form.occupation === "Working Professional" && (
+              <div className="flex w-full flex-col items-center gap-6">
+                <input
+                  autoFocus
+                  type="number"
+                  inputMode="decimal"
+                  min={0}
+                  max={60}
+                  step={0.5}
+                  className={inputClass}
+                  placeholder="Years of experience (e.g. 3)"
+                  value={form.yearsOfExperience}
+                  onChange={(e) => setForm((f) => ({ ...f, yearsOfExperience: e.target.value }))}
+                  onKeyDown={(e) => e.key === "Enter" && experienceValid && goTo(2)}
+                />
+                <Button
+                  type="button"
+                  disabled={!experienceValid}
+                  onClick={() => goTo(2)}
+                  className="w-full py-5 text-headline-sm"
+                  style={{ fontSize: "18px" }}
+                >
+                  Continue
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {step === 2 && (
+          <div key="step-2" className={cn("flex flex-col items-center gap-8 text-center", animClass)}>
             <h2 className="text-display-lg font-semibold text-on-surface">What is your graduation?</h2>
             {!showOtherDegree ? (
               <div className="flex flex-wrap justify-center gap-3">
@@ -267,8 +328,8 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
           </div>
         )}
 
-        {step === 2 && (
-          <div key="step-2" className={cn("flex flex-col items-center gap-8 text-center", animClass)}>
+        {step === 3 && (
+          <div key="step-3" className={cn("flex flex-col items-center gap-8 text-center", animClass)}>
             <h2 className="text-display-lg font-semibold text-on-surface">What is your CGPA?</h2>
             <input
               autoFocus
@@ -280,16 +341,16 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
               placeholder="e.g. 8.2"
               value={form.cgpa}
               onChange={(e) => setForm((f) => ({ ...f, cgpa: e.target.value }))}
-              onKeyDown={(e) => e.key === "Enter" && form.cgpa.trim() && goTo(3)}
+              onKeyDown={(e) => e.key === "Enter" && form.cgpa.trim() && goTo(4)}
             />
-            <Button type="button" disabled={!form.cgpa.trim()} onClick={() => goTo(3)} className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}>
+            <Button type="button" disabled={!form.cgpa.trim()} onClick={() => goTo(4)} className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}>
               Continue
             </Button>
           </div>
         )}
 
-        {step === 3 && (
-          <div key="step-3" className={cn("flex flex-col items-center gap-6 text-center", animClass)}>
+        {step === 4 && (
+          <div key="step-4" className={cn("flex flex-col items-center gap-6 text-center", animClass)}>
             <h2 className="text-display-lg font-semibold text-on-surface">Select the skills you're confident in</h2>
             <div className="flex flex-wrap justify-center gap-3">
               {SKILL_TAGS.map((tag) => (
@@ -335,7 +396,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
             <Button
               type="button"
               disabled={form.skills.length === 0}
-              onClick={() => goTo(4)}
+              onClick={() => goTo(5)}
               className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}
             >
               Continue
@@ -343,8 +404,8 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
           </div>
         )}
 
-        {step === 4 && (
-          <div key="step-4" className={cn("flex flex-col items-center gap-6 text-center", animClass)}>
+        {step === 5 && (
+          <div key="step-5" className={cn("flex flex-col items-center gap-6 text-center", animClass)}>
             <h2 className="text-display-lg font-semibold text-on-surface">
               Pick up to {MAX_STUDENT_INTERESTS} areas you&apos;re interested in
             </h2>
@@ -377,7 +438,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
             <Button
               type="button"
               disabled={form.interests.length === 0}
-              onClick={() => goTo(5)}
+              onClick={() => goTo(6)}
               className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}
             >
               Continue
@@ -385,8 +446,8 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
           </div>
         )}
 
-        {step === 5 && (
-          <div key="step-5" className={cn("flex flex-col items-center gap-8 text-center", animClass)}>
+        {step === 6 && (
+          <div key="step-6" className={cn("flex flex-col items-center gap-8 text-center", animClass)}>
             <h2 className="text-display-lg font-semibold text-on-surface">Which city works best for you?</h2>
             <div className="flex flex-wrap justify-center gap-3">
               {cities.map((c) => (

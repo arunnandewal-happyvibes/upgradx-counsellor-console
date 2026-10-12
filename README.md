@@ -21,15 +21,17 @@ between sessions ("Start Next Session").
 
 ### 2. Student onboarding
 
-A six-step, swipe-through capture screen the counsellor fills in on the student's behalf:
+A seven-step, swipe-through capture screen the counsellor fills in on the student's behalf:
 
 1. Name
-2. Graduation (preset degree chips, or a custom degree + Tech/Non-Tech category)
-3. CGPA
-4. Skills (preset chips + free-text additions)
-5. **Domain interests** — up to 4, from a shared tag taxonomy (FinTech, E-commerce, Tech, AI &
+2. **Student or working professional** — working professionals also give their years of
+   experience (a number); both become part of the learner's profile and show in Closed Sessions
+3. Graduation (preset degree chips, or a custom degree + Tech/Non-Tech category)
+4. CGPA
+5. Skills (preset chips + free-text additions)
+6. **Domain interests** — up to 4, from a shared tag taxonomy (FinTech, E-commerce, Tech, AI &
    Machine Learning, Healthtech, IT/ITES, and more) also used to tag hiring partners
-6. City — or "no preference," which is treated as genuinely unfiltered rather than defaulted to
+7. City — or "no preference," which is treated as genuinely unfiltered rather than defaulted to
    an arbitrary city
 
 Any step can be skipped. On submit, the student's profile drives the rest of the session.

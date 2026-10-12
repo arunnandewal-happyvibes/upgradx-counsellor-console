@@ -5,6 +5,8 @@ export type LeadProfile = {
   degree: string;
   skills: string[];
   interests: string[];
+  occupation?: string | null; // "Student" | "Working Professional"
+  yearsOfExperience?: number | null; // only for working professionals
 };
 
 const KEY = "upgradx.leadProfile";
