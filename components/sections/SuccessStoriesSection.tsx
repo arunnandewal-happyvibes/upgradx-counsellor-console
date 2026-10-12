@@ -1,6 +1,7 @@
 "use client";
 
 import { useCityFetch } from "@/lib/useCityFetch";
+import { Marquee } from "@/components/ui/Marquee";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Avatar } from "@/components/ui/Avatar";
 
@@ -67,21 +68,12 @@ function StoryCard({ s }: { s: Story }) {
 }
 
 function StoryCarousel({ stories, reverse }: { stories: Story[]; reverse?: boolean }) {
-  const duration = `${Math.max(stories.length * 6, 20)}s`;
   return (
-    <div
-      className="w-full overflow-hidden"
-      style={{ maskImage: "linear-gradient(90deg, transparent, black 4%, black 96%, transparent)" }}
-    >
-      <div
-        className={`flex w-max items-stretch gap-gutter py-2 ${reverse ? "marquee-track-reverse" : "marquee-track"}`}
-        style={{ ["--marquee-duration" as string]: duration }}
-      >
-        {[...stories, ...stories].map((s, i) => (
-          <StoryCard key={`${s.id}-${i}`} s={s} />
-        ))}
-      </div>
-    </div>
+    <Marquee speed={45} reverse={reverse} className="items-stretch gap-gutter py-2">
+      {stories.map((s) => (
+        <StoryCard key={s.id} s={s} />
+      ))}
+    </Marquee>
   );
 }
 

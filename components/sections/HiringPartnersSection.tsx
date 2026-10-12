@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Marquee } from "@/components/ui/Marquee";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Icon } from "@/components/ui/Icon";
 import { getLeadProfile } from "@/lib/leadProfile";
@@ -45,27 +46,14 @@ export function HiringPartnersSection() {
 
   if (!partners || partners.length === 0) return null;
 
-  // Keeps the per-card speed constant regardless of how many partners there
-  // are — the track doubles in width for a longer list, so its scroll
-  // duration must grow with it or every card would fly past.
-  const duration = `${Math.max(partners.length * 4, 20)}s`;
-
   return (
     <section id="hiring-partners">
       <SectionHeader eyebrow="Trusted By" title="Hiring Partners" />
-      <div
-        className="w-full overflow-hidden"
-        style={{ maskImage: "linear-gradient(90deg, transparent, black 6%, black 94%, transparent)" }}
-      >
-        <div
-          className="partners-track flex w-max items-center gap-4 py-2"
-          style={{ ["--marquee-duration" as string]: duration }}
-        >
-          {[...partners, ...partners].map((p, i) => (
-            <PartnerTile key={`${p.id}-${i}`} partner={p} />
-          ))}
-        </div>
-      </div>
+      <Marquee speed={60} className="items-center gap-4 py-2">
+        {partners.map((p) => (
+          <PartnerTile key={p.id} partner={p} />
+        ))}
+      </Marquee>
     </section>
   );
 }

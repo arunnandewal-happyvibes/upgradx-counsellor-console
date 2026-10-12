@@ -1,6 +1,7 @@
 "use client";
 
 import { useCityFetch } from "@/lib/useCityFetch";
+import { Marquee } from "@/components/ui/Marquee";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Icon } from "@/components/ui/Icon";
 import { Avatar } from "@/components/ui/Avatar";
@@ -80,21 +81,12 @@ function InstructorCard({ ins }: { ins: Instructor }) {
 }
 
 function InstructorCarousel({ instructors, reverse }: { instructors: Instructor[]; reverse?: boolean }) {
-  const duration = `${Math.max(instructors.length * 6, 20)}s`;
   return (
-    <div
-      className="w-full overflow-hidden"
-      style={{ maskImage: "linear-gradient(90deg, transparent, black 4%, black 96%, transparent)" }}
-    >
-      <div
-        className={`flex w-max items-stretch gap-gutter py-2 ${reverse ? "marquee-track-reverse" : "marquee-track"}`}
-        style={{ ["--marquee-duration" as string]: duration }}
-      >
-        {[...instructors, ...instructors].map((ins, i) => (
-          <InstructorCard key={`${ins.id}-${i}`} ins={ins} />
-        ))}
-      </div>
-    </div>
+    <Marquee speed={45} reverse={reverse} className="items-stretch gap-gutter py-2">
+      {instructors.map((ins) => (
+        <InstructorCard key={ins.id} ins={ins} />
+      ))}
+    </Marquee>
   );
 }
 
