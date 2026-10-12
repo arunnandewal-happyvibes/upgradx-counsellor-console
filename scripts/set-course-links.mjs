@@ -5,6 +5,9 @@ const BASE = "https://www.upgrad.com/offline-centres/";
 
 // Matched by name keywords so it works against local and production course names.
 const RULES = [
+  // Partner-specific courses first — their names also contain "full stack" / "gen ai data science".
+  { test: (n) => n.includes("jammu") && n.includes("full stack"), url: "full-stack-development-course-certificate-iit-jammu/" },
+  { test: (n) => n.includes("jammu") && n.includes("data science"), url: "data-science-ai-ml-course-certificate-iit-jammu/" },
   { test: (n) => n.includes("future") && n.includes("stack"), url: "advanced-certificate-in-future-stack-data-science-gen-ai/" },
   { test: (n) => n.includes("ai pro"), url: "advanced-certificate-in-generative-ai-and-agentic-ai/" },
   { test: (n) => n.includes("digital marketing"), url: "advanced-certificate-in-digital-marketing/" },
