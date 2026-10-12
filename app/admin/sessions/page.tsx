@@ -98,11 +98,12 @@ export default async function SessionsAdminPage({
         <thead>
           <tr>
             <Th>Closed</Th>
-            <Th>Student</Th>
-            <Th>Phone</Th>
-            <Th>Email</Th>
+            <Th>Learner</Th>
+            <Th>Learner Phone</Th>
+            <Th>Learner Email</Th>
             <Th>Recommended Program</Th>
             <Th>Counsellor</Th>
+            <Th>Counsellor Email</Th>
             <Th>City</Th>
             <Th>Rating</Th>
           </tr>
@@ -118,6 +119,7 @@ export default async function SessionsAdminPage({
               <Td>{s.email ?? "—"}</Td>
               <Td>{s.recommendedProgram?.name ?? "—"}</Td>
               <Td>{s.counsellorName ?? "—"}</Td>
+              <Td>{s.counsellorEmail ?? "—"}</Td>
               <Td>{s.counsellorCity ?? "—"}</Td>
               <Td className="whitespace-nowrap">
                 {s.rating ? (
@@ -133,7 +135,7 @@ export default async function SessionsAdminPage({
           ))}
           {sessions.length === 0 && (
             <tr>
-              <td colSpan={8} className="px-3 py-2 text-sm text-brand-gray-400">
+              <td colSpan={9} className="px-3 py-2 text-sm text-brand-gray-400">
                 No closed sessions match these filters yet.
               </td>
             </tr>

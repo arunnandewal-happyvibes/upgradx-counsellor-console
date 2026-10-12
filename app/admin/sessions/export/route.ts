@@ -22,11 +22,12 @@ export async function GET(req: NextRequest) {
 
   sheet.columns = [
     { header: "Closed At", key: "closedAt", width: 20 },
-    { header: "Student Name", key: "name", width: 24 },
-    { header: "Phone", key: "phone", width: 16 },
-    { header: "Email", key: "email", width: 28 },
+    { header: "Learner Name", key: "name", width: 24 },
+    { header: "Learner Phone", key: "phone", width: 16 },
+    { header: "Learner Email", key: "email", width: 28 },
     { header: "Recommended Program", key: "program", width: 32 },
     { header: "Counsellor", key: "counsellor", width: 20 },
+    { header: "Counsellor Email", key: "counsellorEmail", width: 28 },
     { header: "City", key: "city", width: 16 },
     { header: "Rating", key: "rating", width: 10 },
   ];
@@ -43,6 +44,7 @@ export async function GET(req: NextRequest) {
       email: s.email ?? "",
       program: s.recommendedProgram?.name ?? "",
       counsellor: s.counsellorName ?? "",
+      counsellorEmail: s.counsellorEmail ?? "",
       city: s.counsellorCity ?? "",
       rating: s.rating ?? "",
     });
