@@ -22,6 +22,7 @@ export default async function CoursesAdminPage() {
             <Th>Duration</Th>
             <Th>Mode</Th>
             <Th>Certifications</Th>
+            <Th>Course Page</Th>
             <Th></Th>
           </tr>
         </thead>
@@ -32,6 +33,15 @@ export default async function CoursesAdminPage() {
               <Td>{p.duration}</Td>
               <Td>{p.mode}</Td>
               <Td>{p.certifications.map((c) => c.partnerInstitution).join(", ")}</Td>
+              <Td>
+                {p.courseUrl ? (
+                  <a href={p.courseUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-red hover:underline">
+                    Open ↗
+                  </a>
+                ) : (
+                  <span className="text-brand-gray-400">—</span>
+                )}
+              </Td>
               <Td>
                 <div className="flex gap-2">
                   <Link href={`/admin/courses/${p.id}`} className="text-sm font-semibold text-brand-red hover:underline">

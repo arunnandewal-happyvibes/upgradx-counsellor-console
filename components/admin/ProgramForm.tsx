@@ -11,6 +11,7 @@ type Program = {
   bullets: string[];
   brochureUrl?: string | null;
   certificateUrl?: string | null;
+  courseUrl?: string | null;
   certifications: { name: string; partnerInstitution: string; brochureUrl: string }[];
   curriculumModules: { title: string; content: string }[];
 };
@@ -51,6 +52,9 @@ export function ProgramForm({
           rows={4}
           className={inputClass}
         />
+      </Field>
+      <Field label="Course page link" hint="upGrad.com page for this course — counsellors click it to open the page in a new tab.">
+        <input type="url" name="courseUrl" defaultValue={initial?.courseUrl ?? ""} className={inputClass} placeholder="https://www.upgrad.com/offline-centres/..." />
       </Field>
       <FileField
         label="Program brochure (PDF)"

@@ -31,6 +31,7 @@ export async function createProgram(formData: FormData) {
       bullets: linesToArray(formData.get("bullets")),
       brochureUrl: uploadedBrochure ?? strOrNull(formData.get("brochureUrl")),
       certificateUrl: uploadedCertificate ?? strOrNull(formData.get("certificateUrl")),
+      courseUrl: strOrNull(formData.get("courseUrl")),
       certifications: {
         create: certs.map(([certName, partnerInstitution, brochureUrl]) => ({
           name: certName,
@@ -69,6 +70,7 @@ export async function updateProgram(id: string, formData: FormData) {
         bullets: linesToArray(formData.get("bullets")),
         brochureUrl: uploadedBrochure ?? strOrNull(formData.get("brochureUrl")),
         certificateUrl: uploadedCertificate ?? strOrNull(formData.get("certificateUrl")),
+        courseUrl: strOrNull(formData.get("courseUrl")),
         certifications: {
           create: certs.map(([certName, partnerInstitution, brochureUrl]) => ({
             name: certName,

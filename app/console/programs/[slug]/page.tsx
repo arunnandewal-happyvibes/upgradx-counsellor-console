@@ -48,6 +48,17 @@ export default async function ProgramDetailPage({ params }: { params: { slug: st
               Download Brochure — {c.name}
             </a>
           ))}
+          {program.courseUrl && (
+            <a
+              href={program.courseUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-3d inline-flex items-center gap-2 rounded bg-primary px-4 py-2 text-body-sm font-semibold text-on-primary hover:bg-primary-container transition-colors"
+            >
+              <Icon name="open_in_new" size={18} />
+              View Course Page
+            </a>
+          )}
           {program.certificateUrl && (
             <a
               href={program.certificateUrl}

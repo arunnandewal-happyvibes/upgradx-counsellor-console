@@ -115,6 +115,8 @@ model Program {
   bullets     String[]
   brochureUrl String?
   certificateUrl String?
+  // upGrad.com page for this course — opens in a new tab for the counsellor.
+  courseUrl   String?
   order       Int      @default(0)
 
   certifications    Certification[]

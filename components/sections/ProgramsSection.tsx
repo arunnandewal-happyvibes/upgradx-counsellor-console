@@ -113,6 +113,17 @@ export async function ProgramsSection() {
                     Download Brochure
                   </a>
                 </div>
+                {p.courseUrl && (
+                  <a
+                    href={p.courseUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-3d mt-3 inline-flex w-full items-center justify-center gap-2 rounded border border-primary px-4 py-2 text-body-md font-bold text-primary hover:bg-primary-fixed transition-colors"
+                  >
+                    <Icon name="open_in_new" size={18} />
+                    View Course Page
+                  </a>
+                )}
               </div>
             </div>
           </div>
