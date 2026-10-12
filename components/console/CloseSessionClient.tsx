@@ -4,7 +4,6 @@ import { useEffect, useState, useTransition, type FormEvent } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { StarRating } from "@/components/ui/StarRating";
 import { getLeadProfile, type LeadProfile } from "@/lib/leadProfile";
 import { getCounsellorEmail } from "@/lib/counsellor";
 import { findRecommendationForDegree } from "@/lib/recommendationMatch";
@@ -33,7 +32,6 @@ export function CloseSessionClient({
     counsellorName: "",
     counsellorCity: "",
   });
-  const [rating, setRating] = useState(0);
   const [submitted, setSubmitted] = useState<{
     name: string;
     email: string;
@@ -60,10 +58,6 @@ export function CloseSessionClient({
       setError("Name, phone and email are required.");
       return;
     }
-    if (rating < 1) {
-      setError("Ask the student to rate the session before closing it.");
-      return;
-    }
     startTransition(async () => {
       const result = await closeSession({
         leadId: profile?.id ?? null,
@@ -74,7 +68,6 @@ export function CloseSessionClient({
         counsellorName: form.counsellorName || null,
         counsellorCity: form.counsellorCity || null,
         counsellorEmail: getCounsellorEmail(),
-        rating,
       });
       if (!result.ok) {
         setError(result.error);
@@ -221,11 +214,6 @@ export function CloseSessionClient({
               className={inputClass}
             />
           </div>
-        </div>
-
-        <div className="border-t border-surface-variant pt-5">
-          <label className={labelClass}>How would the student rate this session?</label>
-          <StarRating value={rating} onChange={setRating} />
         </div>
 
         {error && <p className="text-body-sm font-semibold text-primary">{error}</p>}

@@ -51,12 +51,15 @@ contact.
 
 ### 4. Close Session
 
-Confirms the student's contact details and recommended program, captures an **interactive 5-star
-rating** of the session, and:
+Confirms the student's contact details and recommended program, saves everything to their record
+(tied to the checked-in counsellor's email), and sends a branded HTML summary email via
+[Resend](https://resend.com) with the program, duration and counsellor name.
 
-- Saves everything to the student's record (tied to the checked-in counsellor's email)
-- Sends a branded HTML summary email (via [Resend](https://resend.com)) including the program,
-  duration, counsellor name, and the star rating
+The **star rating comes from the student, not the counsellor**: the email carries five tappable
+stars that open a public rating page (`/feedback/<token>`, an unguessable per-student link) with
+that rating preselected. The student confirms with one tap, and the rating appears in the admin
+Closed Sessions view and Excel export — "Awaiting student" until they respond. (The confirm step
+means email link scanners that pre-open links can't record a fake rating.)
 
 ### 5. Admin panel
 

@@ -128,7 +128,7 @@ export default async function SessionsAdminPage({
                     <span className="text-brand-gray-200">{"★".repeat(5 - s.rating)}</span>
                   </span>
                 ) : (
-                  "—"
+                  <span className="text-brand-gray-400">Awaiting student</span>
                 )}
               </Td>
             </tr>

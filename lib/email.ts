@@ -5,13 +5,13 @@ export function sessionSummaryHtml({
   programName,
   programDuration,
   counsellorName,
-  rating,
+  feedbackUrl,
 }: {
   studentName: string;
   programName: string | null;
   programDuration: string | null;
   counsellorName: string | null;
-  rating: number | null;
+  feedbackUrl: string | null;
 }) {
   const firstName = studentName.trim().split(/\s+/)[0] || studentName;
   return `<!doctype html>
@@ -76,13 +76,14 @@ export function sessionSummaryHtml({
                 </table>
 
                 ${
-                  rating
-                    ? `<div style="margin-bottom:28px;">
-                  <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:#1a1c1c;text-transform:uppercase;margin-bottom:8px;">
-                    Your Session Rating
+                  feedbackUrl
+                    ? `<div style="margin-bottom:28px;padding:20px;background-color:#faf3f3;border-radius:10px;text-align:center;">
+                  <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:#1a1c1c;text-transform:uppercase;margin-bottom:6px;">
+                    How was your session?
                   </div>
-                  <div style="font-size:24px;letter-spacing:2px;">
-                    ${[1, 2, 3, 4, 5].map((n) => `<span style="color:${n <= rating ? "#e41f26" : "#e2e2e2"};">&#9733;</span>`).join("")}
+                  <div style="font-size:13px;color:#603e3a;margin-bottom:10px;">Tap a star to rate it — it takes a second.</div>
+                  <div style="font-size:34px;line-height:1;letter-spacing:4px;">
+                    ${[1, 2, 3, 4, 5].map((n) => `<a href="${escapeHtml(feedbackUrl)}?rating=${n}" style="color:#e41f26;text-decoration:none;" title="${n} star${n === 1 ? "" : "s"}">&#9733;</a>`).join("")}
                   </div>
                 </div>`
                     : ""
@@ -124,7 +125,7 @@ export async function sendSessionSummaryEmail(params: {
   programName: string | null;
   programDuration: string | null;
   counsellorName: string | null;
-  rating: number | null;
+  feedbackUrl: string | null;
 }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;

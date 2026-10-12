@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { randomBytes } from "crypto";
+import { headers } from "next/headers";
 import { sendSessionSummaryEmail } from "@/lib/email";
 
 export type CloseSessionInput = {
@@ -13,7 +15,6 @@ export type CloseSessionInput = {
   counsellorName: string | null;
   counsellorCity: string | null;
   counsellorEmail: string | null;
-  rating: number;
 };
 
 export type CloseSessionResult = { ok: true; emailSent: boolean } | { ok: false; error: string };
@@ -34,7 +35,6 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
     counsellorName: input.counsellorName?.trim() || null,
     counsellorCity: input.counsellorCity?.trim() || null,
     counsellorEmail: input.counsellorEmail?.trim().toLowerCase() || null,
-    rating: Number.isInteger(input.rating) && input.rating >= 1 && input.rating <= 5 ? input.rating : null,
     sessionClosedAt: new Date(),
   };
 
@@ -46,6 +46,23 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
         .catch(() => null)
     : null;
   const savedLead = updated ?? (await prisma.lead.create({ data }));
+
+  // Unguessable key for the "rate your session" link in the student's email —
+  // the rating comes from the student there, not from the counsellor's form.
+  const feedbackToken =
+    savedLead.feedbackToken ??
+    (
+      await prisma.lead.update({
+        where: { id: savedLead.id },
+        data: { feedbackToken: randomBytes(16).toString("hex") },
+        select: { feedbackToken: true },
+      })
+    ).feedbackToken;
+
+  const h = headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
+  const feedbackUrl = host && feedbackToken ? `${proto}://${host}/feedback/${feedbackToken}` : null;
 
   let programName: string | null = null;
   let programDuration: string | null = null;
@@ -64,7 +81,7 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
     programName,
     programDuration,
     counsellorName: data.counsellorName,
-    rating: data.rating,
+    feedbackUrl,
   });
 
   revalidatePath("/admin/sessions");

@@ -59,8 +59,11 @@ model Lead {
   // CounsellorLogin) — lets admin count completed sessions per counsellor
   // reliably, independent of what they typed into counsellorName.
   counsellorEmail String?
-  // 1-5 star rating the student gives the session when closing it.
+  // 1-5 star rating the student gives from the link in their summary email.
+  // Empty until they respond; feedbackToken is the unguessable key in that link.
   rating         Int?
+  ratedAt        DateTime?
+  feedbackToken  String?   @unique
 }
 
 // One row per counsellor check-in (once per browser session on the console) —
