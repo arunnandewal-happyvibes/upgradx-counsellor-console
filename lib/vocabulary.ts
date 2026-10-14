@@ -7,11 +7,9 @@ let cache: { at: number; text: string } | null = null;
 export async function vocabularyPrompt(): Promise<string> {
   if (cache && Date.now() - cache.at < 10 * 60_000) return cache.text;
   try {
-    const [cities, programs] = await Promise.all([
-      prisma.city.findMany({ select: { name: true }, orderBy: { name: "asc" } }),
-      prisma.program.findMany({ select: { name: true }, orderBy: { order: "asc" } }),
-    ]);
-    const text = `upGrad X counselling session. Learning centres in ${cities.map((c) => c.name.replace(/\s*\(.*\)/, "")).join(", ")}. Programs: ${programs.map((p) => p.name).join("; ")}.`.slice(0, 700);
+    // City names only: a long prompt of program titles made Whisper loop on short questions.
+    const cities = await prisma.city.findMany({ select: { name: true }, orderBy: { name: "asc" } });
+    const text = `upGrad X counselling. Cities: ${cities.map((c) => c.name.replace(/\s*\(.*\)/, "")).join(", ")}.`.slice(0, 300);
     cache = { at: Date.now(), text };
     return text;
   } catch {

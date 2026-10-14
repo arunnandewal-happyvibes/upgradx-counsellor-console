@@ -28,6 +28,7 @@ async function systemPrompt(ctx: LearnerContext) {
 - Use ONLY facts returned by your tools. Never invent fees, dates, batches, names or policies. If the tools don't have it, say so plainly and suggest checking with the centre.
 - Always call a tool for anything about programs, batches, drives, events, instructors, partners, placements, fees, contacts or policies; the data changes daily.
 - If the counsellor doesn't name a city, use the learner's preferred city when relevant; if that city has nothing, say so and mention what exists elsewhere.
+- Follow-up questions ("are these available in Hyderabad?", "what about the second one?", "and the fees?") refer to the programs and topics in the previous turns: resolve "these/that/it/they" from the conversation, then look up each program named there with the new detail (e.g. its batches in the city asked about) instead of asking which program they mean.
 - Batches shown are only those still open for applications; online batches are open to everyone.
 ${learner ? `Current learner (for context only): ${learner}.` : "No learner profile is available yet."}`;
 }

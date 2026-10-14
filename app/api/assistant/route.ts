@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { answerQuestion, type LearnerContext, type Turn } from "@/lib/assistant";
 import { llmEnabled, LlmError } from "@/lib/llm";
-import { transcribeAudio, transcriptionEnabled } from "@/lib/transcription";
+import { transcribeQuestion, transcriptionEnabled } from "@/lib/transcription";
 import { vocabularyPrompt } from "@/lib/vocabulary";
 
 export const dynamic = "force-dynamic";
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       if (audio.size === 0 || audio.size > MAX_AUDIO_BYTES) return NextResponse.json({ error: "Bad audio." }, { status: 400 });
       if (!transcriptionEnabled()) return NextResponse.json({ error: "Voice input isn't configured." }, { status: 503 });
       try {
-        question = await transcribeAudio(audio, audio instanceof File && audio.name ? audio.name : "question.webm", await vocabularyPrompt());
+        question = await transcribeQuestion(audio, audio instanceof File && audio.name ? audio.name : "question.webm", await vocabularyPrompt());
       } catch (err) {
         console.error("assistant stt failed:", err);
         return NextResponse.json({ error: "Couldn't understand the audio." }, { status: 502 });
