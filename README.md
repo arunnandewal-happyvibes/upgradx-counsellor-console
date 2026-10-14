@@ -60,9 +60,9 @@ industry leaders, placement drives, upcoming batches, FAQ, events and contact.
 
 ### 4. Counsellor voice assistant (optional)
 
-An **Ask assistant** button lets the counsellor ask by voice or text — "any data science batches in
-Pune?", "how do I reach the Mumbai centre?", "which companies hire into fintech?" — and hear a short
-spoken answer.
+A large floating **Ask AI** button (bottom-right of every console page) opens the assistant. The
+counsellor asks by voice or text — "any data science batches in Pune?", "how do I reach the Mumbai
+centre?", "which companies hire into fintech?" — and hears a short spoken answer.
 
 Speech goes to Whisper; the question goes to a free-tier open model (`openai/gpt-oss-120b` on Groq
 by default; any OpenAI-compatible host via `LLM_BASE_URL` / `LLM_MODEL`, including a local Ollama).
@@ -71,16 +71,32 @@ programs, open batches, drives, events, instructors, hiring partners, success st
 placement stats, degree recommendations, centre contacts and the career-services policy — so answers
 are always current, and it says so when it doesn't know (there is no fee data, for example).
 
+**It remembers the session.** The conversation (and its links) is kept in the browser for the whole
+counselling session, so it survives page changes and reloads, and follow-ups like "are these
+available in Hyderabad?" or "what about the certificate?" are resolved from earlier turns. It also
+knows which console page is open ("this course" = the program on screen). Tapping **Start Next
+Session** wipes it.
+
+**Links, not guesses.** Answers can carry link chips — the program's console page, its upGrad course
+webpage (opens in a new tab), or the batches / drives / events / FAQ / contact pages. Links are
+accepted only if they came back from a real lookup, so the model can't invent a URL, and links are
+never read aloud.
+
+**Voice.** Replies are read aloud with the best natural voice the device offers (Edge "Natural",
+Apple Enhanced/Siri, Google), with symbols tidied for speech ("₹12 LPA" → "12 lakh per annum"). A
+settings icon lets the counsellor pick the voice and speed and preview it. City names are fed to
+Whisper as a spelling hint, repeated-word hallucinations trigger a retry without the hint, and city
+matching tolerates mis-hearings.
+
 It only sees published content plus the learner's degree, work status, interests and preferred city
-for context — never names, contact details or transcripts. Replies are read aloud with the
-browser's built-in voice. City and program names are fed to Whisper as a hint, and city matching
-tolerates mis-hearings. With no key configured the button doesn't appear. The free tier caps tokens
-per minute, so a burst of questions can briefly slow it.
+for context — never names, contact details or transcripts. With no key configured the button
+doesn't appear. The free tier caps tokens per minute, so a burst of questions can briefly slow it.
 
 ### 5. Session transcription (optional)
 
-A **Record session** button appears (when a speech-to-text key is configured). It only starts after
-the counsellor confirms the learner agreed, shows a live recording clock, and can be paused. The
+A large floating **Record** button (bottom-left) appears when a speech-to-text key is configured. It
+only starts after the counsellor confirms the learner agreed; while recording it shows a live clock,
+and tapping it pauses or resumes. The
 browser sends the microphone audio in ~30 second pieces to Whisper (Groq's free tier by default, or
 any OpenAI-compatible server via `STT_BASE_URL`, e.g. self-hosted faster-whisper).
 
@@ -257,8 +273,8 @@ pulled back). Never commit `.env*` files; only `.env.example` is tracked.
 - `lib/adminAuth.ts` — session-token signing (Edge-compatible)
 - `lib/transcription.ts`, `lib/sessionRecorder.ts`, `lib/vocabulary.ts` — speech-to-text, the
   browser recorder, and the name hints fed to Whisper
-- `lib/llm.ts`, `lib/assistant.ts`, `lib/assistantTools.ts` — the voice assistant's model client,
-  loop and lookup tools
+- `lib/llm.ts`, `lib/assistant.ts`, `lib/assistantTools.ts`, `lib/speech.ts` — the voice assistant's
+  model client, loop, lookup tools, link filtering and speech-friendly text
 - `lib/email.ts` — summary email (with the star-rating links)
 - `lib/snapshot.ts` — database backups
 - `prisma/schema.prisma`, `prisma/migrations/`, `prisma/seed.ts` — data model, history, seed data
