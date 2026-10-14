@@ -16,6 +16,9 @@ export async function createBackup() {
   const filename = `snapshot-${snapshot.capturedAt.replace(/[:.]/g, "-")}.json`;
   await put(`backups/${filename}`, JSON.stringify(snapshot, null, 2), {
     access: "public",
+    // Random suffix: without it the URL is just the timestamp, which is guessable, and
+    // these files hold every learner's details.
+    addRandomSuffix: true,
     contentType: "application/json",
   });
   revalidatePath("/admin/backups");

@@ -6,7 +6,11 @@ import { prisma } from "@/lib/prisma";
  * FK-safe (parents declared before children), so restoring in this order
  * never violates a foreign key before its target exists.
  */
-const MODEL_NAMES = Prisma.dmmf.datamodel.models.map((m) => m.name);
+// Session transcripts are deliberately left out: backups are stored as public Blob files, and
+// a conversation transcript is the most sensitive thing in the database. They live in Postgres
+// only (Neon keeps point-in-time history for restores).
+const EXCLUDED_FROM_BACKUPS = new Set(["SessionRecording", "TranscriptChunk"]);
+const MODEL_NAMES = Prisma.dmmf.datamodel.models.map((m) => m.name).filter((n) => !EXCLUDED_FROM_BACKUPS.has(n));
 
 /** AddOnCertificate<->Program is the only implicit many-to-many relation in
  * the schema; every other model is fully described by its own scalar

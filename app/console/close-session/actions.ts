@@ -15,6 +15,7 @@ export type CloseSessionInput = {
   counsellorName: string | null;
   counsellorCity: string | null;
   counsellorEmail: string | null;
+  recordingKey?: string | null;
 };
 
 export type CloseSessionResult = { ok: true; emailSent: boolean } | { ok: false; error: string };
@@ -46,6 +47,16 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
         .catch(() => null)
     : null;
   const savedLead = updated ?? (await prisma.lead.create({ data }));
+
+  // Attach the session's transcript (if one was recorded) to this learner.
+  if (input.recordingKey) {
+    await prisma.sessionRecording
+      .updateMany({
+        where: { sessionKey: input.recordingKey, leadId: null },
+        data: { leadId: savedLead.id, endedAt: new Date() },
+      })
+      .catch((err) => console.error("couldn't link recording to lead:", err));
+  }
 
   // Unguessable key for the "rate your session" link in the student's email —
   // the rating comes from the student there, not from the counsellor's form.

@@ -23,7 +23,7 @@ export default async function SessionsAdminPage({
     prisma.lead.findMany({
       where,
       orderBy: { sessionClosedAt: sort },
-      include: { recommendedProgram: { select: { name: true } } },
+      include: { recommendedProgram: { select: { name: true } }, recording: { select: { id: true } } },
     }),
     prisma.lead.findMany({
       where: { sessionClosedAt: { not: null }, counsellorCity: { not: null } },
@@ -107,6 +107,7 @@ export default async function SessionsAdminPage({
             <Th>Counsellor Email</Th>
             <Th>City</Th>
             <Th>Rating</Th>
+            <Th>Transcript</Th>
           </tr>
         </thead>
         <tbody>
@@ -139,11 +140,20 @@ export default async function SessionsAdminPage({
                   <span className="text-brand-gray-400">Awaiting student</span>
                 )}
               </Td>
+              <Td>
+                {s.recording ? (
+                  <Link href={`/admin/transcripts/${s.recording.id}`} className="font-semibold text-brand-red hover:underline">
+                    View
+                  </Link>
+                ) : (
+                  <span className="text-brand-gray-400">—</span>
+                )}
+              </Td>
             </tr>
           ))}
           {sessions.length === 0 && (
             <tr>
-              <td colSpan={10} className="px-3 py-2 text-sm text-brand-gray-400">
+              <td colSpan={11} className="px-3 py-2 text-sm text-brand-gray-400">
                 No closed sessions match these filters yet.
               </td>
             </tr>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { getLeadProfile, type LeadProfile } from "@/lib/leadProfile";
 import { getCounsellorEmail } from "@/lib/counsellor";
+import { getSessionRecorder } from "@/lib/sessionRecorder";
 import { findRecommendationForDegree } from "@/lib/recommendationMatch";
 import { closeSession } from "@/app/console/close-session/actions";
 
@@ -59,6 +60,8 @@ export function CloseSessionClient({
       return;
     }
     startTransition(async () => {
+      // Finish uploading the last bit of the recording before the session is closed.
+      const recordingKey = await getSessionRecorder().stopAndFlush().catch(() => null);
       const result = await closeSession({
         leadId: profile?.id ?? null,
         name: form.name,
@@ -68,11 +71,13 @@ export function CloseSessionClient({
         counsellorName: form.counsellorName || null,
         counsellorCity: form.counsellorCity || null,
         counsellorEmail: getCounsellorEmail(),
+        recordingKey,
       });
       if (!result.ok) {
         setError(result.error);
         return;
       }
+      getSessionRecorder().reset();
       const program = programs.find((p) => p.id === form.programId);
       setSubmitted({
         name: form.name,

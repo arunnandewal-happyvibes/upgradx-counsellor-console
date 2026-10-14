@@ -63,6 +63,18 @@ that rating preselected. The student confirms with one tap, and the rating appea
 Closed Sessions view and Excel export — "Awaiting student" until they respond. (The confirm step
 means email link scanners that pre-open links can't record a fake rating.)
 
+### Session transcription (optional)
+
+With a speech-to-text key configured, a **Record session** button appears for counsellors. It only
+starts after the counsellor confirms the student agreed, shows a live recording clock the whole
+time, and can be paused. The browser sends the microphone audio in ~30 second pieces to Whisper
+(Groq's free tier by default, or any OpenAI-compatible server via `STT_BASE_URL` — e.g. a
+self-hosted faster-whisper); **only the text is kept, never the audio**. Closing the session links
+the transcript to the learner, and admins read or download it from **Session Transcripts** (also
+linked from each row in Closed Sessions). Transcripts are machine-generated, don't label speakers,
+and are deliberately left out of the public-Blob database backups. Without a key the button simply
+doesn't appear.
+
 ### 5. Admin panel
 
 Login-gated (see below) CRUD for every piece of content the console shows: cities, courses &

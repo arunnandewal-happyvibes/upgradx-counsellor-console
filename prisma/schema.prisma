@@ -67,6 +67,35 @@ model Lead {
   rating         Int?
   ratedAt        DateTime?
   feedbackToken  String?   @unique
+
+  recording SessionRecording?
+}
+
+// A counselling session's voice recording, kept only as text. The browser sends the
+// audio in ~30s pieces to a speech-to-text service; the audio itself is never stored.
+// Starts only after the counsellor confirms the student agreed (consentConfirmedAt).
+model SessionRecording {
+  id                 String            @id @default(cuid())
+  sessionKey         String            @unique // client-generated; ties chunks together before a Lead exists
+  counsellorEmail    String?
+  consentConfirmedAt DateTime
+  startedAt          DateTime          @default(now())
+  endedAt            DateTime?
+  lead               Lead?             @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  leadId             String?           @unique
+  chunks             TranscriptChunk[]
+}
+
+model TranscriptChunk {
+  id          String           @id @default(cuid())
+  recording   SessionRecording @relation(fields: [recordingId], references: [id], onDelete: Cascade)
+  recordingId String
+  seq         Int
+  offsetSec   Float // where this piece starts, in seconds of recorded time
+  text        String
+  createdAt   DateTime         @default(now())
+
+  @@unique([recordingId, seq])
 }
 
 // One row per counsellor check-in (once per browser session on the console) —

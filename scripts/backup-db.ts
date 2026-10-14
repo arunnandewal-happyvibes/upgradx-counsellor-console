@@ -23,6 +23,9 @@ async function main() {
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     const blob = await put(`backups/${filename}`, json, {
       access: "public",
+    // Random suffix: without it the URL is just the timestamp, which is guessable, and
+    // these files hold every learner's details.
+    addRandomSuffix: true,
       contentType: "application/json",
     });
     console.log(`Uploaded to Vercel Blob: ${blob.url}`);
