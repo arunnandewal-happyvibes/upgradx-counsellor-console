@@ -75,6 +75,21 @@ linked from each row in Closed Sessions). Transcripts are machine-generated, don
 and are deliberately left out of the public-Blob database backups. Without a key the button simply
 doesn't appear.
 
+### Counsellor voice assistant (optional)
+
+An **Ask assistant** button on the console lets the counsellor ask a question by voice (or text) and
+hear a short spoken answer — "any data science batches in Pune?", "how do I reach the Mumbai
+centre?", "which companies hire into fintech?". Speech goes to Whisper, and the question goes to a
+free-tier open model (`openai/gpt-oss-120b` on Groq by default; any OpenAI-compatible host via
+`LLM_BASE_URL` / `LLM_MODEL`, including a local Ollama). Rather than a vector index, the model calls
+small lookup tools over the platform's live data — programs, open batches, placement drives,
+events, instructors, hiring partners, success stories, FAQs, degree recommendations, centre contacts
+and the career-services policy — so answers are always current and it says so when it doesn't know
+(there's no fee data, for instance). It only ever sees published content, plus the learner's degree,
+occupation, interests and preferred city for context — never names, contact details or transcripts.
+Answers are read aloud with the browser's built-in voice. With no key configured the button doesn't
+appear. Note the free tier caps tokens per minute, so a burst of questions can briefly slow down.
+
 ### 5. Admin panel
 
 Login-gated (see below) CRUD for every piece of content the console shows: cities, courses &

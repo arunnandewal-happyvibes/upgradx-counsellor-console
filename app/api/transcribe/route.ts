@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { transcribeAudio, transcriptionEnabled } from "@/lib/transcription";
+import { vocabularyPrompt } from "@/lib/vocabulary";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -50,7 +51,7 @@ export async function POST(req: NextRequest) {
 
   let text: string;
   try {
-    text = await transcribeAudio(audio, audio instanceof File && audio.name ? audio.name : "chunk.webm");
+    text = await transcribeAudio(audio, audio instanceof File && audio.name ? audio.name : "chunk.webm", await vocabularyPrompt());
   } catch (err) {
     console.error("transcribe failed:", err);
     return NextResponse.json({ error: "Speech-to-text service error." }, { status: 502 });

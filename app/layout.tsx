@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SessionRecorderWidget } from "@/components/console/SessionRecorderWidget";
+import { VoiceAssistant } from "@/components/console/VoiceAssistant";
 
 export const metadata: Metadata = {
   title: "Expert Counselling Portal by upGrad X",
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-background font-sans text-on-background">
         {children}
         <SessionRecorderWidget />
+        <VoiceAssistant />
       </body>
     </html>
   );

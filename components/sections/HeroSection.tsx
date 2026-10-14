@@ -1,14 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { HeroClient } from "@/components/sections/HeroClient";
-
-function highestPackage(labels: string[]) {
-  let max = 0;
-  for (const label of labels) {
-    const match = label.match(/₹\s?(\d+(?:\.\d+)?)\s?LPA/i);
-    if (match) max = Math.max(max, parseFloat(match[1]));
-  }
-  return max > 0 ? `₹ ${max} LPA` : "₹ 42 LPA";
-}
+import { highestPackage } from "@/lib/highestPackage";
 
 export async function HeroSection() {
   const [cityCount, stories, settings, recommendations] = await Promise.all([

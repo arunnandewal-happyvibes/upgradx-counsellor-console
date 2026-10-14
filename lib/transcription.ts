@@ -33,13 +33,14 @@ export function cleanSegments(segments: Segment[] | undefined, fallbackText: str
     .trim();
 }
 
-export async function transcribeAudio(audio: Blob, filename: string): Promise<string> {
+export async function transcribeAudio(audio: Blob, filename: string, prompt?: string): Promise<string> {
   const { apiKey, baseUrl, model } = transcriptionConfig();
   const body = new FormData();
   body.append("file", audio, filename);
   body.append("model", model);
   body.append("response_format", "verbose_json");
   body.append("temperature", "0");
+  if (prompt) body.append("prompt", prompt);
 
   const res = await fetch(`${baseUrl}/audio/transcriptions`, {
     method: "POST",
