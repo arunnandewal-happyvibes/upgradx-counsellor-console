@@ -152,16 +152,18 @@ export function VoiceAssistant() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 z-[150] flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-label-bold font-bold uppercase tracking-wide text-on-primary shadow-lg transition-colors hover:bg-primary-container"
+        aria-label="Ask the assistant"
+        className="fixed bottom-6 right-6 z-[150] flex h-20 w-20 flex-col items-center justify-center gap-0.5 rounded-full bg-primary text-on-primary shadow-2xl transition-transform hover:scale-105"
       >
-        <Icon name="support_agent" size={22} fill /> Ask assistant
+        <Icon name="support_agent" size={30} fill />
+        <span className="text-[10px] font-bold uppercase leading-tight">Ask AI</span>
       </button>
     );
   }
 
   const busy = phase === "thinking";
   return (
-    <div className="fixed bottom-4 right-4 z-[150] flex h-[min(560px,80vh)] w-[380px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-outline-variant bg-white shadow-2xl">
+    <div className="fixed bottom-6 right-6 z-[150] flex h-[min(560px,80vh)] w-[380px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-outline-variant bg-white shadow-2xl">
       <div className="flex items-center justify-between bg-primary px-4 py-3 text-on-primary">
         <div className="flex items-center gap-2 text-body-md font-bold">
           <Icon name="support_agent" size={22} fill /> Counsellor assistant

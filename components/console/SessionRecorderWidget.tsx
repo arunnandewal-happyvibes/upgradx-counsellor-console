@@ -50,7 +50,7 @@ export function SessionRecorderWidget() {
 
   if (confirming) {
     return (
-      <div className="fixed bottom-4 left-4 z-[150] w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl border border-outline-variant bg-white p-5 shadow-xl">
+      <div className="fixed bottom-6 left-6 z-[150] w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl border border-outline-variant bg-white p-5 shadow-xl">
         <h3 className="mb-2 text-body-md font-bold text-on-surface">Record this session?</h3>
         <p className="mb-3 text-body-sm text-on-surface-variant">
           The conversation is transcribed to text for admin review. The audio itself isn&apos;t kept.
@@ -81,43 +81,46 @@ export function SessionRecorderWidget() {
     );
   }
 
+  const fab =
+    "fixed bottom-6 left-6 z-[150] flex h-20 w-20 flex-col items-center justify-center gap-0.5 rounded-full text-center shadow-2xl transition-transform hover:scale-105";
+
   if (snap.status === "recording") {
     return (
-      <div className={pill} role="status">
-        <span className="relative flex h-3 w-3">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
-          <span className="relative inline-flex h-3 w-3 rounded-full bg-primary" />
+      <button type="button" onClick={() => rec.pause()} aria-label="Pause recording" className={`${fab} bg-primary text-on-primary`}>
+        <span className="absolute inset-0 animate-ping rounded-full bg-primary opacity-30" />
+        <Icon name="pause" size={28} fill />
+        <span className="relative text-[11px] font-bold tabular-nums">{fmt(snap.elapsedSec)}</span>
+      </button>
+    );
+  }
+
+  if (snap.status === "paused") {
+    return (
+      <button type="button" onClick={() => rec.resume()} aria-label="Resume recording" className={`${fab} border-2 border-primary bg-white text-primary`}>
+        <Icon name="mic" size={28} fill />
+        <span className="text-[10px] font-bold uppercase leading-tight">
+          {snap.pendingUploads > 0 ? "Saving" : "Resume"}
         </span>
-        Recording {fmt(snap.elapsedSec)}
-        <button type="button" onClick={() => rec.pause()} className="ml-1 flex items-center gap-1 rounded-full border border-outline-variant px-3 py-1 text-label-bold uppercase text-on-surface-variant hover:border-primary hover:text-primary">
-          <Icon name="pause" size={16} /> Pause
+      </button>
+    );
+  }
+
+  if (snap.status === "error") {
+    return (
+      <div className={pill} role="status">
+        <span className="h-3 w-3 rounded-full bg-outline" />
+        {snap.error}
+        <button type="button" onClick={() => rec.resume()} className="ml-1 rounded-full bg-primary px-3 py-1 text-label-bold uppercase text-on-primary">
+          Retry
         </button>
       </div>
     );
   }
 
-  if (snap.status === "paused" || snap.status === "error") {
-    return (
-      <div className={pill} role="status">
-        <span className="h-3 w-3 rounded-full bg-outline" />
-        {snap.status === "error" ? snap.error : snap.pendingUploads > 0 ? "Saving the last bit…" : "Recording paused"}
-        {snap.status === "paused" && (
-          <button type="button" onClick={() => rec.resume()} className="ml-1 flex items-center gap-1 rounded-full bg-primary px-3 py-1 text-label-bold uppercase text-on-primary">
-            <Icon name="mic" size={16} /> Resume
-          </button>
-        )}
-        {snap.status === "error" && (
-          <button type="button" onClick={() => rec.resume()} className="ml-1 rounded-full bg-primary px-3 py-1 text-label-bold uppercase text-on-primary">
-            Retry
-          </button>
-        )}
-      </div>
-    );
-  }
-
   return (
-    <button type="button" onClick={() => setConfirming(true)} className={`${pill} hover:border-primary hover:text-primary`}>
-      <span className="h-3 w-3 rounded-full bg-primary" /> Record session
+    <button type="button" onClick={() => setConfirming(true)} aria-label="Record session" className={`${fab} bg-primary text-on-primary`}>
+      <Icon name="mic" size={30} fill />
+      <span className="text-[10px] font-bold uppercase leading-tight">Record</span>
     </button>
   );
 }
