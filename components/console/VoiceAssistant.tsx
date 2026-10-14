@@ -1,12 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
 import { getLeadProfile } from "@/lib/leadProfile";
 import { cleanForSpeech, englishVoices } from "@/lib/speech";
 
-type Msg = { role: "user" | "assistant"; content: string; error?: boolean };
+type Msg = { role: "user" | "assistant"; content: string; error?: boolean; links?: { label: string; url: string }[] };
+
+// Session memory: kept in sessionStorage so it survives page redirects/reloads, and is wiped
+// with the other upgradx.* keys when the counsellor starts the next session.
+const CHAT_KEY = "upgradx.assistantChat";
+const OPEN_KEY = "upgradx.assistantOpen";
 type Phase = "idle" | "listening" | "thinking" | "speaking";
 
 const PREF_KEY = "upgradx.assistantVoicePrefs";
@@ -32,6 +38,7 @@ export function VoiceAssistant() {
   const [muted, setMuted] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [text, setText] = useState("");
+  const [restored, setRestored] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceName, setVoiceName] = useState<string | null>(null);
@@ -48,6 +55,23 @@ export function VoiceAssistant() {
       .then(setStatus)
       .catch(() => setStatus({ enabled: false, voiceInput: false }));
   }, []);
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(window.sessionStorage.getItem(CHAT_KEY) ?? "[]");
+      if (Array.isArray(saved)) setMessages(saved.slice(-40));
+      setOpen(window.sessionStorage.getItem(OPEN_KEY) === "1");
+    } catch {}
+    setRestored(true);
+  }, []);
+
+  useEffect(() => {
+    if (!restored) return;
+    try {
+      window.sessionStorage.setItem(CHAT_KEY, JSON.stringify(messages.slice(-40)));
+      window.sessionStorage.setItem(OPEN_KEY, open ? "1" : "0");
+    } catch {}
+  }, [messages, open, restored]);
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
@@ -89,6 +113,7 @@ export function VoiceAssistant() {
         yearsOfExperience: p?.yearsOfExperience ?? null,
         interests: p?.interests ?? [],
         citySlug,
+        page: pathname,
       },
     };
   };
@@ -127,7 +152,7 @@ export function VoiceAssistant() {
         setMessages((m) => [...m, { role: "assistant", content: "I didn't catch that — could you say it again?", error: true }]);
         return setPhase("idle");
       }
-      setMessages((m) => [...m, { role: "user", content: json.question }, { role: "assistant", content: json.answer }]);
+      setMessages((m) => [...m, { role: "user", content: json.question }, { role: "assistant", content: json.answer, links: Array.isArray(json.links) ? json.links : [] }]);
       speak(json.answer);
     } catch (err) {
       setMessages((m) => [...m, { role: "assistant", content: err instanceof Error ? err.message : "Something went wrong.", error: true }]);
@@ -282,6 +307,23 @@ export function VoiceAssistant() {
               }
             >
               {m.content}
+              {m.links && m.links.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {m.links.map((l) => {
+                    const external = /^https?:/.test(l.url);
+                    return (
+                      <Link
+                        key={l.url}
+                        href={l.url}
+                        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        className="inline-flex items-center gap-1 rounded-full border border-primary bg-white px-2.5 py-1 text-label-bold font-semibold text-primary hover:bg-primary-fixed"
+                      >
+                        {l.label} <Icon name={external ? "open_in_new" : "arrow_forward"} size={14} />
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         ))}

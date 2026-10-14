@@ -78,7 +78,7 @@ export async function runTool(name: string, args: Record<string, unknown>): Prom
   switch (name) {
     case "list_programs": {
       const ps = await prisma.program.findMany({ orderBy: { order: "asc" } });
-      return ps.map((p) => ({ name: p.name, duration: p.duration, mode: p.mode, category: p.category, summary: p.description.slice(0, 160) }));
+      return ps.map((p) => ({ consolePage: `/console/programs/${p.slug}`, name: p.name, duration: p.duration, mode: p.mode, category: p.category, summary: p.description.slice(0, 160) }));
     }
     case "get_program_details": {
       const p0 = await findProgram(s("program"));
@@ -88,6 +88,7 @@ export async function runTool(name: string, args: Record<string, unknown>): Prom
         include: { certifications: true, curriculumModules: { orderBy: { order: "asc" } }, addOnCertificates: true },
       });
       return {
+        consolePage: `/console/programs/${p!.slug}`, courseWebpage: p!.courseUrl ?? undefined,
         name: p!.name, duration: p!.duration, mode: p!.mode, description: p!.description, covers: p!.bullets,
         certifications: p!.certifications.map((c) => `${c.name} (${c.partnerInstitution})`),
         curriculum: p!.curriculumModules.map((m) => m.title),

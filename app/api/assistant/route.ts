@@ -31,13 +31,14 @@ function parseContext(raw: unknown): { history: Turn[]; learner: LearnerContext 
   const history = (Array.isArray(o.history) ? o.history : [])
     .filter((t): t is Turn => (t?.role === "user" || t?.role === "assistant") && typeof t.content === "string")
     .map((t) => ({ role: t.role, content: t.content.slice(0, 600) }))
-    .slice(-6);
+    .slice(-10);
   const l = (o.learner ?? {}) as Record<string, unknown>;
   const learner: LearnerContext = {
     degree: typeof l.degree === "string" ? l.degree.slice(0, 60) : null,
     occupation: l.occupation === "Student" || l.occupation === "Working Professional" ? l.occupation : null,
     yearsOfExperience: typeof l.yearsOfExperience === "number" ? l.yearsOfExperience : null,
     interests: Array.isArray(l.interests) ? l.interests.filter((x): x is string => typeof x === "string").slice(0, 6) : [],
+    page: typeof l.page === "string" ? l.page.slice(0, 120) : null,
     citySlug: typeof l.citySlug === "string" && /^[a-z0-9-]{1,60}$/.test(l.citySlug) ? l.citySlug : null,
   };
   return { history, learner };
@@ -80,8 +81,8 @@ export async function POST(req: NextRequest) {
 
   const { history, learner } = parseContext(context);
   try {
-    const answer = await answerQuestion(question, history, learner);
-    return NextResponse.json({ question, answer });
+    const { text, links } = await answerQuestion(question, history, learner);
+    return NextResponse.json({ question, answer: text, links });
   } catch (err) {
     console.error("assistant failed:", err);
     if (err instanceof LlmError && err.status === 429) {
