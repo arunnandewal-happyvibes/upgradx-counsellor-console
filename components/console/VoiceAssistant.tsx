@@ -4,17 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
 import { getLeadProfile } from "@/lib/leadProfile";
+import { cleanForSpeech, englishVoices } from "@/lib/speech";
 
 type Msg = { role: "user" | "assistant"; content: string; error?: boolean };
 type Phase = "idle" | "listening" | "thinking" | "speaking";
 
-function pickVoice(): SpeechSynthesisVoice | undefined {
-  const voices = window.speechSynthesis?.getVoices() ?? [];
-  return (
-    voices.find((v) => v.lang === "en-IN") ??
-    voices.find((v) => v.lang.startsWith("en-GB")) ??
-    voices.find((v) => v.lang.startsWith("en"))
-  );
+const PREF_KEY = "upgradx.assistantVoicePrefs";
+
+function loadPrefs(): { voice: string | null; rate: number } {
+  try {
+    const p = JSON.parse(window.localStorage.getItem(PREF_KEY) ?? "{}");
+    return { voice: typeof p.voice === "string" ? p.voice : null, rate: typeof p.rate === "number" ? p.rate : 1 };
+  } catch {
+    return { voice: null, rate: 1 };
+  }
 }
 
 /** Counsellor-facing assistant: ask by voice (or text) and hear the answer, grounded in the
@@ -29,6 +32,10 @@ export function VoiceAssistant() {
   const [muted, setMuted] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [text, setText] = useState("");
+  const [showSettings, setShowSettings] = useState(false);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [voiceName, setVoiceName] = useState<string | null>(null);
+  const [rate, setRate] = useState(1);
   const recorder = useRef<MediaRecorder | null>(null);
   const stream = useRef<MediaStream | null>(null);
   const chunks = useRef<Blob[]>([]);
@@ -45,6 +52,24 @@ export function VoiceAssistant() {
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, phase]);
+
+  useEffect(() => {
+    const p = loadPrefs();
+    setVoiceName(p.voice);
+    setRate(p.rate);
+    const load = () => setVoices(englishVoices());
+    load();
+    window.speechSynthesis?.addEventListener?.("voiceschanged", load);
+    return () => window.speechSynthesis?.removeEventListener?.("voiceschanged", load);
+  }, []);
+
+  const savePrefs = (voice: string | null, r: number) => {
+    setVoiceName(voice);
+    setRate(r);
+    try {
+      window.localStorage.setItem(PREF_KEY, JSON.stringify({ voice, rate: r }));
+    } catch {}
+  };
 
   useEffect(() => () => window.speechSynthesis?.cancel(), []);
 
@@ -71,11 +96,11 @@ export function VoiceAssistant() {
   const speak = (answer: string) => {
     if (muted || !window.speechSynthesis) return setPhase("idle");
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(answer);
-    const v = pickVoice();
+    const u = new SpeechSynthesisUtterance(cleanForSpeech(answer));
+    const v = voices.find((x) => x.name === voiceName) ?? voices[0];
     if (v) u.voice = v;
     u.lang = v?.lang ?? "en-IN";
-    u.rate = 1.02;
+    u.rate = rate;
     u.onend = () => setPhase("idle");
     u.onerror = () => setPhase("idle");
     setPhase("speaking");
@@ -171,6 +196,14 @@ export function VoiceAssistant() {
         <div className="flex items-center gap-1">
           <button
             type="button"
+            aria-label="Voice settings"
+            onClick={() => setShowSettings((v) => !v)}
+            className="rounded-full p-1.5 hover:bg-white/20"
+          >
+            <Icon name="tune" size={20} />
+          </button>
+          <button
+            type="button"
             aria-label={muted ? "Turn spoken answers on" : "Turn spoken answers off"}
             onClick={() => {
               window.speechSynthesis?.cancel();
@@ -199,6 +232,38 @@ export function VoiceAssistant() {
           </button>
         </div>
       </div>
+
+      {showSettings && (
+        <div className="space-y-3 border-b border-outline-variant bg-surface-container-low p-3 text-body-sm">
+          <label className="block">
+            <span className="mb-1 block font-semibold text-on-surface">Voice</span>
+            <select
+              value={voiceName ?? voices[0]?.name ?? ""}
+              onChange={(e) => savePrefs(e.target.value, rate)}
+              className="h-9 w-full rounded-lg border border-outline-variant bg-white px-2 text-on-surface"
+            >
+              {voices.map((v) => (
+                <option key={v.name} value={v.name}>
+                  {v.name} ({v.lang})
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className="mb-1 flex justify-between font-semibold text-on-surface">
+              Speed <span className="font-normal text-on-surface-variant">{rate.toFixed(2)}×</span>
+            </span>
+            <input type="range" min={0.8} max={1.3} step={0.05} value={rate} onChange={(e) => savePrefs(voiceName, Number(e.target.value))} className="w-full accent-primary" />
+          </label>
+          <button
+            type="button"
+            onClick={() => speak("Hi, I'm your counselling assistant. This is how I sound. A data science program is six months long, and placements go up to twelve lakh per annum.")}
+            className="flex items-center gap-1 font-semibold text-primary"
+          >
+            <Icon name="play_circle" size={18} /> Preview voice
+          </button>
+        </div>
+      )}
 
       <div ref={listRef} className="flex-1 space-y-3 overflow-y-auto bg-surface-container-lowest p-4" aria-live="polite">
         {messages.length === 0 && (
