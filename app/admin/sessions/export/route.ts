@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
     { header: "Counsellor Email", key: "counsellorEmail", width: 28 },
     { header: "City", key: "city", width: 16 },
     { header: "Rating", key: "rating", width: 10 },
+    { header: "Referral", key: "referral", width: 24 },
   ];
   sheet.getRow(1).font = { bold: true };
   sheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFEEEEEE" } };
@@ -51,6 +52,7 @@ export async function GET(req: NextRequest) {
       counsellorEmail: s.counsellorEmail ?? "",
       city: s.counsellorCity ?? "",
       rating: s.rating ?? "",
+      referral: s.referralStatus ?? "",
     });
   }
 

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { randomBytes } from "crypto";
 import { headers } from "next/headers";
 import { sendSessionSummaryEmail } from "@/lib/email";
+import { leadDropEnabled, submitLeadDrop } from "@/lib/leadDrop";
 
 export type CloseSessionInput = {
   leadId: string | null;
@@ -94,6 +95,25 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
     counsellorName: data.counsellorName,
     feedbackUrl,
   });
+
+  // Drop the learner into upGrad's referral form (Salesforce) when enabled.
+  // The result is recorded on the lead so admins can see sent/failed per session;
+  // a failure here must never stop the session from closing.
+  if (leadDropEnabled()) {
+    const result = await submitLeadDrop({
+      name,
+      email,
+      phone,
+      city: data.counsellorCity,
+    });
+    await prisma.lead
+      .update({
+        where: { id: savedLead.id },
+        data: { referralStatus: result.status, referralSentAt: result.ok ? new Date() : null },
+      })
+      .catch((err) => console.error("couldn't record referral status:", err));
+    if (!result.ok) console.error("lead drop failed:", result.status);
+  }
 
   revalidatePath("/admin/sessions");
   return { ok: true, emailSent };

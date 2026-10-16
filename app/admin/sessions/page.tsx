@@ -107,6 +107,7 @@ export default async function SessionsAdminPage({
             <Th>Counsellor Email</Th>
             <Th>City</Th>
             <Th>Rating</Th>
+            <Th>Referral</Th>
             <Th>Transcript</Th>
           </tr>
         </thead>
@@ -140,6 +141,18 @@ export default async function SessionsAdminPage({
                   <span className="text-brand-gray-400">Awaiting student</span>
                 )}
               </Td>
+              <Td className="max-w-[180px]">
+                {s.referralStatus ? (
+                  <span
+                    title={s.referralStatus}
+                    className={s.referralSentAt ? "font-semibold text-green-700" : "font-semibold text-brand-red"}
+                  >
+                    {s.referralSentAt ? s.referralStatus : `✕ ${s.referralStatus}`}
+                  </span>
+                ) : (
+                  <span className="text-brand-gray-400">—</span>
+                )}
+              </Td>
               <Td>
                 {s.recording ? (
                   <Link href={`/admin/transcripts/${s.recording.id}`} className="font-semibold text-brand-red hover:underline">
@@ -153,7 +166,7 @@ export default async function SessionsAdminPage({
           ))}
           {sessions.length === 0 && (
             <tr>
-              <td colSpan={11} className="px-3 py-2 text-sm text-brand-gray-400">
+              <td colSpan={12} className="px-3 py-2 text-sm text-brand-gray-400">
                 No closed sessions match these filters yet.
               </td>
             </tr>

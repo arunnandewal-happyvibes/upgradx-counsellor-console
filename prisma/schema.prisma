@@ -58,6 +58,10 @@ model Lead {
   // by counsellor and city.
   counsellorName String?
   counsellorCity String?
+  // Result of the automatic drop to upGrad's referral form (lib/leadDrop.ts):
+  // e.g. "Sent to Pune" / "Rejected (403) …" / null when the feature is off.
+  referralStatus String?
+  referralSentAt DateTime?
   // Captured automatically from the counsellor's check-in email (see
   // CounsellorLogin) — lets admin count completed sessions per counsellor
   // reliably, independent of what they typed into counsellorName.
