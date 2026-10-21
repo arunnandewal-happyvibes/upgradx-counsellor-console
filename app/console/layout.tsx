@@ -21,7 +21,7 @@ export default async function ConsoleLayout({ children }: { children: React.Reac
       <CityProvider cities={cities}>
         <CounsellorCheckIn />
         <TopBar programs={programs} />
-        <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-20 px-container-margin pb-32 pt-section-gap md:gap-24 lg:px-12">
+        <main className="mx-auto flex w-full max-w-[1760px] flex-col gap-20 px-4 pb-32 pt-section-gap sm:px-6 md:gap-24 lg:px-8 2xl:px-10">
           {children}
         </main>
       </CityProvider>

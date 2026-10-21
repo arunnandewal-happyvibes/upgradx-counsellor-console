@@ -20,7 +20,7 @@ type Instructor = {
 
 function InstructorCard({ ins }: { ins: Instructor }) {
   return (
-    <article className="elevate-3d flex w-[380px] flex-shrink-0 flex-col gap-5 rounded-[24px] border border-outline-variant bg-white p-7">
+    <article className="card-red-3d flex w-[380px] flex-shrink-0 flex-col gap-5 rounded-[24px] border border-outline-variant bg-white p-7">
       <div className="flex items-start gap-4">
         <Avatar src={ins.photoUrl} name={ins.name} size={80} rounded="rounded-2xl" className="flex-shrink-0" />
         <div className="min-w-0 flex-1">
@@ -73,7 +73,7 @@ function InstructorCard({ ins }: { ins: Instructor }) {
 
 function InstructorCarousel({ instructors, reverse }: { instructors: Instructor[]; reverse?: boolean }) {
   return (
-    <Marquee speed={45} reverse={reverse} className="items-stretch gap-5 py-2">
+    <Marquee speed={45} reverse={reverse} className="items-stretch gap-5 pb-6 pt-4">
       {instructors.map((ins) => (
         <InstructorCard key={ins.id} ins={ins} />
       ))}

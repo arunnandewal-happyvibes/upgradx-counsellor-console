@@ -122,6 +122,31 @@ h3 {
   transition-duration: 0.08s;
 }
 
+/* Red 3D hover for carousel and program cards: the card tips toward the viewer, lifts,
+   and shows a solid red "edge" underneath with a red glow — a physical, pressable feel. */
+.card-red-3d {
+  transition:
+    transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.2s ease;
+  transform-origin: center bottom;
+}
+.card-red-3d:hover,
+.card-red-3d:focus-visible {
+  transform: perspective(1000px) translateY(-8px) rotateX(4deg);
+  border-color: theme("colors.primary");
+  box-shadow:
+    0 8px 0 0 #b4151a,
+    0 30px 46px -16px rgba(228, 31, 38, 0.55);
+}
+.card-red-3d:active {
+  transform: perspective(1000px) translateY(-2px) rotateX(1deg);
+  box-shadow:
+    0 3px 0 0 #b4151a,
+    0 12px 20px -10px rgba(228, 31, 38, 0.45);
+  transition-duration: 0.08s;
+}
+
 .b2b-card {
   background-color: theme("colors.surface-container-lowest");
   border: 1px solid theme("colors.outline-variant");
@@ -251,7 +276,8 @@ h3 {
   }
 }
 .animate-rec-card {
-  animation: rec-card-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  /* "backwards", not "both": a held end-state would pin transform and block the hover tilt. */
+  animation: rec-card-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
 }
 @keyframes best-match-glow {
   0%,

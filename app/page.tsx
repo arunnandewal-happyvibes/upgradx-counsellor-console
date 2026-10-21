@@ -17,7 +17,7 @@ export default async function OnboardingPage() {
     <div className="flex min-h-screen flex-col bg-white">
       <CounsellorCheckIn />
       <header className="sticky top-0 z-50 w-full border-b border-outline-variant bg-white/85 backdrop-blur-xl">
-        <div className="mx-auto flex h-[72px] max-w-[1440px] items-center gap-4 px-container-margin lg:px-12">
+        <div className="mx-auto flex h-[72px] max-w-[1760px] items-center gap-4 px-4 sm:px-6 lg:px-8 2xl:px-10">
           <Link href="/" className="flex items-center gap-4">
             <Logo height={36} priority />
             <span className="hidden whitespace-nowrap border-l border-outline-variant pl-4 text-[13px] font-medium text-on-surface-variant md:block">

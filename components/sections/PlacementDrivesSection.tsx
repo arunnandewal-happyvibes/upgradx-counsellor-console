@@ -18,13 +18,13 @@ export function PlacementDrivesSection() {
         title="Open placement drives."
         action={<SectionLink href="/console/drives">All drives</SectionLink>}
       />
-      <div className="snap-row -mx-1 flex gap-4 overflow-x-auto px-1 py-2">
+      <div className="snap-row -mx-1 flex gap-4 overflow-x-auto px-1 pb-6 pt-4">
         {data.map((d) => {
           const date = new Date(d.date);
           return (
             <article
               key={d.id}
-              className="elevate-3d flex w-[280px] flex-shrink-0 flex-col gap-5 rounded-[24px] border border-outline-variant bg-white p-6"
+              className="card-red-3d flex w-[280px] flex-shrink-0 flex-col gap-5 rounded-[24px] border border-outline-variant bg-white p-6"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">

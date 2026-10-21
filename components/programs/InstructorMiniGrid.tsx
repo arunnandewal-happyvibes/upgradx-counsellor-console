@@ -15,7 +15,7 @@ export function InstructorMiniGrid({ instructors }: { instructors: Instructor[] 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {instructors.map((ins) => (
-        <article key={ins.id} className="elevate-3d flex flex-col gap-4 rounded-[24px] border border-outline-variant bg-white p-6">
+        <article key={ins.id} className="card-red-3d flex flex-col gap-4 rounded-[24px] border border-outline-variant bg-white p-6">
           <div className="flex items-center gap-3.5">
             <Avatar src={ins.photoUrl} name={ins.name} size={56} rounded="rounded-2xl" />
             <div className="min-w-0">

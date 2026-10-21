@@ -28,7 +28,7 @@ export default async function AllDrivesPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {drives.map((d) => (
-            <article key={d.id} className="elevate-3d flex flex-col gap-6 rounded-[24px] border border-outline-variant bg-white p-6">
+            <article key={d.id} className="card-red-3d flex flex-col gap-6 rounded-[24px] border border-outline-variant bg-white p-6">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="font-display text-[24px] font-bold tracking-[-0.02em] text-ink">{d.company}</div>

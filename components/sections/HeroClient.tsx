@@ -67,16 +67,12 @@ function getGreeting(hour: number) {
 /** Bottom-right stat on the dark aside, shared by both hero variants. */
 function CentresStat({ count }: { count: number }) {
   return (
-    <div className="flex items-baseline gap-3 border-t border-white/10 pt-6">
+    <div className="flex items-center gap-4 border-t border-white/10 pt-6">
       <span className="font-display text-[56px] font-extrabold leading-none tracking-[-0.04em]">
         {count}
         <span className="text-primary">+</span>
       </span>
-      <span className="text-[14px] leading-snug text-white/60">
-        learning centres
-        <br />
-        across India
-      </span>
+      <span className="text-[15px] font-medium leading-snug text-white/70">learning centres across India</span>
     </div>
   );
 }
@@ -95,7 +91,7 @@ function JourneyCard({ profile, cityCount }: { profile: LeadProfile; cityCount: 
   return (
     <aside
       aria-label="Learner journey"
-      className="flex animate-rise flex-col gap-7 rounded-[28px] bg-ink p-8 text-white md:p-9"
+      className="flex h-full animate-rise flex-col gap-7 rounded-[28px] bg-ink p-8 text-white md:p-10"
       style={{ animationDelay: "120ms" }}
     >
       <div className="flex items-center justify-between">
@@ -117,11 +113,11 @@ function JourneyCard({ profile, cityCount }: { profile: LeadProfile; cityCount: 
                 {s.state === "done" ? <Icon name="check" size={18} /> : i + 1}
               </span>
               {i < steps.length - 1 && (
-                <span className={cn("my-1 w-0.5 flex-1 min-h-[22px]", s.state === "done" ? "bg-white" : "bg-white/20")} />
+                <span className={cn("my-1.5 w-0.5 flex-1 min-h-[34px]", s.state === "done" ? "bg-white" : "bg-white/20")} />
               )}
             </div>
-            <div className="pb-5 pt-1">
-              <div className={cn("text-[17px] font-bold", s.state === "next" && "text-white/50")}>{s.title}</div>
+            <div className="pb-7 pt-1">
+              <div className={cn("text-[18px] font-bold leading-snug", s.state === "next" && "text-white/50")}>{s.title}</div>
               <div className="mt-0.5 text-[14px] text-white/50">{s.sub}</div>
             </div>
           </li>
@@ -140,7 +136,7 @@ function RecommendationCard({ rank, program, why }: { rank: number; program: Non
     <Link
       href={`/console/programs/${program.slug}`}
       className={cn(
-        "elevate-3d group flex min-h-[300px] animate-rec-card flex-col gap-4 rounded-[28px] border p-7 md:p-8",
+        "card-red-3d group flex min-h-[300px] animate-rec-card flex-col gap-4 rounded-[28px] border p-7 md:p-8",
         best ? "border-primary bg-primary text-white hover:border-primary" : "border-outline-variant bg-white text-ink",
       )}
       style={{ animationDelay: `${rank * 110}ms` }}
@@ -231,7 +227,7 @@ function PersonalizedHero({
             </Button>
           </div>
         </div>
-        <div className="flex min-w-0 flex-[1_1_340px]">
+        <div className="flex min-w-0 flex-[1_1_440px]">
           <div className="w-full">
             <JourneyCard profile={profile} cityCount={cityCount} />
           </div>
@@ -299,7 +295,7 @@ function DefaultHero({
 
       <aside
         aria-label="At a glance"
-        className="flex min-w-0 flex-[1_1_340px] animate-rise flex-col gap-7 rounded-[28px] bg-ink p-8 text-white md:p-9"
+        className="flex min-w-0 flex-[1_1_440px] animate-rise flex-col gap-7 rounded-[28px] bg-ink p-8 text-white md:p-10"
         style={{ animationDelay: "120ms" }}
       >
         <div>

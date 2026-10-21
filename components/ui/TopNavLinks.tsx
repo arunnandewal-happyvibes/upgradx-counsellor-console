@@ -76,7 +76,7 @@ export function MobileSectionNav() {
   const pathname = usePathname();
   if (pathname !== "/console") return null;
   return (
-    <nav aria-label="Console sections" className="snap-row flex gap-2 overflow-x-auto px-container-margin pb-3 md:hidden">
+    <nav aria-label="Console sections" className="snap-row flex gap-2 overflow-x-auto px-4 pb-3 sm:px-6 md:hidden">
       {NAV.map((item) => (
         <a
           key={item.id}

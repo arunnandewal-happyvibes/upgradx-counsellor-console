@@ -10,7 +10,7 @@ type Partner = { id: string; name: string; logoUrl: string | null };
 
 function PartnerTile({ partner }: { partner: Partner }) {
   return (
-    <div className="elevate-3d flex h-24 flex-shrink-0 items-center gap-4 rounded-[20px] border border-outline-variant bg-white py-3 pl-3 pr-6">
+    <div className="card-red-3d flex h-24 flex-shrink-0 items-center gap-4 rounded-[20px] border border-outline-variant bg-white py-3 pl-3 pr-6">
       <span className="flex h-[72px] w-[72px] flex-shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-surface-container-low">
         {partner.logoUrl ? (
           <Image src={partner.logoUrl} alt={partner.name} width={72} height={72} className="h-full w-full object-contain p-2" />
@@ -60,7 +60,7 @@ export function HiringPartnersSection() {
             : "Companies that hire upGrad X learners. Drag or use the arrows to browse."}
         </p>
       </div>
-      <Marquee speed={60} className="items-center gap-4 py-2">
+      <Marquee speed={60} className="items-center gap-4 pb-6 pt-4">
         {partners.map((p) => (
           <PartnerTile key={p.id} partner={p} />
         ))}

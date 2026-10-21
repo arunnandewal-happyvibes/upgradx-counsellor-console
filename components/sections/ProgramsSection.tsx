@@ -25,7 +25,7 @@ export async function ProgramsSection() {
           return (
             <article
               key={p.id}
-              className="elevate-3d flex flex-col gap-5 rounded-[28px] border border-outline-variant bg-white p-7"
+              className="card-red-3d flex flex-col gap-5 rounded-[28px] border border-outline-variant bg-white p-7"
             >
               <div className="flex flex-wrap items-center gap-2">
                 <span

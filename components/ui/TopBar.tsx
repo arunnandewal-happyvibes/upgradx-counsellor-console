@@ -12,7 +12,7 @@ export function TopBar({ programs = [] }: { programs?: PaletteProgram[] }) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-outline-variant bg-white/85 backdrop-blur-xl backdrop-saturate-150">
-      <div className="mx-auto flex h-[72px] max-w-[1440px] items-center gap-6 px-container-margin lg:px-12">
+      <div className="mx-auto flex h-[72px] max-w-[1760px] items-center gap-6 px-4 sm:px-6 lg:px-8 2xl:px-10">
         <Link
           href="/console"
           className="flex items-center gap-4"
