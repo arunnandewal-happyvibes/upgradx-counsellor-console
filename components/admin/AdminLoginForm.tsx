@@ -3,9 +3,9 @@
 import { useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
-
-const inputClass =
-  "h-11 rounded-lg border border-brand-gray-200 px-3 text-sm outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red";
+import { Button } from "@/components/ui/Button";
+import { TextField } from "@/components/ui/Field";
+import { Icon } from "@/components/ui/Icon";
 
 export function AdminLoginForm() {
   const router = useRouter();
@@ -36,38 +36,40 @@ export function AdminLoginForm() {
   }
 
   return (
-    <div className="w-full max-w-sm rounded-2xl border-t-4 border-t-brand-red bg-white p-8 shadow-xl">
-      <div className="mb-6 flex justify-center">
-        <Logo height={32} />
+    <div className="w-full max-w-md rounded-[32px] bg-white p-9 shadow-float sm:p-10">
+      <Logo height={30} />
+      <div className="mb-8 mt-8">
+        <div className="eyebrow mb-2">Admin</div>
+        <h1 className="font-display text-[40px] font-extrabold leading-[1] tracking-[-0.04em] text-ink">Sign in</h1>
+        <p className="mt-2 text-[15px] text-on-surface-variant">Manage the Expert Counselling Portal.</p>
       </div>
-      <h1 className="mb-1 text-center text-xl font-extrabold text-brand-ink">Admin Login</h1>
-      <p className="mb-6 text-center text-sm text-brand-ink2">Sign in to manage the Expert Counselling Portal.</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
+        <TextField
+          label="Email"
           required
           autoFocus
           type="email"
-          placeholder="Email"
+          autoComplete="username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className={inputClass}
         />
-        <input
+        <TextField
+          label="Password"
           required
           type="password"
-          placeholder="Password"
+          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className={inputClass}
         />
-        {error && <p className="text-sm font-semibold text-brand-red">{error}</p>}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="h-11 rounded-lg bg-brand-red text-sm font-bold text-white hover:bg-brand-red/90 disabled:opacity-50"
-        >
-          {submitting ? "Signing in..." : "Sign In"}
-        </button>
+        {error && (
+          <p role="alert" className="flex items-center gap-2 text-[14px] font-medium text-primary">
+            <Icon name="error" size={18} />
+            {error}
+          </p>
+        )}
+        <Button type="submit" size="lg" loading={submitting} className="mt-2 w-full">
+          {submitting ? "Signing in…" : "Sign in"}
+        </Button>
       </form>
     </div>
   );

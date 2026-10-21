@@ -44,11 +44,11 @@ export default async function TranscriptDetailPage({ params }: { params: { id: s
       </div>
 
       {spoken.length === 0 ? (
-        <p className="rounded-lg border border-brand-gray-200 bg-white p-4 text-sm text-brand-gray-400">
+        <p className="rounded-2xl border border-outline-variant bg-white p-4 text-sm text-brand-gray-400">
           No speech was transcribed for this session.
         </p>
       ) : (
-        <div className="space-y-4 rounded-xl border border-brand-gray-200 bg-white p-6">
+        <div className="space-y-4 rounded-[20px] border border-outline-variant bg-white p-6">
           {spoken.map((c) => (
             <p key={c.id} className="text-sm leading-relaxed text-brand-ink">
               <span className="mr-3 font-mono text-xs font-semibold text-brand-red">[{clock(c.offsetSec)}]</span>

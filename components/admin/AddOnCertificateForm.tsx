@@ -52,7 +52,7 @@ export function AddOnCertificateForm({
         />
       </Field>
       <Field label="Eligible programs" hint="Select every program a student can earn this certificate through.">
-        <div className="max-h-64 space-y-2 overflow-y-auto rounded-lg border border-brand-gray-200 p-3">
+        <div className="max-h-64 space-y-2 overflow-y-auto rounded-2xl border border-outline-variant p-3">
           {programs.map((p) => (
             <label key={p.id} className="flex items-center gap-2 text-sm text-brand-ink2">
               <input

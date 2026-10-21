@@ -21,7 +21,7 @@ export function AdditionalCertificateFields({ existing = [] }: { existing?: Exis
 
   return (
     <fieldset
-      className="space-y-4 rounded-lg border border-brand-gray-200 p-4"
+      className="space-y-4 rounded-2xl border border-outline-variant p-4"
       onChange={(e) => {
         const t = e.target as HTMLInputElement;
         if (t.type === "file") setPdfPicked((t.files?.length ?? 0) > 0);

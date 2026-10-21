@@ -5,9 +5,9 @@ import { updateRecommendations } from "./actions";
 export const dynamic = "force-dynamic";
 
 const selectClass =
-  "w-48 rounded-lg border border-brand-gray-200 px-2 py-1.5 text-sm outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red";
+  "w-48 rounded-2xl border border-outline-variant px-2 py-1.5 text-sm outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red";
 const textareaClass =
-  "w-64 rounded-lg border border-brand-gray-200 px-2 py-1.5 text-sm outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red";
+  "w-64 rounded-2xl border border-outline-variant px-2 py-1.5 text-sm outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red";
 
 export default async function RecommendationsAdminPage() {
   const [recommendations, programs] = await Promise.all([
@@ -39,7 +39,7 @@ export default async function RecommendationsAdminPage() {
       </p>
 
       <form action={updateRecommendations}>
-        <div className="overflow-x-auto rounded-card border border-brand-gray-200 bg-white">
+        <div className="overflow-x-auto rounded-[20px] border border-outline-variant bg-white">
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-brand-gray-50 border-b border-brand-gray-200">

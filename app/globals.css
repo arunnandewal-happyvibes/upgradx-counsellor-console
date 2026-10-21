@@ -49,6 +49,28 @@ h3 {
   scroll-snap-align: start;
 }
 
+/* Admin pages: give every page title and section heading the editorial type without
+   touching each of the ~36 pages (these selectors outrank the pages' own utility classes). */
+.admin-main h1 {
+  font-family: theme("fontFamily.display");
+  font-size: clamp(30px, 3.4vw, 40px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  font-weight: 800;
+  color: theme("colors.ink");
+}
+.admin-main h2 {
+  font-family: theme("fontFamily.display");
+  letter-spacing: -0.02em;
+  color: theme("colors.ink");
+}
+.admin-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+.admin-table tbody tr:hover {
+  background-color: theme("colors.surface-container-low");
+}
+
 /* Small uppercase kicker above section titles. */
 .eyebrow {
   @apply text-label-bold font-bold uppercase text-primary;

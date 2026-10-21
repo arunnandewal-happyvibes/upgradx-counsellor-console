@@ -6,7 +6,7 @@ import { buildSessionsWhere } from "@/lib/sessionFilters";
 export const dynamic = "force-dynamic";
 
 const selectClass =
-  "h-10 rounded-lg border border-brand-gray-200 px-3 text-sm outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red";
+  "h-10 rounded-2xl border border-outline-variant px-3 text-sm outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red";
 
 export default async function SessionsAdminPage({
   searchParams,

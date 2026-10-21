@@ -31,7 +31,7 @@ export function BatchUploadForm({
       <div className="flex flex-wrap items-center gap-3">
         <a
           href="/admin/batches/template"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-brand-gray-200 px-4 py-2 text-sm font-bold text-brand-ink2 hover:border-brand-red hover:text-brand-red"
+          className="inline-flex items-center gap-1.5 rounded-2xl border border-outline-variant px-4 py-2 text-sm font-bold text-brand-ink2 hover:border-brand-red hover:text-brand-red"
         >
           Download Template (.xlsx)
         </a>
@@ -55,7 +55,7 @@ export function BatchUploadForm({
       </form>
 
       {result && (
-        <div className="rounded-lg border border-brand-gray-200 bg-white p-4 text-sm">
+        <div className="rounded-2xl border border-outline-variant bg-white p-4 text-sm">
           <p className="font-semibold text-brand-ink">
             {result.inserted} new batch{result.inserted === 1 ? "" : "es"} added
             {result.skippedDuplicates > 0 && `, ${result.skippedDuplicates} duplicate row${result.skippedDuplicates === 1 ? "" : "s"} skipped`}
