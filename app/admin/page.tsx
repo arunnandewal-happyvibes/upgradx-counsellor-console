@@ -20,6 +20,8 @@ export default async function AdminDashboard() {
     referralFailures,
     addOnsMissingDescription,
     openBatches,
+    programsMissingLsq,
+    activeCounsellors,
   ] = await Promise.all([
     prisma.city.count(),
     prisma.program.count(),
@@ -35,6 +37,8 @@ export default async function AdminDashboard() {
     prisma.lead.count({ where: { referralStatus: { not: null }, referralSentAt: null } }),
     prisma.addOnCertificate.count({ where: { OR: [{ description: null }, { description: "" }] } }),
     prisma.batch.count({ where: { applicationCloseDate: { gte: startOfToday() } } }),
+    prisma.program.count({ where: { OR: [{ lsqVertical: null }, { lsqProgramme: null }] } }),
+    prisma.counsellor.count({ where: { active: true } }),
   ]);
 
   const avg = ratingWeek._avg.rating;
@@ -56,6 +60,18 @@ export default async function AdminDashboard() {
       icon: "edit_note",
       title: `${addOnsMissingDescription} add-on certificate${addOnsMissingDescription === 1 ? "" : "s"} missing a description`,
       body: "Add the masterclasses or projects each certificate needs.",
+    },
+    programsMissingLsq > 0 && {
+      href: "/admin/courses",
+      icon: "qr_code",
+      title: `${programsMissingLsq} program${programsMissingLsq === 1 ? "" : "s"} missing LSQ codes`,
+      body: "Closed sessions for these programs can't be routed to LeadSquared until the codes are set.",
+    },
+    activeCounsellors === 0 && {
+      href: "/admin/counsellors",
+      icon: "badge",
+      title: "No counsellors on the list yet",
+      body: "Add each counsellor with their LSQ login email so leads are assigned to them.",
     },
     openBatches === 0 && {
       href: "/admin/batches",

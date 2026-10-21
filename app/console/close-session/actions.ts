@@ -5,38 +5,61 @@ import { prisma } from "@/lib/prisma";
 import { randomBytes } from "crypto";
 import { headers } from "next/headers";
 import { sendSessionSummaryEmail } from "@/lib/email";
-import { leadDropEnabled, submitLeadDrop } from "@/lib/leadDrop";
+import { leadDropEnabled } from "@/lib/leadDrop";
+import { sendToLsq } from "@/lib/lsqSend";
+import { getCentre } from "@/lib/centres";
+import { normalizeMobile, validateCloseSession } from "@/lib/closeSessionRules";
 
 export type CloseSessionInput = {
   leadId: string | null;
   name: string;
-  phone: string;
+  countryCode: string;
+  mobile: string;
   email: string;
-  programId: string | null;
-  counsellorName: string | null;
-  counsellorCity: string | null;
-  counsellorEmail: string | null;
+  programId: string;
+  source: string;
+  centre: string; // a CENTRES value
+  counsellorEmail: string | null; // the check-in email from the browser — verified server-side
   recordingKey?: string | null;
 };
 
 export type CloseSessionResult = { ok: true; emailSent: boolean } | { ok: false; error: string };
 
 export async function closeSession(input: CloseSessionInput): Promise<CloseSessionResult> {
-  const name = input.name.trim();
-  const phone = input.phone.trim();
-  const email = input.email.trim();
-  if (!name || !phone || !email) {
-    return { ok: false, error: "Name, phone and email are required." };
+  // Repeat every form rule here: the action can be called without the form.
+  const errors = validateCloseSession(input);
+  if (Object.keys(errors).length > 0) {
+    return { ok: false, error: Object.values(errors)[0]! };
   }
+  const name = input.name.trim();
+  const email = input.email.trim();
+  const mobile = normalizeMobile(input.mobile);
+  const phone = `${input.countryCode} ${mobile}`;
+  const centre = getCentre(input.centre)!;
+
+  const program = await prisma.program.findUnique({
+    where: { id: input.programId },
+    select: { id: true, lsqVertical: true, lsqProgramme: true },
+  });
+  if (!program) return { ok: false, error: "That program no longer exists — pick another." };
+
+  // The check-in email lives in the browser, so only trust it after matching an active
+  // Counsellor row here. Unmatched → no counsellor name and no LSQ owner (centre queue).
+  const checkInEmail = input.counsellorEmail?.trim().toLowerCase() || null;
+  const counsellor = checkInEmail
+    ? await prisma.counsellor.findFirst({ where: { email: checkInEmail, active: true } })
+    : null;
 
   const data = {
     name,
     phone,
     email,
-    recommendedProgramId: input.programId || null,
-    counsellorName: input.counsellorName?.trim() || null,
-    counsellorCity: input.counsellorCity?.trim() || null,
-    counsellorEmail: input.counsellorEmail?.trim().toLowerCase() || null,
+    recommendedProgramId: program.id,
+    counsellorName: counsellor?.name ?? null,
+    counsellorCity: centre.label,
+    counsellorEmail: checkInEmail,
+    lsqSource: input.source,
+    lsqCentre: centre.value,
     sessionClosedAt: new Date(),
   };
 
@@ -96,25 +119,22 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
     feedbackUrl,
   });
 
-  // Drop the learner into upGrad's referral form (Salesforce) when enabled.
-  // The result is recorded on the lead so admins can see sent/failed per session;
-  // a failure here must never stop the session from closing.
+  // Send the learner to LeadSquared (only when LEAD_DROP_ENABLED=true — every call is a
+  // real lead). A failure is recorded for admins and never stops the session closing.
   if (leadDropEnabled()) {
-    const result = await submitLeadDrop({
-      name,
-      email,
-      phone,
-      city: data.counsellorCity,
-    });
-    await prisma.lead
-      .update({
-        where: { id: savedLead.id },
-        data: { referralStatus: result.status, referralSentAt: result.ok ? new Date() : null },
-      })
-      .catch((err) => console.error("couldn't record referral status:", err));
-    if (!result.ok) console.error("lead drop failed:", result.status);
+    await sendToLsq(savedLead.id).catch((err) => console.error("LSQ drop failed:", err));
   }
 
   revalidatePath("/admin/sessions");
   return { ok: true, emailSent };
+}
+
+
+/** Name + home centre for the checked-in counsellor, shown read-only on Close Session.
+ * Returns only those two fields (never other counsellors' data). */
+export async function getCounsellorProfile(email: string | null): Promise<{ name: string; centre: string } | null> {
+  const e = email?.trim().toLowerCase();
+  if (!e) return null;
+  const c = await prisma.counsellor.findFirst({ where: { email: e, active: true }, select: { name: true, centre: true } });
+  return c ?? null;
 }

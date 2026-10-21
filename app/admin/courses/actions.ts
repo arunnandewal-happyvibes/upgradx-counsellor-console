@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { linesToArray, linesToTuples, str, strOrNull } from "@/lib/adminParsing";
+import { LSQ_PROGRAMMES, LSQ_VERTICALS } from "@/lib/leadDrop";
 import { maybeUploadImage } from "@/lib/blob";
 import { requireAddOnDescription } from "@/lib/addOnCertificate";
 
@@ -23,6 +24,17 @@ function slugify(name: string) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
+}
+
+// Both LSQ codes are required: they build the Source Campaign and pick the Program of
+// Interest label (lib/leadDrop.ts). The form's selects are `required`; this is the backstop.
+function lsqCodes(formData: FormData) {
+  const lsqVertical = str(formData.get("lsqVertical"));
+  const lsqProgramme = str(formData.get("lsqProgramme"));
+  if (!(LSQ_VERTICALS as readonly string[]).includes(lsqVertical) || !LSQ_PROGRAMMES.includes(lsqProgramme)) {
+    throw new Error("Pick the LSQ vertical and programme for this program.");
+  }
+  return { lsqVertical, lsqProgramme };
 }
 
 export async function createProgram(formData: FormData) {
@@ -45,6 +57,7 @@ export async function createProgram(formData: FormData) {
       brochureUrl: uploadedBrochure ?? strOrNull(formData.get("brochureUrl")),
       certificateUrl: uploadedCertificate ?? strOrNull(formData.get("certificateUrl")),
       courseUrl: strOrNull(formData.get("courseUrl")),
+      ...lsqCodes(formData),
       certifications: {
         create: certs.map(([certName, partnerInstitution, brochureUrl]) => ({
           name: certName,
@@ -87,6 +100,7 @@ export async function updateProgram(id: string, formData: FormData) {
         brochureUrl: uploadedBrochure ?? strOrNull(formData.get("brochureUrl")),
         certificateUrl: uploadedCertificate ?? strOrNull(formData.get("certificateUrl")),
         courseUrl: strOrNull(formData.get("courseUrl")),
+        ...lsqCodes(formData),
         certifications: {
           create: certs.map(([certName, partnerInstitution, brochureUrl]) => ({
             name: certName,

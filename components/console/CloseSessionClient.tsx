@@ -3,15 +3,17 @@
 import { useEffect, useState, useTransition, type FormEvent } from "react";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { TextField } from "@/components/ui/Field";
+import { TextField, SelectField } from "@/components/ui/Field";
+import { fieldClass } from "@/components/ui/fieldStyles";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { cn } from "@/lib/cn";
-import { useCity } from "@/lib/city-context";
 import { getLeadProfile, type LeadProfile } from "@/lib/leadProfile";
 import { getCounsellorEmail } from "@/lib/counsellor";
 import { getSessionRecorder } from "@/lib/sessionRecorder";
 import { findRecommendationForDegree } from "@/lib/recommendationMatch";
-import { closeSession } from "@/app/console/close-session/actions";
+import { closeSession, getCounsellorProfile } from "@/app/console/close-session/actions";
+import { CENTRES, COUNTRY_CODES, DEFAULT_LEAD_SOURCE, LEAD_SOURCES, getCentre } from "@/lib/centres";
+import { normalizeMobile, validateCloseSession, type CloseSessionFields, type FieldErrors } from "@/lib/closeSessionRules";
 
 type ProgramOption = { id: string; name: string; duration: string };
 type RecommendationRow = { degree: string; choice1ProgramId: string | null };
@@ -20,20 +22,26 @@ type RecommendationRow = { degree: string; choice1ProgramId: string | null };
 export function CloseSessionClient({
   programs,
   recommendations,
+  lsqEnabled,
 }: {
   programs: ProgramOption[];
   recommendations: RecommendationRow[];
+  lsqEnabled: boolean;
 }) {
-  const { cities } = useCity();
   const [profile, setProfile] = useState<LeadProfile | null>(null);
-  const [form, setForm] = useState({
+  const [counsellor, setCounsellor] = useState<{ name: string; centre: string } | null | undefined>(undefined);
+  const [form, setForm] = useState<CloseSessionFields>({
     name: "",
-    phone: "",
+    countryCode: "+91",
+    mobile: "",
     email: "",
     programId: "",
-    counsellorName: "",
-    counsellorCity: "",
+    source: DEFAULT_LEAD_SOURCE,
+    centre: "",
   });
+  // Errors only show for fields the counsellor has touched, or all of them after a submit attempt.
+  const [touched, setTouched] = useState<Partial<Record<keyof CloseSessionFields, boolean>>>({});
+  const [triedSubmit, setTriedSubmit] = useState(false);
   const [submitted, setSubmitted] = useState<{
     name: string;
     email: string;
@@ -50,27 +58,39 @@ export function CloseSessionClient({
       const match = findRecommendationForDegree(recommendations, p.degree);
       setForm((f) => ({ ...f, name: p.name, programId: match?.choice1ProgramId ?? "" }));
     }
+    // The counsellor's name and home centre come from the admin Counsellor list.
+    getCounsellorProfile(getCounsellorEmail())
+      .then((c) => {
+        setCounsellor(c);
+        if (c && getCentre(c.centre)) setForm((f) => (f.centre ? f : { ...f, centre: c.centre }));
+      })
+      .catch(() => setCounsellor(null));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const errors: FieldErrors = validateCloseSession(form);
+  const valid = Object.keys(errors).length === 0;
+  const show = (k: keyof CloseSessionFields) => (triedSubmit || touched[k] ? errors[k] : undefined);
+  const set = <K extends keyof CloseSessionFields>(k: K, v: CloseSessionFields[K]) => setForm((f) => ({ ...f, [k]: v }));
+  const touch = (k: keyof CloseSessionFields) => () => setTouched((t) => ({ ...t, [k]: true }));
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
-    if (!form.name.trim() || !form.phone.trim() || !form.email.trim()) {
-      setError("Name, phone and email are required.");
-      return;
-    }
+    setTriedSubmit(true);
+    if (!valid) return;
     startTransition(async () => {
       // Finish uploading the last bit of the recording before the session is closed.
       const recordingKey = await getSessionRecorder().stopAndFlush().catch(() => null);
       const result = await closeSession({
         leadId: profile?.id ?? null,
         name: form.name,
-        phone: form.phone,
+        countryCode: form.countryCode,
+        mobile: normalizeMobile(form.mobile),
         email: form.email,
-        programId: form.programId || null,
-        counsellorName: form.counsellorName || null,
-        counsellorCity: form.counsellorCity || null,
+        programId: form.programId,
+        source: form.source,
+        centre: form.centre,
         counsellorEmail: getCounsellorEmail(),
         recordingKey,
       });
@@ -166,6 +186,7 @@ export function CloseSessionClient({
   }
 
   const recommendedId = profile ? findRecommendationForDegree(recommendations, profile.degree)?.choice1ProgramId ?? null : null;
+  const selectedCentre = getCentre(form.centre);
 
   return (
     <div className="flex flex-col gap-12">
@@ -173,7 +194,7 @@ export function CloseSessionClient({
         back={{ href: "/console", label: "Console" }}
         eyebrow="Close session"
         title={profile ? `Wrap up with ${profile.name.split(" ")[0]}.` : "Wrap up the session."}
-        lead="Confirm the learner's details and the program you recommended. They get a summary email with a link to rate the session."
+        lead="Every field is needed: the learner gets a summary email, and the lead is routed to the right centre."
       />
 
       <div className="flex flex-wrap items-start gap-10">
@@ -183,22 +204,53 @@ export function CloseSessionClient({
               <span className="mr-2 text-primary">01</span>Learner
             </legend>
             <TextField
-              label="Learner name"
+              label="Student name"
               required
               autoComplete="off"
               value={form.name}
-              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              error={show("name")}
+              onBlur={touch("name")}
+              onChange={(e) => set("name", e.target.value)}
             />
             <div className="grid gap-5 sm:grid-cols-2">
-              <TextField
-                label="Phone number"
-                required
-                type="tel"
-                inputMode="tel"
-                placeholder="10-digit mobile"
-                value={form.phone}
-                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-              />
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="cs-mobile" className="text-[14px] font-semibold text-ink">
+                  Mobile number
+                </label>
+                <div className="flex gap-2">
+                  <select
+                    aria-label="Country code"
+                    value={form.countryCode}
+                    onChange={(e) => set("countryCode", e.target.value)}
+                    className={cn(fieldClass, "h-12 !w-[96px] flex-shrink-0 px-3")}
+                  >
+                    {COUNTRY_CODES.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    id="cs-mobile"
+                    required
+                    type="tel"
+                    inputMode="numeric"
+                    autoComplete="tel-national"
+                    placeholder={form.countryCode === "+91" ? "10-digit mobile" : "Mobile number"}
+                    value={form.mobile}
+                    aria-invalid={show("mobile") ? true : undefined}
+                    aria-describedby={show("mobile") ? "cs-mobile-msg" : undefined}
+                    onBlur={touch("mobile")}
+                    onChange={(e) => set("mobile", e.target.value.replace(/[^\d\s-]/g, ""))}
+                    className={cn(fieldClass, "h-12 min-w-0 flex-1")}
+                  />
+                </div>
+                {show("mobile") && (
+                  <p id="cs-mobile-msg" role="alert" className="text-[13px] font-medium text-primary">
+                    {show("mobile")}
+                  </p>
+                )}
+              </div>
               <TextField
                 label="Email"
                 required
@@ -207,7 +259,9 @@ export function CloseSessionClient({
                 placeholder="name@example.com"
                 hint="The summary and rating link go here."
                 value={form.email}
-                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                error={show("email")}
+                onBlur={touch("email")}
+                onChange={(e) => set("email", e.target.value)}
               />
             </div>
           </fieldset>
@@ -218,10 +272,10 @@ export function CloseSessionClient({
             </legend>
             {profile && recommendedId && (
               <p className="text-[14px] text-on-surface-variant">
-                Pre-selected from {profile.name.split(" ")[0]}&apos;s best match — pick another if you discussed something else.
+                Pre-selected from {profile.name.split(" ")[0]}&apos;s best match — confirm it or pick another.
               </p>
             )}
-            <div role="radiogroup" aria-label="Recommended program" className="grid gap-2.5 sm:grid-cols-2">
+            <div role="radiogroup" aria-label="Recommended program" aria-required="true" className="grid gap-2.5 sm:grid-cols-2">
               {programs.map((p) => {
                 const on = form.programId === p.id;
                 return (
@@ -230,7 +284,10 @@ export function CloseSessionClient({
                     type="button"
                     role="radio"
                     aria-checked={on}
-                    onClick={() => setForm((f) => ({ ...f, programId: on ? "" : p.id }))}
+                    onClick={() => {
+                      set("programId", p.id);
+                      touch("programId")();
+                    }}
                     className={cn(
                       "btn-3d flex items-start gap-3 rounded-2xl border p-4 text-left",
                       on ? "border-ink bg-ink text-white" : "border-outline-variant bg-white text-ink hover:border-ink",
@@ -259,31 +316,72 @@ export function CloseSessionClient({
                 );
               })}
             </div>
+            {show("programId") && (
+              <p role="alert" className="text-[13px] font-medium text-primary">
+                {show("programId")}
+              </p>
+            )}
           </fieldset>
 
           <fieldset className="flex flex-col gap-5">
             <legend className="mb-5 font-display text-headline-sm text-ink">
-              <span className="mr-2 text-primary">03</span>Counsellor <span className="text-[15px] font-medium text-on-surface-variant">· optional</span>
+              <span className="mr-2 text-primary">03</span>Source &amp; centre
             </legend>
             <div className="grid gap-5 sm:grid-cols-2">
-              <TextField
-                label="Your name"
-                autoComplete="name"
-                value={form.counsellorName}
-                onChange={(e) => setForm((f) => ({ ...f, counsellorName: e.target.value }))}
-              />
-              <TextField
-                label="Your centre city"
-                list="close-session-cities"
-                hint="Used to route the learner to the right centre."
-                value={form.counsellorCity}
-                onChange={(e) => setForm((f) => ({ ...f, counsellorCity: e.target.value }))}
-              />
-              <datalist id="close-session-cities">
-                {cities.map((c) => (
-                  <option key={c.id} value={c.name} />
+              <SelectField
+                label="Source"
+                required
+                value={form.source}
+                error={show("source")}
+                hint="Where the learner came from."
+                onChange={(e) => set("source", e.target.value)}
+              >
+                {LEAD_SOURCES.map((src) => (
+                  <option key={src} value={src}>
+                    {src}
+                  </option>
                 ))}
-              </datalist>
+              </SelectField>
+              <SelectField
+                label="Centre"
+                required
+                value={form.centre}
+                error={show("centre")}
+                hint={
+                  selectedCentre && !selectedCentre.hasRule
+                    ? "No LSQ routing rule for this centre yet — the lead lands in the LC Team queue."
+                    : "Pre-filled with your centre. Change it if you're covering another centre."
+                }
+                onBlur={touch("centre")}
+                onChange={(e) => set("centre", e.target.value)}
+              >
+                <option value="" disabled>
+                  — Select a centre —
+                </option>
+                {CENTRES.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </SelectField>
+            </div>
+            <div className="flex items-center gap-3 rounded-2xl bg-surface-container-low px-4 py-3.5">
+              <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full bg-white text-ink">
+                <Icon name="badge" size={18} />
+              </span>
+              <span className="min-w-0 text-[14px] text-on-surface-variant">
+                Counsellor:{" "}
+                {counsellor === undefined ? (
+                  "checking…"
+                ) : counsellor ? (
+                  <span className="font-semibold text-ink">{counsellor.name}</span>
+                ) : (
+                  <span className="font-semibold text-ink">Not in the counsellor list</span>
+                )}
+                {counsellor === null && (
+                  <span className="block text-[13px]">The lead will go to the centre queue. Ask an admin to add you.</span>
+                )}
+              </span>
             </div>
           </fieldset>
 
@@ -295,10 +393,12 @@ export function CloseSessionClient({
           )}
 
           <div className="flex flex-wrap items-center gap-4 border-t border-outline-variant pt-8">
-            <Button type="submit" size="lg" loading={pending} className="min-w-[240px]">
+            <Button type="submit" size="lg" loading={pending} disabled={!valid} className="min-w-[240px]">
               {pending ? "Closing session…" : "Confirm & close session"}
             </Button>
-            <span className="text-[14px] text-on-surface-variant">Any recording in progress is saved first.</span>
+            <span className="text-[14px] text-on-surface-variant">
+              {valid ? "Any recording in progress is saved first." : "Fill every field to enable this."}
+            </span>
           </div>
         </form>
 
@@ -307,6 +407,7 @@ export function CloseSessionClient({
           <ol className="flex flex-col gap-5">
             {[
               ["mail", "Summary email", "The learner gets their program summary and a one-tap link to rate today."],
+              ...(lsqEnabled ? [["hub", "Routed to the centre", "The lead goes to the selected centre in LeadSquared, assigned to you."]] : []),
               ["description", "Transcript linked", "If you recorded, the transcript is attached to this learner for admins."],
               ["groups", "Next session ready", "One tap clears the learner's details — you stay checked in."],
             ].map(([icon, title, body]) => (

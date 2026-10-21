@@ -32,7 +32,11 @@ export async function GET(req: NextRequest) {
     { header: "Counsellor Email", key: "counsellorEmail", width: 28 },
     { header: "City", key: "city", width: 16 },
     { header: "Rating", key: "rating", width: 10 },
-    { header: "Referral", key: "referral", width: 24 },
+    { header: "LSQ Status", key: "referral", width: 24 },
+    { header: "LSQ Campaign", key: "lsqCampaign", width: 52 },
+    { header: "LSQ Lead ID", key: "lsqLeadId", width: 36 },
+    { header: "LSQ Owner Sent", key: "lsqOwnerEmail", width: 30 },
+    { header: "Source", key: "lsqSource", width: 18 },
   ];
   sheet.getRow(1).font = { bold: true };
   sheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFEEEEEE" } };
@@ -53,6 +57,10 @@ export async function GET(req: NextRequest) {
       city: s.counsellorCity ?? "",
       rating: s.rating ?? "",
       referral: s.referralStatus ?? "",
+      lsqCampaign: s.lsqCampaign ?? "",
+      lsqLeadId: s.lsqLeadId ?? "",
+      lsqOwnerEmail: s.lsqOwnerEmail ?? "",
+      lsqSource: s.lsqSource ?? "",
     });
   }
 

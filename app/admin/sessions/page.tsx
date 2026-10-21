@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Table, Th, Td } from "@/components/admin/AdminUI";
 import { buildSessionsWhere } from "@/lib/sessionFilters";
+import { leadDropEnabled } from "@/lib/leadDrop";
+import { resendLsq } from "@/app/admin/sessions/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -34,6 +36,7 @@ export default async function SessionsAdminPage({
   ]);
 
   const cities = cityRows.map((r) => r.counsellorCity!).filter(Boolean);
+  const lsqOn = leadDropEnabled();
 
   return (
     <div>
@@ -107,7 +110,7 @@ export default async function SessionsAdminPage({
             <Th>Counsellor Email</Th>
             <Th>City</Th>
             <Th>Rating</Th>
-            <Th>Referral</Th>
+            <Th>LeadSquared</Th>
             <Th>Transcript</Th>
           </tr>
         </thead>
@@ -141,16 +144,44 @@ export default async function SessionsAdminPage({
                   <span className="text-brand-gray-400">Awaiting student</span>
                 )}
               </Td>
-              <Td className="max-w-[180px]">
+              <Td className="min-w-[220px]">
                 {s.referralStatus ? (
-                  <span
-                    title={s.referralStatus}
-                    className={s.referralSentAt ? "font-semibold text-green-700" : "font-semibold text-brand-red"}
-                  >
-                    {s.referralSentAt ? s.referralStatus : `✕ ${s.referralStatus}`}
-                  </span>
+                  <div className="flex flex-col gap-1">
+                    <span className="flex flex-wrap items-center gap-2">
+                      <span
+                        title={s.referralStatus}
+                        className={
+                          !s.referralSentAt
+                            ? "rounded-full bg-primary px-2.5 py-0.5 text-[12px] font-bold text-white"
+                            : /^(Reactivated|Repeat)/.test(s.referralStatus)
+                              ? "rounded-full bg-[#fff1d6] px-2.5 py-0.5 text-[12px] font-bold text-[#8a5a00]"
+                              : "rounded-full bg-ink px-2.5 py-0.5 text-[12px] font-bold text-white"
+                        }
+                      >
+                        {s.referralSentAt ? s.referralStatus : `Failed`}
+                      </span>
+                      {!s.referralSentAt && (
+                        <form action={resendLsq.bind(null, s.id)}>
+                          <button
+                            disabled={!lsqOn}
+                            title={lsqOn ? "Send again with the stored values" : "LSQ sending is switched off"}
+                            className="text-[13px] font-semibold text-primary hover:underline disabled:cursor-not-allowed disabled:text-on-surface-variant disabled:no-underline"
+                          >
+                            Re-send
+                          </button>
+                        </form>
+                      )}
+                    </span>
+                    {!s.referralSentAt && <span className="text-[12px] text-primary">{s.referralStatus}</span>}
+                    {s.referralSentAt && /^(Reactivated|Repeat)/.test(s.referralStatus) && (
+                      <span className="text-[12px] text-[#8a5a00]">Existing lead — owner may be outside LC. Check in LSQ.</span>
+                    )}
+                    {s.lsqCampaign && <code className="break-all text-[11px] text-on-surface-variant">{s.lsqCampaign}</code>}
+                    {s.lsqLeadId && <span className="text-[11px] text-on-surface-variant">ID {s.lsqLeadId}</span>}
+                    {s.lsqOwnerEmail && <span className="text-[11px] text-on-surface-variant">Owner sent: {s.lsqOwnerEmail}</span>}
+                  </div>
                 ) : (
-                  <span className="text-brand-gray-400">—</span>
+                  <span className="text-on-surface-variant">{lsqOn ? "—" : "Not sent (off)"}</span>
                 )}
               </Td>
               <Td>

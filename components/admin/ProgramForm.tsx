@@ -2,6 +2,7 @@ import { Field, inputClass } from "@/components/admin/AdminUI";
 import { Button } from "@/components/ui/Button";
 import { FileField } from "@/components/admin/FileField";
 import { AdditionalCertificateFields } from "@/components/admin/AdditionalCertificateFields";
+import { COURSE_LABEL, LSQ_VERTICALS } from "@/lib/leadDrop";
 
 type Program = {
   name: string;
@@ -13,6 +14,8 @@ type Program = {
   brochureUrl?: string | null;
   certificateUrl?: string | null;
   courseUrl?: string | null;
+  lsqVertical?: string | null;
+  lsqProgramme?: string | null;
   certifications: { name: string; partnerInstitution: string; brochureUrl: string }[];
   curriculumModules: { title: string; content: string }[];
   addOnCertificates?: { id: string; name: string; pdfUrl: string; description: string | null }[];
@@ -55,6 +58,36 @@ export function ProgramForm({
           className={inputClass}
         />
       </Field>
+      <div className="grid grid-cols-2 gap-4 rounded-2xl border border-outline-variant bg-white p-4">
+        <p className="col-span-2 text-[13px] text-on-surface-variant">
+          <strong className="text-ink">LeadSquared codes</strong> — required. They route closed sessions to LSQ with the
+          right Program of Interest.
+        </p>
+        <Field label="LSQ vertical">
+          <select required name="lsqVertical" defaultValue={initial?.lsqVertical ?? ""} className={inputClass}>
+            <option value="" disabled>
+              — Select —
+            </option>
+            {LSQ_VERTICALS.map((v) => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
+          </select>
+        </Field>
+        <Field label="LSQ programme">
+          <select required name="lsqProgramme" defaultValue={initial?.lsqProgramme ?? ""} className={inputClass}>
+            <option value="" disabled>
+              — Select —
+            </option>
+            {Object.entries(COURSE_LABEL).map(([code, label]) => (
+              <option key={code} value={code}>
+                {code} — {label.replace(/\s+/g, " ")}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </div>
       <Field label="Course page link" hint="upGrad.com page for this course — counsellors click it to open the page in a new tab.">
         <input type="url" name="courseUrl" defaultValue={initial?.courseUrl ?? ""} className={inputClass} placeholder="https://www.upgrad.com/offline-centres/..." />
       </Field>

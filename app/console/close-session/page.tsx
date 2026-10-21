@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { CloseSessionClient } from "@/components/console/CloseSessionClient";
+import { leadDropEnabled } from "@/lib/leadDrop";
 
 export const dynamic = "force-dynamic";
 
@@ -14,5 +15,5 @@ export default async function CloseSessionPage() {
     }),
   ]);
 
-  return <CloseSessionClient programs={programs} recommendations={recommendations} />;
+  return <CloseSessionClient programs={programs} recommendations={recommendations} lsqEnabled={leadDropEnabled()} />;
 }

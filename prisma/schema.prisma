@@ -62,6 +62,13 @@ model Lead {
   // e.g. "Sent to Pune" / "Rejected (403) …" / null when the feature is off.
   referralStatus String?
   referralSentAt DateTime?
+  // LeadSquared drop (lib/leadDrop.ts, LSQ_INTEGRATION.md). Stored so admins can trace
+  // where a lead routed and re-send a failed one with exactly the same values.
+  lsqLeadId     String?
+  lsqCampaign   String?
+  lsqOwnerEmail String?
+  lsqSource     String?
+  lsqCentre     String?
   // Captured automatically from the counsellor's check-in email (see
   // CounsellorLogin) — lets admin count completed sessions per counsellor
   // reliably, independent of what they typed into counsellorName.
@@ -104,6 +111,17 @@ model TranscriptChunk {
 
 // One row per counsellor check-in (once per browser session on the console) —
 // powers the admin telemetry view of logins and completed sessions per email.
+// Counsellors allowed to run sessions. `email` must be their LSQ login (an active LC LSQ
+// user) — it's sent as the lead owner, and a wrong address sends leads out of LC.
+model Counsellor {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  centre    String   // a CENTRES value from lib/centres.ts, e.g. "Kothrud"
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
 model CounsellorLogin {
   id         String   @id @default(cuid())
   email      String
@@ -156,6 +174,10 @@ model Program {
   certificateUrl String?
   // upGrad.com page for this course — opens in a new tab for the counsellor.
   courseUrl   String?
+  // LSQ codes: vertical (Tech / Finance) and programme (a COURSE_LABEL key in lib/leadDrop.ts).
+  // They build the Source Campaign and pick the Program of Interest label.
+  lsqVertical  String?
+  lsqProgramme String?
   order       Int      @default(0)
 
   certifications    Certification[]

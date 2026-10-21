@@ -23,6 +23,7 @@ export default async function CoursesAdminPage() {
             <Th>Mode</Th>
             <Th>Certifications</Th>
             <Th>Course Page</Th>
+            <Th>LSQ code</Th>
             <Th></Th>
           </tr>
         </thead>
@@ -40,6 +41,15 @@ export default async function CoursesAdminPage() {
                   </a>
                 ) : (
                   <span className="text-brand-gray-400">—</span>
+                )}
+              </Td>
+              <Td>
+                {p.lsqVertical && p.lsqProgramme ? (
+                  <code className="rounded bg-surface-container px-1.5 py-0.5 text-[12px]">
+                    {p.lsqVertical}_{p.lsqProgramme}
+                  </code>
+                ) : (
+                  <span className="rounded-full bg-primary-fixed px-2 py-0.5 text-[11px] font-bold text-primary">Missing — edit to set</span>
                 )}
               </Td>
               <Td>

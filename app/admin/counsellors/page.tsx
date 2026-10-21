@@ -1,10 +1,22 @@
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Table, Th, Td } from "@/components/admin/AdminUI";
+import { CounsellorForm } from "@/components/admin/CounsellorForm";
+import { createCounsellor, setCounsellorActive } from "@/app/admin/counsellors/actions";
+import { getCentre } from "@/lib/centres";
 
 export const dynamic = "force-dynamic";
 
-export default async function CounsellorsAdminPage() {
-  const [logins, sessions] = await Promise.all([
+const ERRORS: Record<string, string> = {
+  name: "Enter the counsellor's name.",
+  email: "Enter a valid email address.",
+  centre: "Pick a centre.",
+  duplicate: "A counsellor with that email already exists.",
+};
+
+export default async function CounsellorsAdminPage({ searchParams }: { searchParams: { error?: string; saved?: string } }) {
+  const [counsellors, logins, sessions] = await Promise.all([
+    prisma.counsellor.findMany({ orderBy: [{ active: "desc" }, { name: "asc" }] }),
     prisma.counsellorLogin.groupBy({
       by: ["email"],
       _count: { _all: true },
@@ -17,66 +29,141 @@ export default async function CounsellorsAdminPage() {
     }),
   ]);
 
-  const sessionCountByEmail = new Map(sessions.map((s) => [s.counsellorEmail!, s._count._all]));
-
-  const rows = logins
-    .map((l) => ({
-      email: l.email,
-      loginCount: l._count._all,
-      lastLogin: l._max.loggedInAt,
-      sessionsCompleted: sessionCountByEmail.get(l.email) ?? 0,
-    }))
-    .sort((a, b) => (b.lastLogin?.getTime() ?? 0) - (a.lastLogin?.getTime() ?? 0));
-
-  // Emails that closed sessions but (for some reason) have no matching login
-  // row — surface them too rather than silently dropping their session count.
-  const loggedEmails = new Set(logins.map((l) => l.email));
-  const orphanRows = sessions
-    .filter((s) => !loggedEmails.has(s.counsellorEmail!))
-    .map((s) => ({
-      email: s.counsellorEmail!,
-      loginCount: 0,
-      lastLogin: null as Date | null,
-      sessionsCompleted: s._count._all,
-    }));
-
-  const allRows = [...rows, ...orphanRows];
+  const loginByEmail = new Map(logins.map((l) => [l.email, l]));
+  const sessionsByEmail = new Map(sessions.map((s) => [s.counsellorEmail!, s._count._all]));
+  const listed = new Set(counsellors.map((c) => c.email));
+  // People who have checked in but aren't on the list yet — the starting point for adding them.
+  const unlisted = logins
+    .filter((l) => !listed.has(l.email))
+    .sort((a, b) => (b._max.loggedInAt?.getTime() ?? 0) - (a._max.loggedInAt?.getTime() ?? 0));
+  const allowlistOn = process.env.COUNSELLOR_ALLOWLIST_ENABLED === "true";
+  const fmt = (d: Date | null | undefined) => (d ? d.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) : "—");
 
   return (
-    <div>
-      <h1 className="mb-1 text-2xl font-extrabold text-brand-ink">Counsellors</h1>
-      <p className="mb-6 max-w-2xl text-sm text-brand-ink2">
-        Every counsellor who has checked in on the console, how many times they've logged in, and how many
-        student sessions they've completed.
-      </p>
-
-      <Table>
-        <thead>
-          <tr>
-            <Th>Email</Th>
-            <Th>Logins</Th>
-            <Th>Last Login</Th>
-            <Th>Sessions Completed</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {allRows.map((r) => (
-            <tr key={r.email} className="border-t border-brand-gray-100">
-              <Td className="font-semibold text-brand-ink">{r.email}</Td>
-              <Td>{r.loginCount}</Td>
-              <Td>{r.lastLogin ? r.lastLogin.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) : "—"}</Td>
-              <Td>{r.sessionsCompleted}</Td>
-            </tr>
-          ))}
-          {allRows.length === 0 && (
-            <tr>
-              <td colSpan={4} className="px-3 py-2 text-sm text-brand-gray-400">
-                No counsellor check-ins yet.
-              </td>
-            </tr>
+    <div className="flex flex-col gap-10">
+      <div>
+        <h1 className="mb-2">Counsellors</h1>
+        <p className="max-w-3xl text-[15px] text-on-surface-variant">
+          Who may run sessions. Each counsellor&apos;s email is sent to LeadSquared as the lead owner, and their centre
+          pre-fills Close Session.{" "}
+          {allowlistOn ? (
+            <strong className="text-ink">Check-in is limited to active counsellors on this list.</strong>
+          ) : (
+            <>
+              Check-in is currently <strong className="text-ink">open to anyone</strong> — add every counsellor here
+              before switching on <code className="rounded bg-surface-container px-1">COUNSELLOR_ALLOWLIST_ENABLED</code>.
+            </>
           )}
-        </tbody>
-      </Table>
+        </p>
+      </div>
+
+      {searchParams.error && ERRORS[searchParams.error] && (
+        <div role="alert" className="rounded-2xl bg-primary-fixed px-4 py-3 text-[14px] font-medium text-primary-container">
+          {ERRORS[searchParams.error]}
+        </div>
+      )}
+      {searchParams.saved && (
+        <div role="status" className="rounded-2xl bg-ink px-4 py-3 text-[14px] font-medium text-white">
+          Saved. Make sure the email is their active LSQ login — otherwise their leads leave Learning Centre.
+        </div>
+      )}
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-[22px] font-bold">Counsellor list</h2>
+        <Table>
+          <thead>
+            <tr>
+              <Th>Name</Th>
+              <Th>LSQ email</Th>
+              <Th>Centre</Th>
+              <Th>Status</Th>
+              <Th>Last check-in</Th>
+              <Th>Sessions</Th>
+              <Th></Th>
+            </tr>
+          </thead>
+          <tbody>
+            {counsellors.map((c) => {
+              const centre = getCentre(c.centre);
+              return (
+                <tr key={c.id} className="border-t border-outline-variant">
+                  <Td className="font-semibold">{c.name}</Td>
+                  <Td>{c.email}</Td>
+                  <Td>
+                    {centre?.label ?? c.centre}
+                    {centre && !centre.hasRule && (
+                      <span className="ml-2 rounded-full bg-primary-fixed px-2 py-0.5 text-[11px] font-bold text-primary">No LSQ rule</span>
+                    )}
+                  </Td>
+                  <Td>
+                    {c.active ? (
+                      <span className="rounded-full bg-ink px-2.5 py-1 text-[12px] font-semibold text-white">Active</span>
+                    ) : (
+                      <span className="rounded-full bg-surface-container px-2.5 py-1 text-[12px] font-semibold text-on-surface-variant">Inactive</span>
+                    )}
+                  </Td>
+                  <Td>{fmt(loginByEmail.get(c.email)?._max.loggedInAt)}</Td>
+                  <Td>{sessionsByEmail.get(c.email) ?? 0}</Td>
+                  <Td>
+                    <div className="flex gap-3">
+                      <Link href={`/admin/counsellors/${c.id}`} className="text-sm font-semibold text-primary hover:underline">
+                        Edit
+                      </Link>
+                      <form action={setCounsellorActive.bind(null, c.id, !c.active)}>
+                        <button className="text-sm font-semibold text-on-surface-variant hover:text-primary">
+                          {c.active ? "Deactivate" : "Activate"}
+                        </button>
+                      </form>
+                    </div>
+                  </Td>
+                </tr>
+              );
+            })}
+            {counsellors.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-4 py-4 text-sm text-on-surface-variant">
+                  No counsellors yet — add the first one below.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 className="text-[22px] font-bold">Add a counsellor</h2>
+        <CounsellorForm action={createCounsellor} submitLabel="Add counsellor" />
+      </section>
+
+      {unlisted.length > 0 && (
+        <section className="flex flex-col gap-3">
+          <h2 className="text-[22px] font-bold">Checked in but not on the list</h2>
+          <p className="max-w-3xl text-[14px] text-on-surface-variant">
+            Emails used to check in on the console. Check each against the person&apos;s LSQ login before adding them —
+            a personal or misspelt address would send leads out of LC.
+          </p>
+          <Table>
+            <thead>
+              <tr>
+                <Th>Email</Th>
+                <Th>Logins</Th>
+                <Th>Last check-in</Th>
+                <Th>Sessions</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {unlisted.map((l) => (
+                <tr key={l.email} className="border-t border-outline-variant">
+                  <Td className="font-semibold">{l.email}</Td>
+                  <Td>{l._count._all}</Td>
+                  <Td>{fmt(l._max.loggedInAt)}</Td>
+                  <Td>{sessionsByEmail.get(l.email) ?? 0}</Td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </section>
+      )}
     </div>
   );
 }
