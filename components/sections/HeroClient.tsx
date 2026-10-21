@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
-import { Button } from "@/components/ui/Button";
+import { LinkButton } from "@/components/ui/Button";
 import { getLeadProfile, type LeadProfile } from "@/lib/leadProfile";
 import { findRecommendationForDegree } from "@/lib/recommendationMatch";
 
@@ -243,13 +243,13 @@ function DefaultHero({ settings, topCtc }: { settings: NonNullable<Settings>; to
         <p className="text-body-lg text-on-surface-variant max-w-xl mb-8 border-l-2 border-primary pl-4 py-1 editable-field">
           {settings.subheadline}
         </p>
-        <div className="flex gap-4">
-          <a href="#programs">
-            <Button variant="primary">{settings.primaryCtaLabel}</Button>
-          </a>
-          <a href="#faq">
-            <Button variant="secondary">{settings.secondaryCtaLabel}</Button>
-          </a>
+        <div className="flex flex-wrap gap-3">
+          <LinkButton href="#programs" variant="primary" size="lg">
+            {settings.primaryCtaLabel}
+          </LinkButton>
+          <LinkButton href="#faq" variant="secondary" size="lg">
+            {settings.secondaryCtaLabel}
+          </LinkButton>
         </div>
       </div>
 

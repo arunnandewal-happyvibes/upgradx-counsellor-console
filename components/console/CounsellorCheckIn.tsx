@@ -64,7 +64,7 @@ export function CounsellorCheckIn() {
             className="h-14 w-full rounded-lg border-2 border-surface-variant bg-white px-4 text-center text-body-lg text-on-surface transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary"
           />
           {error && <p className="text-body-sm font-semibold text-primary">{error}</p>}
-          <Button type="submit" disabled={submitting} className="mt-2 w-full justify-center py-4">
+          <Button type="submit" disabled={submitting} size="lg" className="mt-2 w-full">
             {submitting ? "Checking in..." : "Check In"}
           </Button>
         </form>

@@ -16,6 +16,42 @@ section[id] {
 
 body {
   @apply bg-background text-on-background antialiased;
+  font-feature-settings: "cv11", "ss01";
+}
+
+/* Editorial voice: every heading uses the tight display face. */
+h1,
+h2,
+h3 {
+  @apply font-display;
+}
+
+::selection {
+  background: rgba(228, 31, 38, 0.18);
+}
+
+/* One consistent, visible focus ring for keyboard users across the whole app. */
+:focus-visible {
+  outline: 2px solid theme("colors.primary");
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Swipe rows: snap cards into place, hide the bar (arrows/drag do the work). */
+.snap-row {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.snap-row::-webkit-scrollbar {
+  display: none;
+}
+.snap-row > * {
+  scroll-snap-align: start;
+}
+
+/* Small uppercase kicker above section titles. */
+.eyebrow {
+  @apply text-label-bold font-bold uppercase text-primary;
 }
 
 .material-symbols-outlined {
@@ -44,40 +80,38 @@ body {
   cursor: pointer;
 }
 
-/* 3D press interaction — shared by every card-like surface. Add alongside
-   the element's own background/border classes; this only owns motion + shadow. */
+/* Card lift — shared by every card-like surface. Add alongside the element's own
+   background/border classes; this only owns motion + shadow. A calm neutral
+   lift (no red glow): the content, not the chrome, should carry the colour. */
 .elevate-3d {
   transition:
-    transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 0.2s ease,
-    border-color 0.2s ease,
-    background-color 0.2s ease;
-  will-change: transform;
+    transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.22s ease,
+    background-color 0.22s ease;
 }
 .elevate-3d:hover {
   transform: translateY(-6px);
-  box-shadow:
-    0 18px 30px -14px rgba(228, 31, 38, 0.4),
-    0 8px 14px -8px rgba(20, 20, 20, 0.2);
+  border-color: #d4d4d4;
+  box-shadow: 0 24px 48px -20px rgba(17, 17, 17, 0.28);
 }
 .elevate-3d:active {
-  transform: translateY(-1px) scale(0.99);
-  box-shadow:
-    0 6px 12px -6px rgba(228, 31, 38, 0.3),
-    0 2px 5px rgba(20, 20, 20, 0.15);
+  transform: translateY(-2px) scale(0.995);
   transition-duration: 0.08s;
 }
 
 .b2b-card {
   background-color: theme("colors.surface-container-lowest");
-  border: 1px solid #e0e0e0;
-  border-radius: theme("borderRadius.DEFAULT");
+  border: 1px solid theme("colors.outline-variant");
+  border-radius: theme("borderRadius.card");
+  transition: border-color 0.2s ease;
 }
 .b2b-card:hover {
-  border-color: theme("colors.primary");
+  border-color: #c9c9c9;
 }
 
-/* 3D press interaction for buttons — a raised "bottom edge" that flattens on click. */
+/* Button motion — replaces the old raised "3D edge". A 1px lift on hover and a
+   quick squeeze on press: tactile without looking like a 2000s bevel. */
 .btn-3d {
   position: relative;
   transition:
@@ -86,27 +120,28 @@ body {
     background-color 0.15s ease,
     color 0.15s ease,
     border-color 0.15s ease;
-  box-shadow:
-    0 3px 0 0 rgba(0, 0, 0, 0.18),
-    0 4px 8px -2px rgba(20, 20, 20, 0.2);
-  will-change: transform;
 }
 .btn-3d:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 5px 0 0 rgba(0, 0, 0, 0.18),
-    0 12px 20px -6px rgba(228, 31, 38, 0.45);
+  transform: translateY(-1px);
 }
 .btn-3d:active {
-  transform: translateY(2px);
-  box-shadow:
-    0 0 0 0 rgba(0, 0, 0, 0.18),
-    0 2px 4px rgba(20, 20, 20, 0.18);
+  transform: translateY(1px) scale(0.98);
   transition-duration: 0.05s;
 }
 .btn-3d:disabled {
   transform: none !important;
-  box-shadow: none !important;
+}
+
+/* Everything that moves respects the OS "reduce motion" setting. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Welcome popup — brand-red pop-in + a celebratory pulse ring on the icon badge. */

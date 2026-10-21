@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition, type FormEvent } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { Button, LinkButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { getLeadProfile, type LeadProfile } from "@/lib/leadProfile";
 import { getCounsellorEmail } from "@/lib/counsellor";
@@ -127,9 +126,9 @@ export function CloseSessionClient({
             A summary email is on its way to {submitted.email}.
           </p>
         )}
-        <Link href="/" onClick={startNextSession}>
-          <Button>Start Next Session</Button>
-        </Link>
+        <LinkButton href="/" onClick={startNextSession} size="lg">
+          Start next session
+        </LinkButton>
       </div>
     );
   }
@@ -223,7 +222,7 @@ export function CloseSessionClient({
 
         {error && <p className="text-body-sm font-semibold text-primary">{error}</p>}
 
-        <Button type="submit" disabled={pending} className="mt-2 w-full justify-center py-4">
+        <Button type="submit" disabled={pending} size="lg" className="mt-2 w-full">
           {pending ? "Closing session..." : "Confirm & Close Session"}
         </Button>
       </form>

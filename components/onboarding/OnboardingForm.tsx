@@ -230,7 +230,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               onKeyDown={(e) => e.key === "Enter" && form.name.trim() && goTo(1)}
             />
-            <Button type="button" disabled={!form.name.trim()} onClick={() => goTo(1)} className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}>
+            <Button type="button" disabled={!form.name.trim()} onClick={() => goTo(1)} size="lg" className="w-full !h-16 !text-[18px]">
               Continue
             </Button>
           </div>
@@ -273,7 +273,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
                   type="button"
                   disabled={!experienceValid}
                   onClick={() => goTo(2)}
-                  className="w-full py-5 text-headline-sm"
+                  size="lg" className="w-full !h-16 !text-[18px]"
                   style={{ fontSize: "18px" }}
                 >
                   Continue
@@ -319,7 +319,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
                   type="button"
                   disabled={!form.customDegree.trim() || !form.degreeCategory}
                   onClick={confirmCustomDegree}
-                  className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}
+                  size="lg" className="w-full !h-16 !text-[18px]"
                 >
                   Continue
                 </Button>
@@ -343,7 +343,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
               onChange={(e) => setForm((f) => ({ ...f, cgpa: e.target.value }))}
               onKeyDown={(e) => e.key === "Enter" && form.cgpa.trim() && goTo(4)}
             />
-            <Button type="button" disabled={!form.cgpa.trim()} onClick={() => goTo(4)} className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}>
+            <Button type="button" disabled={!form.cgpa.trim()} onClick={() => goTo(4)} size="lg" className="w-full !h-16 !text-[18px]">
               Continue
             </Button>
           </div>
@@ -397,7 +397,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
               type="button"
               disabled={form.skills.length === 0}
               onClick={() => goTo(5)}
-              className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}
+              size="lg" className="w-full !h-16 !text-[18px]"
             >
               Continue
             </Button>
@@ -439,7 +439,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
               type="button"
               disabled={form.interests.length === 0}
               onClick={() => goTo(6)}
-              className="w-full py-5 text-headline-sm" style={{ fontSize: "18px" }}
+              size="lg" className="w-full !h-16 !text-[18px]"
             >
               Continue
             </Button>

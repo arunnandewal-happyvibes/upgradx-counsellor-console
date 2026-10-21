@@ -1,5 +1,6 @@
 import { cn } from "@/lib/cn";
 
+/** Editorial section opener: red tracked kicker, big tight headline, optional action on the right. */
 export function SectionHeader({
   eyebrow,
   title,
@@ -12,19 +13,12 @@ export function SectionHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("mb-gutter", className)}>
-      <div className="flex items-end justify-between gap-4 mb-2">
-        <div>
-          {eyebrow && (
-            <div className="mb-1 text-label-bold font-bold uppercase tracking-wide text-secondary">
-              {eyebrow}
-            </div>
-          )}
-          <h2 className="text-headline-md font-bold text-on-surface">{title}</h2>
-        </div>
-        {action}
+    <div className={cn("mb-7 flex flex-wrap items-end justify-between gap-4", className)}>
+      <div className="min-w-0">
+        {eyebrow && <div className="eyebrow mb-2">{eyebrow}</div>}
+        <h2 className="text-display-lg font-extrabold text-on-surface">{title}</h2>
       </div>
-      <div className="h-[2px] w-16 bg-primary" />
+      {action}
     </div>
   );
 }

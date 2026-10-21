@@ -10,11 +10,11 @@ export function TopBar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 flex justify-between items-center w-full px-container-margin h-16 bg-surface border-b-2 border-primary shadow-sm">
-      <div className="flex items-center gap-gutter">
+    <header className="sticky top-0 z-50 w-full border-b border-outline-variant bg-white/85 backdrop-blur-xl backdrop-saturate-150">
+      <div className="mx-auto flex h-[72px] max-w-[1440px] items-center gap-6 px-container-margin lg:px-12">
         <Link
           href="/console"
-          className="flex items-center gap-2"
+          className="flex items-center gap-4"
           onClick={(e) => {
             // Always land at the top of the console home page — including
             // when we're already there but scrolled down or hash-anchored.
@@ -25,39 +25,39 @@ export function TopBar() {
             }
           }}
         >
-          <Logo height={40} priority />
-          <span className="hidden text-xs font-semibold leading-tight text-secondary lg:block">
+          <Logo height={36} priority />
+          <span className="hidden whitespace-nowrap border-l border-outline-variant pl-4 text-[13px] font-medium text-on-surface-variant xl:block">
             Expert Counselling Portal
           </span>
         </Link>
-      </div>
 
-      <TopNavLinks />
+        <TopNavLinks />
 
-      <div className="flex items-center gap-4">
-        <Link
-          href="/console/contact"
-          aria-label="Contact"
-          className="text-primary hover:opacity-80 transition-opacity"
-        >
-          <Icon name="location_on" />
-        </Link>
-        {!pathname.startsWith("/console/close-session") && (
+        <div className="ml-auto flex items-center gap-2.5">
           <Link
-            href="/console/close-session"
-            className="btn-3d inline-flex items-center gap-1.5 rounded bg-primary px-3 py-1.5 text-label-bold font-bold uppercase tracking-wide text-on-primary hover:bg-primary-container transition-colors"
+            href="/console/contact"
+            aria-label="Centre contacts"
+            className="btn-3d grid h-11 w-11 place-items-center rounded-xl border border-outline-variant bg-white text-primary hover:border-ink"
           >
-            <Icon name="task_alt" size={18} />
-            <span className="hidden sm:inline">Close Session</span>
+            <Icon name="location_on" size={20} />
           </Link>
-        )}
-        <Link
-          href="/admin"
-          className="btn-3d inline-flex items-center gap-1.5 rounded border border-outline-variant px-3 py-1.5 text-label-bold font-bold uppercase tracking-wide text-on-surface-variant hover:border-primary hover:text-primary transition-colors"
-        >
-          <Icon name="admin_panel_settings" size={18} />
-          <span className="hidden sm:inline">Admin</span>
-        </Link>
+          {!pathname.startsWith("/console/close-session") && (
+            <Link
+              href="/console/close-session"
+              className="btn-3d inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-xl bg-primary px-4 text-[14px] font-bold text-on-primary hover:bg-primary-container hover:shadow-red-glow"
+            >
+              <Icon name="task_alt" size={18} />
+              <span className="hidden sm:inline">Close session</span>
+            </Link>
+          )}
+          <Link
+            href="/admin"
+            className="btn-3d inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-xl border border-outline-variant bg-white px-4 text-[14px] font-semibold text-ink hover:border-ink"
+          >
+            <Icon name="admin_panel_settings" size={18} />
+            <span className="hidden sm:inline">Admin</span>
+          </Link>
+        </div>
       </div>
     </header>
   );

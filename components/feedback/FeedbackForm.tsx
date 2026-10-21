@@ -48,7 +48,7 @@ export function FeedbackForm({
       {error && <p className="mb-3 text-body-sm font-semibold text-primary">{error}</p>}
       <Button
         disabled={rating < 1 || pending}
-        className="w-full justify-center py-3"
+        size="lg" className="w-full"
         onClick={() =>
           startTransition(async () => {
             setError(null);
