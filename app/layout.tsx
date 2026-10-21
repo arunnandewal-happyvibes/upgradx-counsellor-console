@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/Toast";
+import { SessionDock } from "@/components/console/SessionDock";
 import { SessionRecorderWidget } from "@/components/console/SessionRecorderWidget";
 import { VoiceAssistant } from "@/components/console/VoiceAssistant";
 
@@ -28,6 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-background font-sans text-on-background">
         <ToastProvider>
           {children}
+          {/* Rendered before the widgets so it exists in the DOM when they portal into it. */}
+          <SessionDock />
           <SessionRecorderWidget />
           <VoiceAssistant />
         </ToastProvider>

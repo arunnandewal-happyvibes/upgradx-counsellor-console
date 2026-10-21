@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
 import { getLeadProfile } from "@/lib/leadProfile";
 import { cleanForSpeech, englishVoices } from "@/lib/speech";
+import { onOpenAssistant, useDockTarget } from "@/lib/sessionDock";
 
 type Msg = { role: "user" | "assistant"; content: string; error?: boolean; links?: { label: string; url: string }[] };
 
@@ -48,6 +50,10 @@ export function VoiceAssistant() {
   const chunks = useRef<Blob[]>([]);
   const startedAt = useRef(0);
   const listRef = useRef<HTMLDivElement>(null);
+  const dock = useDockTarget();
+
+  // "Ask the assistant" buttons elsewhere on the page open this panel.
+  useEffect(() => onOpenAssistant(() => setOpen(true)), []);
 
   useEffect(() => {
     fetch("/api/assistant/status")
@@ -197,23 +203,39 @@ export function VoiceAssistant() {
     void ask({ text: t });
   };
 
-  if (!open) {
-    return (
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="Ask the assistant"
-        className="fixed bottom-6 right-6 z-[150] flex h-20 w-20 flex-col items-center justify-center gap-0.5 rounded-full bg-primary text-on-primary shadow-2xl transition-transform hover:scale-105"
-      >
-        <Icon name="support_agent" size={30} fill />
-        <span className="text-[10px] font-bold uppercase leading-tight">Ask AI</span>
-      </button>
-    );
-  }
+  const closePanel = () => {
+    window.speechSynthesis?.cancel();
+    if (recorder.current?.state === "recording") {
+      recorder.current.onstop = () => stream.current?.getTracks().forEach((t) => t.stop());
+      recorder.current.stop();
+    }
+    setPhase("idle");
+    setOpen(false);
+  };
+
+  const launcher = dock
+    ? createPortal(
+        <button
+          type="button"
+          onClick={() => (open ? closePanel() : setOpen(true))}
+          aria-expanded={open}
+          aria-label={open ? "Close the assistant" : "Ask the assistant"}
+          className="btn-3d order-2 flex h-12 items-center gap-2 whitespace-nowrap rounded-[14px] bg-primary px-5 text-[15px] font-bold text-on-primary hover:bg-primary-container hover:shadow-red-glow"
+        >
+          <Icon name={open ? "close" : "mic"} size={20} />
+          {open ? "Close AI" : "Ask AI"}
+        </button>,
+        dock,
+      )
+    : null;
+
+  if (!open) return launcher;
 
   const busy = phase === "thinking";
   return (
-    <div className="fixed bottom-6 right-6 z-[150] flex h-[min(560px,80vh)] w-[380px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-outline-variant bg-white shadow-2xl">
+    <>
+    {launcher}
+    <div className="fixed bottom-24 right-4 z-[150] flex h-[min(560px,calc(100vh-140px))] w-[400px] max-w-[calc(100vw-2rem)] animate-pop-in flex-col overflow-hidden rounded-3xl border border-outline-variant bg-white shadow-float sm:bottom-28 sm:right-6">
       <div className="flex items-center justify-between bg-primary px-4 py-3 text-on-primary">
         <div className="flex items-center gap-2 text-body-md font-bold">
           <Icon name="support_agent" size={22} fill /> Counsellor assistant
@@ -242,15 +264,7 @@ export function VoiceAssistant() {
           <button
             type="button"
             aria-label="Close assistant"
-            onClick={() => {
-              window.speechSynthesis?.cancel();
-              if (recorder.current?.state === "recording") {
-                recorder.current.onstop = () => stream.current?.getTracks().forEach((t) => t.stop());
-                recorder.current.stop();
-              }
-              setPhase("idle");
-              setOpen(false);
-            }}
+            onClick={closePanel}
             className="rounded-full p-1.5 hover:bg-white/20"
           >
             <Icon name="close" size={20} />
@@ -341,7 +355,7 @@ export function VoiceAssistant() {
             type="button"
             disabled={busy}
             onClick={phase === "listening" ? stopListening : startListening}
-            className={`mb-2 flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-label-bold font-bold uppercase tracking-wide transition-colors disabled:opacity-50 ${
+            className={`mb-2 flex h-12 w-full items-center justify-center gap-2 rounded-2xl px-4 text-[15px] font-bold transition-colors disabled:opacity-50 ${
               phase === "listening" ? "animate-pulse bg-primary text-on-primary" : "border-2 border-primary text-primary hover:bg-primary-fixed"
             }`}
           >
@@ -369,5 +383,6 @@ export function VoiceAssistant() {
         </form>
       </div>
     </div>
+    </>
   );
 }

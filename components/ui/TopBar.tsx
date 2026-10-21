@@ -4,9 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
-import { TopNavLinks } from "@/components/ui/TopNavLinks";
+import { TopNavLinks, MobileSectionNav } from "@/components/ui/TopNavLinks";
+import { CommandPalette, type PaletteProgram } from "@/components/console/CommandPalette";
 
-export function TopBar() {
+export function TopBar({ programs = [] }: { programs?: PaletteProgram[] }) {
   const pathname = usePathname();
 
   return (
@@ -34,6 +35,7 @@ export function TopBar() {
         <TopNavLinks />
 
         <div className="ml-auto flex items-center gap-2.5">
+          <CommandPalette programs={programs} />
           <Link
             href="/console/contact"
             aria-label="Centre contacts"
@@ -59,6 +61,7 @@ export function TopBar() {
           </Link>
         </div>
       </div>
+      <MobileSectionNav />
     </header>
   );
 }

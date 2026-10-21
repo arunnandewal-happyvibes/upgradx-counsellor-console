@@ -70,3 +70,22 @@ export function TopNavLinks() {
     </nav>
   );
 }
+
+/** Phones hide the desktop nav; this swipeable chip row keeps every section one tap away. */
+export function MobileSectionNav() {
+  const pathname = usePathname();
+  if (pathname !== "/console") return null;
+  return (
+    <nav aria-label="Console sections" className="snap-row flex gap-2 overflow-x-auto px-container-margin pb-3 md:hidden">
+      {NAV.map((item) => (
+        <a
+          key={item.id}
+          href={`#${item.id}`}
+          className="flex-shrink-0 rounded-full border border-outline-variant bg-white px-4 py-2 text-[14px] font-medium text-ink"
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  );
+}

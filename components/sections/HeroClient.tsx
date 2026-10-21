@@ -3,9 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
-import { LinkButton } from "@/components/ui/Button";
+import { Button, LinkButton } from "@/components/ui/Button";
+import { Tag } from "@/components/ui/Chip";
+import { cn } from "@/lib/cn";
+import { useCity } from "@/lib/city-context";
 import { getLeadProfile, type LeadProfile } from "@/lib/leadProfile";
 import { findRecommendationForDegree } from "@/lib/recommendationMatch";
+import { openAssistant } from "@/lib/sessionDock";
 
 type ProgramRef = { name: string; slug: string; duration: string; mode: string } | null;
 
@@ -42,7 +46,7 @@ const DEFAULT_SETTINGS: NonNullable<Settings> = {
   careerGrowthCaption: "Tailored pathways for senior roles.",
 };
 
-const MATCH_LABELS = ["Best Match", "Also Great", "Worth Exploring"];
+const MATCH_LABELS = ["Best match", "Also great", "Worth exploring"];
 
 const MOTIVATIONAL_LINES: Record<string, string> = {
   "B.Tech": "Your technical foundation is strong — let's turn it into a career that matches your ambition.",
@@ -60,192 +64,232 @@ function getGreeting(hour: number) {
   return "Good evening";
 }
 
-function getMotivationalLine(degree: string) {
-  return MOTIVATIONAL_LINES[degree] ?? MOTIVATIONAL_LINES.Other;
-}
-
-function RecommendationCard({
-  rank,
-  program,
-  why,
-}: {
-  rank: number;
-  program: ProgramRef;
-  why: string | null;
-}) {
-  if (!program) return null;
-  const isBestMatch = rank === 0;
+/** Bottom-right stat on the dark aside, shared by both hero variants. */
+function CentresStat({ count }: { count: number }) {
   return (
-    <div
-      className={`elevate-3d animate-rec-card flex flex-col gap-2.5 rounded-lg border p-[22px] transition-colors ${
-        isBestMatch
-          ? "border-primary bg-surface-container-lowest animate-best-match-glow"
-          : "border-surface-variant bg-surface-container-lowest hover:border-primary"
-      }`}
-      style={{ animationDelay: `${rank * 130}ms` }}
-    >
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-[13px] font-bold uppercase tracking-wide text-primary">{MATCH_LABELS[rank]}</span>
-        <span className="bg-surface-container-highest px-2 py-0.5 text-on-surface text-[10px] font-bold tracking-wider uppercase rounded-full">
-          {program.duration}
-        </span>
-      </div>
-      <h3 className="text-headline-sm text-on-surface">{program.name}</h3>
-      {why && <p className="text-body-sm text-on-surface-variant editable-field">{why}</p>}
-      <Link
-        href={`/console/programs/${program.slug}`}
-        className="mt-1 inline-flex items-center gap-1 text-body-sm font-bold text-primary hover:underline"
-      >
-        View Details
-        <Icon name="arrow_forward" size={16} />
-      </Link>
+    <div className="flex items-baseline gap-3 border-t border-white/10 pt-6">
+      <span className="font-display text-[56px] font-extrabold leading-none tracking-[-0.04em]">
+        {count}
+        <span className="text-primary">+</span>
+      </span>
+      <span className="text-[14px] leading-snug text-white/60">
+        learning centres
+        <br />
+        across India
+      </span>
     </div>
   );
 }
 
-type Milestone = { icon: string; label: string; x: number; y: number; color: string };
+type StepState = "done" | "now" | "next";
 
-function JourneyBanner({ profile }: { profile: LeadProfile }) {
-  const [greeting, setGreeting] = useState("Welcome");
-  const firstName = profile.name.split(" ")[0];
-
-  useEffect(() => {
-    setGreeting(getGreeting(new Date().getHours()));
-  }, []);
-
-  const milestones: Milestone[] = [
-    { icon: "school", label: profile.degree || "Graduate", x: 6, y: 70, color: "#7A1015" },
-    { icon: "code", label: profile.skills[0] ?? "Skilled Up", x: 36, y: 30, color: "#A61319" },
-    { icon: "rocket_launch", label: "Career Ready", x: 66, y: 62, color: "#C81922" },
-    { icon: "emoji_events", label: "Success", x: 94, y: 18, color: "#E41F26" },
+function JourneyCard({ profile, cityCount }: { profile: LeadProfile; cityCount: number }) {
+  const focus = profile.skills[0] ?? profile.interests[0];
+  const steps: { title: string; sub: string; state: StepState }[] = [
+    { title: profile.degree ? `${profile.degree} graduate` : "Graduate", sub: "Foundation in place", state: "done" },
+    { title: focus ? `${focus} interest` : "Interests captured", sub: "Matched to programs", state: "done" },
+    { title: "Career ready", sub: "Pick a program and batch", state: "now" },
+    { title: "Success", sub: "Placement support", state: "next" },
   ];
 
   return (
-    <div className="relative flex min-h-[150px] w-full items-center overflow-hidden rounded-lg bg-gradient-to-r from-black via-[#141414] to-[#1A1C1C] py-5 md:h-[18vh] md:py-0">
-      <div className="pointer-events-none absolute -left-10 top-1/2 h-48 w-48 -translate-y-1/2 rounded-full bg-primary opacity-20 blur-3xl" />
-      <div className="pointer-events-none absolute -right-10 top-0 h-56 w-56 rounded-full bg-white opacity-[0.06] blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 right-1/3 h-40 w-40 rounded-full bg-primary opacity-10 blur-3xl" />
-
-      <div className="relative z-10 flex w-full items-center gap-6 px-6 md:px-10">
-        <div className="w-full min-w-0 md:w-auto md:shrink-0">
-          <span className="text-[13px] font-bold uppercase tracking-wide text-white/60">{greeting}</span>
-          <h1 className="break-words text-[32px] font-extrabold leading-[1.05] text-white md:text-[54px]">
-            <span className="bg-gradient-to-r from-white to-primary bg-clip-text text-transparent">
-              {firstName}!
-            </span>
-          </h1>
-          {profile.degree && (
-            <p className="text-[17px] font-semibold text-white/70">
-              {profile.degree} graduate
-              {profile.skills[0] ? ` · ${profile.skills[0]}` : ""}
-            </p>
-          )}
-          <p className="mt-1 line-clamp-2 max-w-md text-[13px] italic leading-snug text-white/60">
-            {getMotivationalLine(profile.degree)}
-          </p>
-        </div>
-
-        {/* "Path to success" infographic — desktop only; mobile keeps the compact identity block alone. */}
-        <div className="relative hidden h-full flex-1 md:block">
-          <svg
-            className="absolute inset-0 h-full w-full"
-            viewBox="0 0 1000 200"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="journeyGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#4A4A4A" />
-                <stop offset="36%" stopColor="#7A1015" />
-                <stop offset="66%" stopColor="#C81922" />
-                <stop offset="100%" stopColor="#E41F26" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M60,140 C160,140 220,60 360,60 C480,60 520,124 660,124 C780,124 840,36 940,36"
-              fill="none"
-              stroke="url(#journeyGradient)"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeDasharray="1 9"
-              className="animate-path-draw"
-            />
-          </svg>
-
-          {milestones.map((m, i) => (
-            <div
-              key={m.label}
-              className="animate-milestone-in absolute flex flex-col items-center gap-1.5"
-              style={{ left: `${m.x}%`, top: `${m.y}%`, animationDelay: `${700 + i * 200}ms` }}
-            >
-              <div
-                className={`flex h-10 w-10 items-center justify-center rounded-full text-white ${
-                  i === milestones.length - 1 ? "animate-welcome-pulse" : ""
-                }`}
-                style={{ backgroundColor: m.color, boxShadow: `0 0 16px 2px ${m.color}99` }}
-              >
-                <Icon name={m.icon} size={19} />
-              </div>
-              <span
-                className="whitespace-nowrap rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-sm"
-                style={{ boxShadow: `0 0 0 1px ${m.color}55` }}
-              >
-                {m.label}
-              </span>
-            </div>
-          ))}
-        </div>
+    <aside
+      aria-label="Learner journey"
+      className="flex animate-rise flex-col gap-7 rounded-[28px] bg-ink p-8 text-white md:p-9"
+      style={{ animationDelay: "120ms" }}
+    >
+      <div className="flex items-center justify-between">
+        <span className="text-label-bold uppercase text-white/50">Your path</span>
+        <span className="text-[13px] text-white/50">Step 3 of 4</span>
       </div>
-    </div>
+      <ol className="flex flex-col">
+        {steps.map((s, i) => (
+          <li key={s.title} className="flex gap-4">
+            <div className="flex flex-col items-center">
+              <span
+                className={cn(
+                  "grid h-[34px] w-[34px] flex-shrink-0 place-items-center rounded-full text-[14px] font-bold",
+                  s.state === "done" && "bg-white text-ink",
+                  s.state === "now" && "bg-primary text-white shadow-[0_0_0_6px_rgba(228,31,38,0.25)]",
+                  s.state === "next" && "border-[1.5px] border-white/30 text-white/50",
+                )}
+              >
+                {s.state === "done" ? <Icon name="check" size={18} /> : i + 1}
+              </span>
+              {i < steps.length - 1 && (
+                <span className={cn("my-1 w-0.5 flex-1 min-h-[22px]", s.state === "done" ? "bg-white" : "bg-white/20")} />
+              )}
+            </div>
+            <div className="pb-5 pt-1">
+              <div className={cn("text-[17px] font-bold", s.state === "next" && "text-white/50")}>{s.title}</div>
+              <div className="mt-0.5 text-[14px] text-white/50">{s.sub}</div>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div className="mt-auto">
+        <CentresStat count={cityCount} />
+      </div>
+    </aside>
   );
 }
 
-function PersonalizedHero({ profile, recommendations }: { profile: LeadProfile; recommendations: Recommendation[] }) {
+function RecommendationCard({ rank, program, why }: { rank: number; program: NonNullable<ProgramRef>; why: string | null }) {
+  const best = rank === 0;
+  return (
+    <Link
+      href={`/console/programs/${program.slug}`}
+      className={cn(
+        "elevate-3d group flex min-h-[300px] animate-rec-card flex-col gap-4 rounded-[28px] border p-7 md:p-8",
+        best ? "border-primary bg-primary text-white hover:border-primary" : "border-outline-variant bg-white text-ink",
+      )}
+      style={{ animationDelay: `${rank * 110}ms` }}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <span className={cn("text-label-bold uppercase", best ? "text-white" : "text-primary")}>{MATCH_LABELS[rank]}</span>
+        <span
+          className={cn(
+            "rounded-full px-3 py-1.5 text-[13px] font-semibold",
+            best ? "bg-white/20 text-white" : "bg-surface-container text-ink",
+          )}
+        >
+          {program.duration}
+        </span>
+      </div>
+      <h3 className="font-display text-[26px] font-bold leading-[1.12] tracking-[-0.02em] md:text-[28px]">{program.name}</h3>
+      {why && (
+        <p className={cn("editable-field text-[15px] leading-relaxed", best ? "text-white/85" : "text-on-surface-variant")}>
+          {why}
+        </p>
+      )}
+      <span className="mt-auto inline-flex items-center gap-2 text-[15px] font-bold">
+        View details
+        <Icon name="arrow_forward" size={18} className="transition-transform duration-base group-hover:translate-x-1" />
+      </span>
+    </Link>
+  );
+}
+
+function PersonalizedHero({
+  profile,
+  recommendations,
+  cityCount,
+}: {
+  profile: LeadProfile;
+  recommendations: Recommendation[];
+  cityCount: number;
+}) {
+  const { selectedCity } = useCity();
+  const [greeting, setGreeting] = useState("Welcome");
+  useEffect(() => setGreeting(getGreeting(new Date().getHours())), []);
+
+  const firstName = profile.name.split(" ")[0] || "there";
+  const focus = profile.skills[0] ?? profile.interests[0];
   const rec = findRecommendationForDegree(recommendations, profile.degree);
   const choices = rec
     ? [
         { program: rec.choice1Program, why: rec.choice1Why },
         { program: rec.choice2Program, why: rec.choice2Why },
         { program: rec.choice3Program, why: rec.choice3Why },
-      ].filter((c) => c.program)
+      ].filter((c): c is { program: NonNullable<ProgramRef>; why: string | null } => !!c.program)
     : [];
+  const occupation =
+    profile.occupation === "Working Professional"
+      ? profile.yearsOfExperience != null
+        ? `Working · ${profile.yearsOfExperience} yrs`
+        : "Working professional"
+      : profile.occupation;
 
   return (
-    <div className="flex flex-col gap-[22px]">
-      <JourneyBanner profile={profile} />
+    <>
+      <div className="flex flex-wrap items-stretch gap-10 lg:gap-12">
+        <div className="flex min-w-0 flex-[999_1_560px] animate-rise flex-col justify-center gap-7">
+          <span className="eyebrow">{greeting}</span>
+          <h1 className="font-display text-display-xl font-extrabold text-ink">
+            {firstName}, let’s build
+            <br />
+            your <span className="text-primary">next move.</span>
+          </h1>
+          <div className="flex flex-wrap gap-2">
+            {profile.degree && <Tag dark>{profile.degree} graduate</Tag>}
+            {focus && <Tag>Interested in {focus}</Tag>}
+            {occupation && <Tag>{occupation}</Tag>}
+            {selectedCity && <Tag>Prefers {selectedCity.name}</Tag>}
+          </div>
+          <p className="max-w-[560px] text-[19px] leading-relaxed text-[#3d3d3d]">
+            {MOTIVATIONAL_LINES[profile.degree] ?? MOTIVATIONAL_LINES.Other}
+            {choices.length > 0 && ` Here are the ${choices.length === 1 ? "program" : `${choices.length} programs`} that fit best.`}
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <LinkButton href="#matches" size="lg">
+              See my matches
+              <Icon name="arrow_forward" size={20} />
+            </LinkButton>
+            <Button variant="secondary" size="lg" onClick={openAssistant}>
+              <Icon name="mic" size={20} />
+              Ask the assistant
+            </Button>
+          </div>
+        </div>
+        <div className="flex min-w-0 flex-[1_1_340px]">
+          <div className="w-full">
+            <JourneyCard profile={profile} cityCount={cityCount} />
+          </div>
+        </div>
+      </div>
 
-      <div className="flex flex-col gap-[14px]">
-        <span className="text-[13px] font-bold uppercase tracking-wide text-secondary">Recommended for you</span>
+      <div id="matches" className="scroll-mt-24">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <div className="eyebrow mb-2">Recommended for you</div>
+            <h2 className="text-display-lg font-extrabold text-ink">
+              {choices.length > 1 ? `${["", "One", "Two", "Three"][choices.length]} matches, ranked.` : "Your best match."}
+            </h2>
+          </div>
+          <a
+            href="#programs"
+            className="border-b-[1.5px] border-current pb-0.5 text-[15px] font-semibold text-ink hover:text-primary"
+          >
+            Compare all programs
+          </a>
+        </div>
         {choices.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-[18px]">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
             {choices.map((c, i) => (
-              <RecommendationCard key={i} rank={i} program={c.program} why={c.why} />
+              <RecommendationCard key={c.program.slug} rank={i} program={c.program} why={c.why} />
             ))}
           </div>
         ) : (
-          <p className="text-body-sm text-on-surface-variant">
-            Recommendations aren't set up yet — browse the full catalogue below.
+          <p className="rounded-card border border-dashed border-outline-variant p-8 text-body-md text-on-surface-variant">
+            Recommendations for this degree aren’t set up yet — browse the full catalogue below.
           </p>
         )}
       </div>
-    </div>
+    </>
   );
 }
 
-function DefaultHero({ settings, topCtc }: { settings: NonNullable<Settings>; topCtc: string }) {
+function DefaultHero({
+  settings,
+  topCtc,
+  cityCount,
+}: {
+  settings: NonNullable<Settings>;
+  topCtc: string;
+  cityCount: number;
+}) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
-      <div className="md:col-span-8 b2b-card elevate-3d p-8 flex flex-col justify-center relative overflow-hidden bg-surface-bright">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-        <h1 className="text-display-lg text-on-surface mb-4 max-w-2xl leading-tight">
+    <div className="flex flex-wrap items-stretch gap-10 lg:gap-12">
+      <div className="flex min-w-0 flex-[999_1_560px] animate-rise flex-col justify-center gap-7">
+        <span className="eyebrow">Expert counselling</span>
+        <h1 className="font-display text-display-xl font-extrabold text-ink">
           <span className="text-primary">upGrad X</span> {settings.headline}
         </h1>
-        <p className="text-body-lg text-on-surface-variant max-w-xl mb-8 border-l-2 border-primary pl-4 py-1 editable-field">
-          {settings.subheadline}
-        </p>
+        <p className="editable-field max-w-[560px] text-[19px] leading-relaxed text-[#3d3d3d]">{settings.subheadline}</p>
         <div className="flex flex-wrap gap-3">
-          <LinkButton href="#programs" variant="primary" size="lg">
+          <LinkButton href="#programs" size="lg">
             {settings.primaryCtaLabel}
+            <Icon name="arrow_forward" size={20} />
           </LinkButton>
           <LinkButton href="#faq" variant="secondary" size="lg">
             {settings.secondaryCtaLabel}
@@ -253,30 +297,35 @@ function DefaultHero({ settings, topCtc }: { settings: NonNullable<Settings>; to
         </div>
       </div>
 
-      <div className="md:col-span-4 flex flex-col gap-gutter">
-        <div className="b2b-card elevate-3d p-6 flex-1 flex flex-col justify-between">
-          <div>
-            <span className="text-label-bold font-bold text-secondary uppercase mb-2 block">Placement Record</span>
-            <div className="text-stat-lg text-on-surface">{settings.placementRecordPercent}</div>
-            <p className="text-body-sm text-on-surface-variant mt-1 editable-field inline-block">
-              {settings.placementRecordCaption}
-            </p>
+      <aside
+        aria-label="At a glance"
+        className="flex min-w-0 flex-[1_1_340px] animate-rise flex-col gap-7 rounded-[28px] bg-ink p-8 text-white md:p-9"
+        style={{ animationDelay: "120ms" }}
+      >
+        <div>
+          <span className="text-label-bold uppercase text-white/50">Placement record</span>
+          <div className="mt-2 font-display text-[64px] font-extrabold leading-none tracking-[-0.045em]">
+            {settings.placementRecordPercent}
           </div>
-          <div className="mt-4 pt-4 border-t border-surface-variant">
-            <span className="text-label-bold font-bold text-secondary uppercase mb-2 block">Highest CTC</span>
-            <div className="text-headline-md text-primary">{topCtc}</div>
+          <p className="editable-field mt-2 text-[14px] text-white/60">{settings.placementRecordCaption}</p>
+        </div>
+        <div className="border-t border-white/10 pt-6">
+          <span className="text-label-bold uppercase text-white/50">Highest CTC</span>
+          <div className="mt-2 font-display text-[40px] font-extrabold leading-none tracking-[-0.035em] text-[#ff5c61]">
+            {topCtc}
           </div>
         </div>
-        <div className="b2b-card elevate-3d p-6 flex-1 bg-surface-container-low flex items-center gap-4">
-          <div className="w-12 h-12 rounded bg-primary-container/10 flex items-center justify-center shrink-0">
-            <Icon name="trending_up" className="text-primary" />
-          </div>
+        <div className="flex items-start gap-3 rounded-2xl bg-white/5 p-4">
+          <Icon name="trending_up" className="text-[#ff5c61]" />
           <div>
-            <div className="text-headline-sm text-on-surface">Career Growth</div>
-            <div className="text-body-sm text-on-surface-variant editable-field">{settings.careerGrowthCaption}</div>
+            <div className="font-semibold">Career growth</div>
+            <div className="editable-field text-[14px] text-white/60">{settings.careerGrowthCaption}</div>
           </div>
         </div>
-      </div>
+        <div className="mt-auto">
+          <CentresStat count={cityCount} />
+        </div>
+      </aside>
     </div>
   );
 }
@@ -301,18 +350,11 @@ export function HeroClient({
   const resolvedSettings = settings ?? DEFAULT_SETTINGS;
 
   return (
-    <section id="hero" className="flex flex-col gap-section-gap">
-      <div className="w-full bg-surface-container-lowest border-b border-surface-variant py-4 px-card-padding shadow-sm rounded flex items-center gap-4">
-        <span className="text-stat-lg text-primary">{cityCount}+</span>
-        <span className="text-label-bold font-bold text-secondary uppercase tracking-wide">
-          Learning Centres Across India
-        </span>
-      </div>
-
+    <section id="hero" className="flex flex-col gap-16 pb-4 pt-6 md:pt-10">
       {profile ? (
-        <PersonalizedHero profile={profile} recommendations={recommendations} />
+        <PersonalizedHero profile={profile} recommendations={recommendations} cityCount={cityCount} />
       ) : (
-        <DefaultHero settings={resolvedSettings} topCtc={topCtc} />
+        <DefaultHero settings={resolvedSettings} topCtc={topCtc} cityCount={cityCount} />
       )}
     </section>
   );
