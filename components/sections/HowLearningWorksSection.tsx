@@ -8,7 +8,7 @@ export async function HowLearningWorksSection() {
 
   return (
     <section>
-      <SectionHeader eyebrow="The Pitch" title="How Learning Works" />
+      <SectionHeader eyebrow="How learning works" title="From first class to first offer." />
       <JourneySteps steps={steps} />
     </section>
   );

@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useCityFetch } from "@/lib/useCityFetch";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { SectionLink } from "@/components/ui/SectionLink";
 import { Icon } from "@/components/ui/Icon";
 
 type Drive = { id: string; company: string; role: string; date: string; city: { name: string } };
@@ -14,32 +14,38 @@ export function PlacementDrivesSection() {
   return (
     <section id="drives">
       <SectionHeader
-        eyebrow="Hiring Now"
-        title="Open Placement Drives"
-        action={
-          <Link href="/console/drives" className="text-label-bold font-bold uppercase text-primary hover:underline">
-            View All Drives →
-          </Link>
-        }
+        eyebrow="Hiring now"
+        title="Open placement drives."
+        action={<SectionLink href="/console/drives">All drives</SectionLink>}
       />
-      <div className="flex gap-gutter overflow-x-auto scrollbar-thin py-1">
-        {data.map((d) => (
-          <div key={d.id} className="min-w-[240px] b2b-card elevate-3d p-card-padding flex flex-col gap-2">
-            <div className="text-headline-sm text-on-surface">{d.company}</div>
-            <div className="flex items-center gap-1 text-body-sm text-secondary">
-              <Icon name="work" size={16} />
-              {d.role}
-            </div>
-            <div className="flex items-center gap-1 text-body-sm text-secondary">
-              <Icon name="location_on" size={16} />
-              {d.city.name}
-            </div>
-            <div className="flex items-center gap-1 text-body-sm text-secondary">
-              <Icon name="calendar_today" size={16} />
-              {new Date(d.date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-            </div>
-          </div>
-        ))}
+      <div className="snap-row -mx-1 flex gap-4 overflow-x-auto px-1 py-2">
+        {data.map((d) => {
+          const date = new Date(d.date);
+          return (
+            <article
+              key={d.id}
+              className="elevate-3d flex w-[280px] flex-shrink-0 flex-col gap-5 rounded-[24px] border border-outline-variant bg-white p-6"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="truncate font-display text-[22px] font-bold tracking-[-0.02em] text-ink">{d.company}</div>
+                  <div className="mt-1 text-[14px] text-on-surface-variant">{d.role}</div>
+                </div>
+                <div className="flex h-14 w-14 flex-shrink-0 flex-col items-center justify-center rounded-2xl bg-ink text-white">
+                  <span className="font-display text-[20px] font-extrabold leading-none">{date.getDate()}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/70">
+                    {date.toLocaleDateString("en-IN", { month: "short" })}
+                  </span>
+                </div>
+              </div>
+              <div className="mt-auto flex items-center gap-1.5 text-[14px] text-ink">
+                <Icon name="location_on" size={16} className="text-primary" />
+                {d.city.name}
+                <span className="ml-auto text-on-surface-variant">{date.getFullYear()}</span>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

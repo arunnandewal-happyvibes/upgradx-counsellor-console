@@ -20,27 +20,21 @@ type Instructor = {
 
 function InstructorCard({ ins }: { ins: Instructor }) {
   return (
-    <article className="elevate-3d flex w-[380px] flex-shrink-0 flex-col bg-surface rounded border border-[#E0E0E0] hover:border-primary p-card-padding group">
-      <div className="flex items-start gap-4 mb-3">
-        <Avatar
-          src={ins.photoUrl}
-          name={ins.name}
-          size={88}
-          rounded="rounded"
-          className="text-headline-md shadow-sm flex-shrink-0"
-        />
+    <article className="elevate-3d flex w-[380px] flex-shrink-0 flex-col gap-5 rounded-[24px] border border-outline-variant bg-white p-7">
+      <div className="flex items-start gap-4">
+        <Avatar src={ins.photoUrl} name={ins.name} size={80} rounded="rounded-2xl" className="flex-shrink-0" />
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="text-headline-sm text-on-background leading-tight">{ins.name}</h3>
+            <h3 className="font-display text-[20px] font-bold leading-tight tracking-[-0.01em] text-ink">{ins.name}</h3>
             {ins.linkedinUrl && (
               <a
-                aria-label="LinkedIn Profile"
-                className="text-secondary group-hover:text-primary transition-colors flex-shrink-0"
+                aria-label={`${ins.name}'s LinkedIn profile`}
+                className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-[#0a66c2]"
                 href={ins.linkedinUrl}
                 target="_blank"
                 rel="noreferrer"
               >
-                <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <svg aria-hidden="true" className="h-[18px] w-[18px]" fill="currentColor" viewBox="0 0 24 24">
                   <path
                     fillRule="evenodd"
                     clipRule="evenodd"
@@ -50,27 +44,24 @@ function InstructorCard({ ins }: { ins: Instructor }) {
               </a>
             )}
           </div>
-          <p className="text-label-bold font-bold text-tertiary uppercase tracking-wider">{ins.subjectTaught}</p>
+          <p className="mt-1 text-[12px] font-bold uppercase tracking-[0.12em] text-primary">{ins.subjectTaught}</p>
           {ins.city?.name && (
-            <p className="text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-              <Icon name="location_on" size={14} className="text-secondary" />
+            <p className="mt-1 flex items-center gap-1 text-[13px] text-on-surface-variant">
+              <Icon name="location_on" size={14} />
               {ins.city.name}
             </p>
           )}
         </div>
       </div>
-      <p className="text-body-sm text-secondary line-clamp-2 mb-3 editable-field">{ins.bio}</p>
-      <div className="flex items-center justify-between gap-2 mt-auto">
-        <p className="text-body-sm font-semibold text-on-surface-variant flex items-center gap-1 flex-shrink-0">
-          <Icon name="workspace_premium" size={16} className="text-primary" />
-          {ins.experienceYears}+ yrs
+      <p className="editable-field line-clamp-2 text-[14px] leading-relaxed text-on-surface-variant">{ins.bio}</p>
+      <div className="mt-auto flex items-center justify-between gap-3 border-t border-outline-variant pt-4">
+        <p className="flex flex-shrink-0 items-baseline gap-1">
+          <span className="font-display text-[22px] font-extrabold tracking-[-0.02em] text-ink">{ins.experienceYears}+</span>
+          <span className="text-[13px] text-on-surface-variant">yrs experience</span>
         </p>
         <div className="flex flex-wrap justify-end gap-1.5 overflow-hidden">
           {ins.tags.slice(0, 2).map((t) => (
-            <span
-              key={t}
-              className="inline-block bg-surface-container-high text-on-surface-variant text-label-bold font-bold px-2 py-1 rounded border border-outline-variant whitespace-nowrap"
-            >
+            <span key={t} className="whitespace-nowrap rounded-full bg-surface-container px-2.5 py-1 text-[12px] font-medium text-ink">
               {t}
             </span>
           ))}
@@ -82,7 +73,7 @@ function InstructorCard({ ins }: { ins: Instructor }) {
 
 function InstructorCarousel({ instructors, reverse }: { instructors: Instructor[]; reverse?: boolean }) {
   return (
-    <Marquee speed={45} reverse={reverse} className="items-stretch gap-gutter py-2">
+    <Marquee speed={45} reverse={reverse} className="items-stretch gap-5 py-2">
       {instructors.map((ins) => (
         <InstructorCard key={ins.id} ins={ins} />
       ))}
@@ -96,7 +87,7 @@ export function InstructorsSection() {
 
   return (
     <section id="instructors">
-      <SectionHeader eyebrow="Faculty" title="Meet Your Instructors" />
+      <SectionHeader eyebrow="Faculty" title="Learn from people who do the work." />
       <InstructorCarousel instructors={data} />
     </section>
   );
@@ -108,7 +99,7 @@ export function IndustryLeadersSection() {
 
   return (
     <section id="leaders">
-      <SectionHeader eyebrow="Mentorship" title="Industry Leaders" />
+      <SectionHeader eyebrow="Mentorship" title="Industry leaders in your corner." />
       <InstructorCarousel instructors={data} reverse />
     </section>
   );

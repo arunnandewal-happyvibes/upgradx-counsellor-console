@@ -18,61 +18,47 @@ export function JourneySteps({ steps }: { steps: Step[] }) {
   const activeStep = steps.find((s) => s.order === active) ?? steps[0];
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-gutter">
+    <div className="flex flex-col gap-5">
+      <div role="tablist" aria-label="How learning works" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {steps.map((s) => {
-          const isActive = s.order === active;
+          const on = s.order === active;
           return (
             <button
               key={s.id}
+              type="button"
+              role="tab"
+              aria-selected={on}
               onClick={() => setActive(s.order)}
               className={cn(
-                "elevate-3d border-2 rounded-xl p-6 flex flex-col items-center text-center gap-4",
-                isActive
-                  ? "border-primary bg-primary-fixed/30"
-                  : "border-surface-variant hover:border-primary/50",
+                "btn-3d flex flex-col gap-6 rounded-[24px] border p-6 text-left",
+                on ? "border-ink bg-ink text-white" : "border-outline-variant bg-white text-ink hover:border-ink",
               )}
             >
-              <div
+              <span
                 className={cn(
-                  "size-12 rounded-full flex items-center justify-center transition-all",
-                  isActive ? "bg-primary text-white" : "bg-surface-container text-secondary",
+                  "font-display text-[44px] font-extrabold leading-none tracking-[-0.04em]",
+                  on ? "text-primary" : "text-[#d4d4d4]",
                 )}
               >
-                <Icon name={ICON_MAP[s.icon] ?? "star"} fill={isActive} />
-              </div>
-              <div className="flex flex-col gap-1">
-                <span
-                  className={cn(
-                    "text-label-bold font-bold uppercase tracking-widest",
-                    isActive ? "text-primary" : "text-secondary",
-                  )}
-                >
-                  Step {String(s.order).padStart(2, "0")}
-                </span>
-                <h3 className="text-headline-sm text-on-surface">{s.title}</h3>
-              </div>
+                {String(s.order).padStart(2, "0")}
+              </span>
+              <span className="font-display text-[19px] font-bold leading-tight">{s.title}</span>
             </button>
           );
         })}
       </div>
 
       {activeStep && (
-        <div className="w-full bg-surface-container-lowest border border-outline-variant rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
-          <div
-            className="md:w-2/5 w-full h-40 md:h-auto flex items-center justify-center"
-            style={{ background: "linear-gradient(135deg, #1a1c1c, #e41f26 160%)" }}
-          >
-            <Icon name={ICON_MAP[activeStep.icon] ?? "star"} className="text-white opacity-80" size={64} fill />
+        <div role="tabpanel" className="flex flex-col gap-6 rounded-[28px] border border-outline-variant bg-white p-8 md:flex-row md:items-center md:p-10">
+          <div className="grid h-20 w-20 flex-shrink-0 place-items-center rounded-3xl bg-primary text-white">
+            <Icon name={ICON_MAP[activeStep.icon] ?? "star"} size={40} />
           </div>
-          <div className="md:w-3/5 w-full p-8 flex flex-col justify-center gap-4">
-            <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-label-bold font-bold w-fit uppercase tracking-wider">
+          <div className="flex flex-col gap-2">
+            <span className="eyebrow">
               Step {activeStep.order} of {steps.length}
-            </div>
-            <h2 className="text-headline-md text-on-surface tracking-tight">{activeStep.title}</h2>
-            <p className="text-body-lg text-secondary leading-relaxed editable-field">
-              {activeStep.description}
-            </p>
+            </span>
+            <h3 className="font-display text-headline-md font-bold text-ink">{activeStep.title}</h3>
+            <p className="editable-field max-w-3xl text-body-lg text-on-surface-variant">{activeStep.description}</p>
           </div>
         </div>
       )}

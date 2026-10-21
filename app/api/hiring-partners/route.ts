@@ -13,7 +13,8 @@ export async function GET(req: NextRequest) {
     // Prefer partners tagged with the student's interests, but never show an
     // empty strip — fall back to every partner if none match yet.
     if (matched.length > 0) {
-      return NextResponse.json(matched);
+      // Tells the console the list really is interest-filtered (vs. the fallback below).
+      return NextResponse.json(matched, { headers: { "X-Interest-Filtered": "1" } });
     }
   }
 

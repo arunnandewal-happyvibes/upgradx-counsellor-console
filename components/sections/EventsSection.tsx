@@ -18,41 +18,36 @@ export function EventsSection() {
 
   return (
     <section id="events">
-      <SectionHeader
-        eyebrow="Phase 2"
-        title="Upcoming Events & Workshops"
-        action={<span className="bg-surface-container-highest text-secondary text-body-sm px-2 py-1 rounded">Phase 2 Ready</span>}
-      />
-      <div className="flex flex-col gap-unit">
-        {data.map((o) => (
-          <div
-            key={o.id}
-            className="elevate-3d bg-surface-container-lowest border border-surface-variant p-card-padding rounded hover:border-primary group"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div className="flex-1">
-                <h3 className="text-headline-sm text-on-surface group-hover:text-primary transition-colors mb-1">
-                  {o.event.name}
-                </h3>
-                <p className="text-body-sm text-on-surface-variant mb-2 editable-field">{o.event.description}</p>
-                <div className="grid grid-cols-2 gap-2 text-body-sm text-secondary max-w-xs">
-                  <div className="flex items-center gap-1">
-                    <Icon name="calendar_today" size={16} />
-                    {new Date(o.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Icon name="location_on" size={16} />
-                    {o.city.name}
-                  </div>
-                </div>
+      <SectionHeader eyebrow="Events & workshops" title="Come see it in person." />
+      <ul className="flex flex-col gap-3">
+        {data.map((o) => {
+          const date = new Date(o.date);
+          return (
+            <li
+              key={o.id}
+              className="elevate-3d flex flex-col gap-5 rounded-[24px] border border-outline-variant bg-white p-5 sm:flex-row sm:items-center sm:p-6"
+            >
+              <div className="flex h-16 w-16 flex-shrink-0 flex-col items-center justify-center rounded-2xl bg-primary text-white">
+                <span className="font-display text-[24px] font-extrabold leading-none">{date.getDate()}</span>
+                <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/80">
+                  {date.toLocaleDateString("en-IN", { month: "short" })}
+                </span>
               </div>
-              <LinkButton href={`/console/events/${o.id}/register`} variant="secondary">
+              <div className="min-w-0 flex-1">
+                <h3 className="font-display text-[21px] font-bold tracking-[-0.01em] text-ink">{o.event.name}</h3>
+                <p className="editable-field mt-1 line-clamp-2 text-[14px] text-on-surface-variant">{o.event.description}</p>
+                <p className="mt-2 flex items-center gap-1 text-[14px] text-ink">
+                  <Icon name="location_on" size={16} className="text-primary" />
+                  {o.city.name}
+                </p>
+              </div>
+              <LinkButton href={`/console/events/${o.id}/register`} variant="secondary" className="sm:flex-shrink-0">
                 Register
               </LinkButton>
-            </div>
-          </div>
-        ))}
-      </div>
+            </li>
+          );
+        })}
+      </ul>
     </section>
   );
 }

@@ -19,49 +19,42 @@ type Story = {
 
 function StoryCard({ s }: { s: Story }) {
   return (
-    <article className="min-w-[260px] w-[260px] flex-shrink-0 elevate-3d bg-gradient-to-br from-surface-container-lowest to-primary-fixed/25 border-2 border-primary/20 hover:border-primary rounded-xl shadow-[0_6px_18px_-8px_rgba(228,31,38,0.35)] p-card-padding flex flex-col gap-3">
-      <div className="flex items-start gap-3">
-        <Avatar src={s.avatarUrl} name={s.studentName} size={48} />
-        <div className="flex flex-1 min-w-0 items-start justify-between gap-2">
-          <div className="flex flex-col min-w-0">
-            <h3 className="text-headline-sm text-on-surface truncate editable-field">{s.studentName}</h3>
-            <span className="text-label-bold font-bold text-tertiary truncate uppercase editable-field">
-              {s.courseName}
-            </span>
-          </div>
-          {s.linkedinUrl && (
-            <a
-              aria-label={`${s.studentName}'s LinkedIn profile`}
-              title="Connect on LinkedIn"
-              className="text-secondary hover:text-primary transition-colors flex-shrink-0"
-              href={s.linkedinUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  fillRule="evenodd"
-                  clipRule="evenodd"
-                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
-                />
-              </svg>
-            </a>
-          )}
+    <article className="elevate-3d flex w-[340px] flex-shrink-0 flex-col gap-5 rounded-[24px] border border-outline-variant bg-white p-7">
+      <div className="flex items-center gap-3.5">
+        <Avatar src={s.avatarUrl} name={s.studentName} size={52} />
+        <div className="min-w-0 flex-1">
+          <h3 className="editable-field truncate text-[17px] font-bold text-ink">{s.studentName}</h3>
+          <span className="editable-field block truncate text-[14px] text-on-surface-variant">{s.courseName}</span>
         </div>
+        {s.linkedinUrl && (
+          <a
+            aria-label={`${s.studentName}'s LinkedIn profile`}
+            title="Connect on LinkedIn"
+            className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-[#0a66c2]"
+            href={s.linkedinUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <svg aria-hidden="true" className="h-[18px] w-[18px]" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+              />
+            </svg>
+          </a>
+        )}
       </div>
 
-      <div className="flex flex-col gap-1 mt-1 border-l-2 border-primary/30 pl-3">
-        <span className="text-body-sm text-secondary">Landed Role</span>
-        <p className="text-body-sm font-semibold text-on-surface truncate editable-field">
-          {s.roleLanded} <span className="text-primary font-bold">@ {s.company}</span>
-        </p>
-      </div>
+      <p className="editable-field font-display text-[22px] font-bold leading-[1.18] tracking-[-0.02em] text-ink">
+        {s.roleLanded} <span className="text-on-surface-variant">at</span> {s.company}
+      </p>
 
-      <p className="text-body-sm text-on-surface-variant line-clamp-3 mt-1 editable-field">{s.description}</p>
+      <p className="editable-field line-clamp-3 text-[14px] leading-relaxed text-on-surface-variant">{s.description}</p>
 
-      <div className="mt-auto pt-4 border-t border-primary/15">
-        <span className="text-label-bold font-bold text-secondary uppercase block mb-1">Placement Package</span>
-        <span className="text-headline-sm text-primary font-bold editable-field">{s.packageLabel}</span>
+      <div className="mt-auto flex items-center justify-between border-t border-outline-variant pt-4">
+        <span className="text-[13px] text-on-surface-variant">Package</span>
+        <span className="editable-field text-[18px] font-bold text-primary">{s.packageLabel}</span>
       </div>
     </article>
   );
@@ -69,7 +62,7 @@ function StoryCard({ s }: { s: Story }) {
 
 function StoryCarousel({ stories, reverse }: { stories: Story[]; reverse?: boolean }) {
   return (
-    <Marquee speed={45} reverse={reverse} className="items-stretch gap-gutter py-2">
+    <Marquee speed={45} reverse={reverse} className="items-stretch gap-5 py-2">
       {stories.map((s) => (
         <StoryCard key={s.id} s={s} />
       ))}
@@ -88,8 +81,8 @@ export function SuccessStoriesSection() {
 
   return (
     <section id="success-stories">
-      <SectionHeader eyebrow="Social Proof" title="Success Stories" />
-      <div className="flex flex-col gap-gutter">
+      <SectionHeader eyebrow="Success stories" title="People who sat in this chair." />
+      <div className="flex flex-col gap-5">
         <StoryCarousel stories={topRow} />
         {bottomRow.length > 0 && <StoryCarousel stories={bottomRow} reverse />}
       </div>

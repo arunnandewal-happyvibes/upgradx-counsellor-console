@@ -1,53 +1,61 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 
+const COLUMNS = [
+  {
+    title: "Programs",
+    links: [
+      { href: "/console#programs", label: "Data Science" },
+      { href: "/console#programs", label: "Full Stack Development" },
+      { href: "/console#programs", label: "Digital Marketing" },
+    ],
+  },
+  {
+    title: "About",
+    links: [
+      { href: "/console#hero", label: "Our story" },
+      { href: "/console#success-stories", label: "Success stories" },
+    ],
+  },
+  {
+    title: "Support",
+    links: [
+      { href: "/console/faq", label: "FAQ" },
+      { href: "/console/career-services-policy", label: "Career services policy" },
+    ],
+  },
+];
+
 export function Footer() {
   return (
-    <footer className="w-full py-section-gap px-card-padding grid grid-cols-1 md:grid-cols-4 gap-gutter bg-surface-container-highest border-t-2 border-primary mt-section-gap rounded">
-      <div className="flex flex-col gap-4">
-        <Link href="/console" className="w-fit">
-          <Logo height={34} />
+    <footer className="grid w-full grid-cols-1 gap-10 rounded-[32px] bg-ink px-8 py-12 text-white md:grid-cols-[1.4fr_repeat(3,minmax(0,1fr))] md:px-12">
+      <div className="flex flex-col gap-5">
+        <Link href="/console" className="w-fit rounded-xl bg-white px-3 py-2">
+          <Logo height={30} />
         </Link>
-        <span className="text-xs font-semibold leading-tight text-secondary">Expert Counselling Portal</span>
-        <p className="text-body-sm text-secondary">
-          © {new Date().getFullYear()} upGrad Education Pvt. Ltd. All rights reserved.
+        <p className="max-w-xs font-display text-[22px] font-bold leading-tight tracking-[-0.02em]">
+          Expert counselling, <span className="text-primary">in person.</span>
         </p>
-      </div>
-      <div className="flex flex-col gap-2">
-        <h4 className="text-label-bold font-bold text-on-surface uppercase mb-2">Program</h4>
-        <Link href="/console#programs" className="text-body-sm text-on-surface-variant hover:text-primary hover:underline transition-all">
-          Data Science
-        </Link>
-        <Link href="/console#programs" className="text-body-sm text-on-surface-variant hover:text-primary hover:underline transition-all">
-          Full Stack Development
-        </Link>
-        <Link href="/console#programs" className="text-body-sm text-on-surface-variant hover:text-primary hover:underline transition-all">
-          Digital Marketing
-        </Link>
-      </div>
-      <div className="flex flex-col gap-2">
-        <h4 className="text-label-bold font-bold text-on-surface uppercase mb-2">About</h4>
-        <Link href="/console#hero" className="text-body-sm text-on-surface-variant hover:text-primary hover:underline transition-all">
-          Our Story
-        </Link>
-        <Link href="/console#success-stories" className="text-body-sm text-on-surface-variant hover:text-primary hover:underline transition-all">
-          Success Stories
-        </Link>
-      </div>
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <h4 className="text-label-bold font-bold text-on-surface uppercase mb-2">Support</h4>
-          <Link href="/console/faq" className="text-body-sm text-on-surface-variant hover:text-primary hover:underline transition-all">
-            FAQ
-          </Link>
-        </div>
         <Link
           href="/console/contact"
-          className="bg-primary text-on-primary text-label-bold font-bold uppercase py-2 px-4 rounded border border-primary hover:bg-primary-container transition-colors duration-200 w-fit"
+          className="btn-3d inline-flex h-11 w-fit items-center rounded-xl bg-primary px-5 text-[14px] font-bold hover:bg-primary-container"
         >
-          Contact Us
+          Contact a centre
         </Link>
       </div>
+      {COLUMNS.map((col) => (
+        <div key={col.title} className="flex flex-col gap-3">
+          <h4 className="mb-1 text-[12px] font-bold uppercase tracking-[0.12em] text-white/50">{col.title}</h4>
+          {col.links.map((l) => (
+            <Link key={l.label} href={l.href} className="w-fit text-[15px] text-white/80 transition-colors hover:text-white">
+              {l.label}
+            </Link>
+          ))}
+        </div>
+      ))}
+      <p className="text-[13px] text-white/40 md:col-span-4">
+        © {new Date().getFullYear()} upGrad Education Pvt. Ltd. All rights reserved.
+      </p>
     </footer>
   );
 }

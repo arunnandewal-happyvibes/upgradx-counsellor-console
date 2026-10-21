@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { SectionLink } from "@/components/ui/SectionLink";
 import { Icon } from "@/components/ui/Icon";
 
 // FaqCategory.icon stores a Material Symbols icon name directly (e.g.
@@ -23,26 +24,23 @@ export async function FaqLandingSection() {
   return (
     <section id="faq">
       <SectionHeader
-        eyebrow="Frequently Asked"
-        title="FAQ"
-        action={
-          <Link href="/console/faq" className="text-label-bold font-bold uppercase text-primary hover:underline">
-            Search all FAQs →
-          </Link>
-        }
+        eyebrow="Frequently asked"
+        title="Questions learners ask."
+        action={<SectionLink href="/console/faq">Search all FAQs</SectionLink>}
       />
-      <div className="grid grid-cols-2 gap-gutter sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {categories.map((c) => (
           <Link
             key={c.id}
             href={`/console/faq/${c.slug}`}
-            className="elevate-3d group text-left bg-surface-container-lowest border border-surface-variant rounded p-card-padding hover:border-primary flex flex-col gap-2"
+            className="elevate-3d group flex min-h-[148px] flex-col justify-between gap-6 rounded-[22px] border border-outline-variant bg-white p-5"
           >
-            <div className="w-10 h-10 rounded bg-surface-container flex items-center justify-center group-hover:bg-primary-fixed transition-colors">
-              <Icon name={ICONS[c.icon] ?? c.icon} className="text-primary" />
-            </div>
-            <span className="text-body-md font-bold text-on-surface group-hover:text-primary transition-colors">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary-fixed text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+              <Icon name={ICONS[c.icon] ?? c.icon} />
+            </span>
+            <span className="flex items-end justify-between gap-2 text-[15px] font-semibold leading-snug text-ink">
               {c.name}
+              <Icon name="arrow_forward" size={18} className="flex-shrink-0 text-on-surface-variant transition-transform group-hover:translate-x-0.5 group-hover:text-ink" />
             </span>
           </Link>
         ))}
