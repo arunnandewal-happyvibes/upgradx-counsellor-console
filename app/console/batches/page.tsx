@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { BatchesListClient } from "@/components/console/BatchesListClient";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { startOfToday } from "@/lib/dateFilters";
 
 export const dynamic = "force-dynamic";
@@ -14,10 +15,13 @@ export default async function AllBatchesPage() {
   });
 
   return (
-    <div className="pb-16">
-      <h1 className="text-display-lg text-on-surface mb-2">All Upcoming Batches</h1>
-      <p className="text-body-lg text-secondary mb-section-gap">Filter by city, or view batches across every centre.</p>
-
+    <div className="flex flex-col gap-12">
+      <PageHeader
+        back={{ href: "/console#batches", label: "Console" }}
+        eyebrow="Upcoming batches"
+        title="Every open batch."
+        lead="Filter by city or mode. Only batches still accepting applications are listed."
+      />
       <BatchesListClient
         batches={batches.map((b) => ({
           ...b,

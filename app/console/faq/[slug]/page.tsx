@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { FaqSearchBar } from "@/components/faq/FaqSearchBar";
 import { FaqAccordion } from "@/components/faq/FaqAccordion";
 import { SuggestQuestion } from "@/components/faq/SuggestQuestion";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export default async function FaqCategoryPage({ params }: { params: { slug: string } }) {
   const category = await prisma.faqCategory.findUnique({
@@ -13,18 +13,15 @@ export default async function FaqCategoryPage({ params }: { params: { slug: stri
   if (!category) notFound();
 
   return (
-    <div className="pb-16">
-      <Link href="/console/faq" className="mb-4 inline-block text-body-sm text-secondary hover:text-primary">
-        ← All categories
-      </Link>
-      <h1 className="text-display-lg text-on-surface mb-2">{category.name}</h1>
-      <p className="text-body-lg text-secondary mb-6">Search across every category below.</p>
-
-      <FaqSearchBar className="mb-section-gap" />
-
+    <div className="flex flex-col gap-10">
+      <PageHeader
+        back={{ href: "/console/faq", label: "All topics" }}
+        eyebrow={`${category.faqs.length} question${category.faqs.length === 1 ? "" : "s"}`}
+        title={category.name}
+      />
+      <FaqSearchBar />
       <FaqAccordion faqs={category.faqs} />
-
-      <SuggestQuestion className="mt-section-gap" />
+      <SuggestQuestion />
     </div>
   );
 }

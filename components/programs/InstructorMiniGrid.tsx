@@ -1,5 +1,3 @@
-import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 
 type Instructor = {
@@ -15,23 +13,25 @@ type Instructor = {
 
 export function InstructorMiniGrid({ instructors }: { instructors: Instructor[] }) {
   return (
-    <div className="grid grid-cols-1 gap-gutter sm:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {instructors.map((ins) => (
-        <Card key={ins.id} className="p-card-padding">
-          <div className="mb-2 flex items-center gap-3">
-            <Avatar src={ins.photoUrl} name={ins.name} size={40} rounded="rounded" />
-            <div>
-              <div className="text-body-md font-bold text-on-surface">{ins.name}</div>
-              <div className="text-body-sm text-secondary">{ins.subjectTaught}</div>
+        <article key={ins.id} className="elevate-3d flex flex-col gap-4 rounded-[24px] border border-outline-variant bg-white p-6">
+          <div className="flex items-center gap-3.5">
+            <Avatar src={ins.photoUrl} name={ins.name} size={56} rounded="rounded-2xl" />
+            <div className="min-w-0">
+              <div className="font-display text-[18px] font-bold text-ink">{ins.name}</div>
+              <div className="text-[12px] font-bold uppercase tracking-[0.12em] text-primary">{ins.subjectTaught}</div>
             </div>
           </div>
-          <p className="mb-2 line-clamp-2 text-body-sm text-on-surface-variant editable-field">{ins.bio}</p>
-          <div className="flex flex-wrap gap-1">
+          <p className="editable-field line-clamp-2 text-[14px] leading-relaxed text-on-surface-variant">{ins.bio}</p>
+          <div className="mt-auto flex flex-wrap gap-1.5">
             {ins.tags.map((t) => (
-              <Badge key={t}>{t}</Badge>
+              <span key={t} className="rounded-full bg-surface-container px-2.5 py-1 text-[12px] font-medium text-ink">
+                {t}
+              </span>
             ))}
           </div>
-        </Card>
+        </article>
       ))}
     </div>
   );

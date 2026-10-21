@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useCity } from "@/lib/city-context";
+import { Chip } from "@/components/ui/Chip";
+import { SegmentedControl } from "@/components/ui/SegmentedControl";
+import { BatchList } from "@/components/console/BatchList";
 
 type Batch = {
   id: string;
@@ -14,78 +17,65 @@ type Batch = {
   location: string;
 };
 
-const fmt = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+type Mode = "all" | "Offline" | "Online";
 
 export function BatchesListClient({ batches }: { batches: Batch[] }) {
   const { cities, selectedCity } = useCity();
   const [filterSlug, setFilterSlug] = useState<string>("all");
+  const [mode, setMode] = useState<Mode>("all");
 
   // Defaults to whichever city is active for this session (set during
-  // onboarding, or the first city otherwise) — "All Cities" is always
-  // available to see everything.
+  // onboarding) — "All cities" is always available to see everything.
   useEffect(() => {
     if (selectedCity) setFilterSlug(selectedCity.slug);
   }, [selectedCity]);
 
-  const filtered = filterSlug === "all" ? batches : batches.filter((b) => b.mode === "Online" || b.city?.slug === filterSlug);
+  // Only offer cities that actually have an offline batch open.
+  const cityOptions = cities.filter((c) => batches.some((b) => b.city?.slug === c.slug));
+
+  const filtered = batches.filter((b) => {
+    if (mode !== "all" && b.mode !== mode) return false;
+    if (filterSlug === "all") return true;
+    return b.mode === "Online" || b.city?.slug === filterSlug;
+  });
 
   return (
-    <div>
-      <div className="mb-section-gap flex flex-wrap items-center gap-3">
-        <label htmlFor="batch-city-filter" className="text-label-bold font-bold uppercase tracking-wide text-secondary">
-          City
-        </label>
-        <select
-          id="batch-city-filter"
-          value={filterSlug}
-          onChange={(e) => setFilterSlug(e.target.value)}
-          className="h-10 rounded-lg border-2 border-surface-variant bg-white px-3 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary"
-        >
-          <option value="all">All Cities</option>
-          {cities.map((c) => (
-            <option key={c.id} value={c.slug}>
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4 rounded-[24px] bg-surface-container-low p-4 md:flex-row md:items-center md:justify-between">
+        <div role="group" aria-label="City" className="snap-row flex gap-2 overflow-x-auto">
+          <Chip selected={filterSlug === "all"} onClick={() => setFilterSlug("all")} className="flex-shrink-0">
+            All cities
+          </Chip>
+          {cityOptions.map((c) => (
+            <Chip key={c.id} selected={filterSlug === c.slug} onClick={() => setFilterSlug(c.slug)} className="flex-shrink-0">
               {c.name}
-            </option>
+            </Chip>
           ))}
-        </select>
+        </div>
+        <SegmentedControl
+          label="Batch mode"
+          value={mode}
+          onChange={setMode}
+          className="flex-shrink-0 self-start bg-white md:self-auto"
+          options={[
+            { value: "all", label: "All" },
+            { value: "Offline", label: "Offline" },
+            { value: "Online", label: "Online" },
+          ]}
+        />
       </div>
 
-      {filtered.length === 0 && (
-        <p className="text-body-sm text-secondary">No upcoming batches for this city right now.</p>
-      )}
+      <p className="text-[14px] text-on-surface-variant">
+        <span className="font-semibold text-ink">{filtered.length}</span> batch{filtered.length === 1 ? "" : "es"} open
+        {filterSlug !== "all" && " · online batches are open to every city"}
+      </p>
 
-      {filtered.length > 0 && (
-        <div className="bg-surface border border-surface-variant rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-surface-container-low text-secondary border-b border-surface-variant text-label-bold font-bold uppercase">
-                  <th className="px-card-padding py-3">Course</th>
-                  <th className="px-card-padding py-3">Mode</th>
-                  <th className="px-card-padding py-3">City</th>
-                  <th className="px-card-padding py-3">Start</th>
-                  <th className="px-card-padding py-3">Apply By</th>
-                  <th className="px-card-padding py-3">Timing</th>
-                  <th className="px-card-padding py-3">Location</th>
-                </tr>
-              </thead>
-              <tbody className="text-body-sm">
-                {filtered.map((b) => (
-                  <tr key={b.id} className="border-b border-surface-variant last:border-0 hover:bg-surface-container-lowest transition-colors">
-                    <td className="px-card-padding py-3 font-medium text-on-surface">{b.program.name}</td>
-                    <td className="px-card-padding py-3 font-medium">{b.mode}</td>
-                    <td className="px-card-padding py-3 text-secondary">{b.city?.name ?? "Anywhere"}</td>
-                    <td className="px-card-padding py-3 text-secondary">{fmt(b.startDate)}</td>
-                    <td className="px-card-padding py-3 font-medium text-primary">{fmt(b.applicationCloseDate)}</td>
-                    <td className="px-card-padding py-3 text-secondary">{b.timing}</td>
-                    <td className="px-card-padding py-3">{b.location}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      {filtered.length === 0 ? (
+        <div className="rounded-[24px] border border-dashed border-outline-variant p-10 text-center text-body-md text-on-surface-variant">
+          No open batches match these filters right now.
         </div>
+      ) : (
+        <BatchList batches={filtered} />
       )}
     </div>
   );

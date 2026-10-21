@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { Icon } from "@/components/ui/Icon";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -11,66 +12,57 @@ export default async function ContactPage() {
   });
 
   return (
-    <div className="pb-16">
-      <h1 className="text-display-lg text-on-surface mb-2">Contact Us</h1>
-      <div className="h-0.5 bg-primary w-16 mb-4" />
-      <p className="text-body-lg text-secondary max-w-2xl mb-section-gap">
-        Find your local centre below, or reach out for dedicated counsellor support.
-      </p>
+    <div className="flex flex-col gap-12">
+      <PageHeader
+        back={{ href: "/console", label: "Console" }}
+        eyebrow="Centres"
+        title="Find a centre."
+        lead={`${contacts.length} upGrad X learning centres. Tap a phone number or email to reach the team directly.`}
+      />
 
-      <div className="elevate-3d bg-surface-container-low border border-surface-variant p-6 rounded shadow-sm relative overflow-hidden mb-section-gap">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary-fixed-dim rounded-bl-full opacity-20 -mr-16 -mt-16 pointer-events-none" />
-        <h3 className="text-headline-sm text-on-surface mb-2">Counsellor Services</h3>
-        <p className="text-body-sm text-secondary mb-6 max-w-xl">
-          Need to modify a batch schedule, request a course change, or escalate an issue? Use our
-          internal service desk.
-        </p>
-        <button
-          disabled
-          className="w-full max-w-md bg-surface-variant text-secondary-fixed-dim font-bold text-label-bold py-3 px-4 rounded border border-surface-dim cursor-not-allowed flex items-center justify-center gap-2"
-        >
-          <Icon name="lock" size={18} />
-          Need a course change? Raise a request
-        </button>
-        <p className="text-body-sm text-tertiary mt-3 italic">
-          Service portal temporarily unavailable. Module coming soon.
-        </p>
+      <div className="flex flex-col gap-4 rounded-[24px] bg-surface-container-low p-6 md:flex-row md:items-center">
+        <span className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-2xl bg-white text-ink">
+          <Icon name="support_agent" size={24} />
+        </span>
+        <div className="flex-1">
+          <p className="font-display text-[19px] font-bold text-ink">Counsellor service desk</p>
+          <p className="mt-0.5 text-[14px] text-on-surface-variant">
+            Batch changes, course changes and escalations will be raised here. Coming soon.
+          </p>
+        </div>
+        <span className="inline-flex h-10 w-fit items-center gap-1.5 rounded-full border border-outline-variant bg-white px-4 text-[13px] font-semibold text-on-surface-variant">
+          <Icon name="schedule" size={16} />
+          Coming soon
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {contacts.map((c) => (
-          <div
-            key={c.id}
-            className="elevate-3d bg-surface-container-lowest border border-surface-variant rounded shadow-sm overflow-hidden flex flex-col"
-          >
-            <div className="relative w-full h-28 flex items-center justify-center overflow-hidden">
+          <article key={c.id} className="elevate-3d flex flex-col overflow-hidden rounded-[24px] border border-outline-variant bg-white">
+            <div className="relative flex h-36 w-full items-end overflow-hidden bg-ink">
               {c.city.monumentImageUrl ? (
                 <Image src={c.city.monumentImageUrl} alt={`A landmark in ${c.city.name}`} fill className="object-cover" />
               ) : (
-                <div
-                  className="absolute inset-0 flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg, #1a1c1c, #e41f26 160%)" }}
-                >
-                  <Icon name="location_city" className="text-white opacity-80" size={40} fill />
-                </div>
+                <Icon name="location_city" className="absolute right-5 top-5 text-white/20" size={56} />
               )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+              <h2 className="relative p-5 font-display text-[26px] font-extrabold tracking-[-0.03em] text-white">{c.city.name}</h2>
             </div>
-            <div className="p-5 flex flex-col gap-3">
-              <h2 className="text-headline-sm text-on-surface">{c.city.name}</h2>
-              <div className="flex items-start gap-2">
-                <Icon name="business" className="text-primary mt-0.5" size={18} />
-                <p className="text-body-sm text-on-surface">{c.address}</p>
-              </div>
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-3 p-5">
+              <p className="flex items-start gap-2.5 text-[14px] leading-relaxed text-ink">
+                <Icon name="business" className="mt-0.5 flex-shrink-0 text-primary" size={18} />
+                {c.address}
+              </p>
+              <a href={`tel:${c.phone.replace(/\s+/g, "")}`} className="flex items-center gap-2.5 text-[15px] font-semibold text-ink hover:text-primary">
                 <Icon name="call" className="text-primary" size={18} />
-                <p className="text-body-sm text-on-surface">{c.phone}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Icon name="mail" className="text-primary" size={18} />
-                <p className="text-body-sm text-on-surface truncate">{c.email}</p>
-              </div>
+                {c.phone}
+              </a>
+              <a href={`mailto:${c.email}`} className="flex min-w-0 items-center gap-2.5 text-[15px] font-semibold text-ink hover:text-primary">
+                <Icon name="mail" className="flex-shrink-0 text-primary" size={18} />
+                <span className="truncate">{c.email}</span>
+              </a>
             </div>
-          </div>
+          </article>
         ))}
       </div>
     </div>

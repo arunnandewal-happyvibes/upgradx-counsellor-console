@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { EventRegisterForm } from "@/components/events/EventRegisterForm";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Icon } from "@/components/ui/Icon";
 
 export default async function EventRegisterPage({ params }: { params: { occurrenceId: string } }) {
@@ -11,25 +12,24 @@ export default async function EventRegisterPage({ params }: { params: { occurren
   if (!occurrence) notFound();
 
   return (
-    <div className="mx-auto max-w-md pb-16">
-      <section className="bg-surface-container-lowest border border-surface-variant rounded-lg p-container-margin shadow-sm">
-        <h2 className="text-headline-sm text-on-surface mb-1 flex items-center gap-2">
-          <Icon name="edit_document" className="text-primary" />
-          {occurrence.event.name}
-        </h2>
-        <p className="text-body-sm text-on-surface-variant mb-4">{occurrence.event.description}</p>
+    <div className="flex flex-col gap-10">
+      <PageHeader
+        back={{ href: "/console#events", label: "Events" }}
+        eyebrow="Register"
+        title={occurrence.event.name}
+        lead={occurrence.event.description}
+      >
+        <span className="inline-flex h-10 items-center gap-1.5 rounded-full bg-ink px-4 text-[14px] font-semibold text-white">
+          <Icon name="calendar_today" size={16} />
+          {occurrence.date.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" })}
+        </span>
+        <span className="inline-flex h-10 items-center gap-1.5 rounded-full border border-outline-variant px-4 text-[14px] font-semibold text-ink">
+          <Icon name="location_on" size={16} className="text-primary" />
+          {occurrence.city.name}
+        </span>
+      </PageHeader>
 
-        <div className="mb-5 grid grid-cols-2 gap-3 rounded bg-surface-container-low p-3 text-body-sm">
-          <div className="flex items-center gap-1">
-            <Icon name="location_on" size={16} className="text-primary" />
-            {occurrence.city.name}
-          </div>
-          <div className="flex items-center gap-1">
-            <Icon name="calendar_today" size={16} className="text-primary" />
-            {occurrence.date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-          </div>
-        </div>
-
+      <section className="w-full max-w-lg rounded-[28px] border border-outline-variant bg-white p-7 md:p-8">
         <EventRegisterForm occurrenceId={occurrence.id} />
       </section>
     </div>

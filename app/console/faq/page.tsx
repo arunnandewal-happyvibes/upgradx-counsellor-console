@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { FaqSearchBar } from "@/components/faq/FaqSearchBar";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Icon } from "@/components/ui/Icon";
 
 // FaqCategory.icon stores a Material Symbols icon name directly (e.g.
@@ -23,30 +24,35 @@ export default async function FaqIndexPage() {
   });
 
   return (
-    <div className="pb-16">
-      <h1 className="text-display-lg text-on-surface mb-2">Knowledge Base</h1>
-      <p className="text-body-lg text-secondary mb-8">Quick answers for high-velocity counselling.</p>
+    <div className="flex flex-col gap-12">
+      <PageHeader
+        back={{ href: "/console#faq", label: "Console" }}
+        eyebrow="Knowledge base"
+        title="Answers, fast."
+        lead="Search every question learners ask, or browse by topic."
+      />
 
-      <div className="h-[2px] bg-primary mb-section-gap" />
+      <FaqSearchBar />
 
-      <FaqSearchBar className="mb-section-gap" />
-
-      <div className="grid grid-cols-1 gap-gutter sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((c) => (
           <Link
             key={c.id}
             href={`/console/faq/${c.slug}`}
-            className="elevate-3d group text-left bg-surface-container-lowest border border-surface-variant rounded p-container-margin hover:border-primary h-full flex flex-col justify-between"
+            className="elevate-3d group flex min-h-[180px] flex-col justify-between gap-6 rounded-[24px] border border-outline-variant bg-white p-6"
           >
-            <div>
-              <div className="w-12 h-12 rounded bg-surface-container flex items-center justify-center mb-card-padding group-hover:bg-primary-fixed transition-colors">
-                <Icon name={ICONS[c.icon] ?? c.icon} className="text-primary" />
-              </div>
-              <h2 className="text-headline-sm text-on-surface mb-1 group-hover:text-primary transition-colors">
-                {c.name}
-              </h2>
-              <p className="text-body-sm text-secondary">{c._count.faqs} questions</p>
-            </div>
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-primary-fixed text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+              <Icon name={ICONS[c.icon] ?? c.icon} />
+            </span>
+            <span className="flex items-end justify-between gap-3">
+              <span>
+                <span className="block font-display text-[22px] font-bold tracking-[-0.02em] text-ink">{c.name}</span>
+                <span className="text-[14px] text-on-surface-variant">
+                  {c._count.faqs} question{c._count.faqs === 1 ? "" : "s"}
+                </span>
+              </span>
+              <Icon name="arrow_forward" size={20} className="text-on-surface-variant transition-transform group-hover:translate-x-0.5 group-hover:text-ink" />
+            </span>
           </Link>
         ))}
       </div>
