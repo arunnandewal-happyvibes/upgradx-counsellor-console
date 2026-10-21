@@ -7,6 +7,7 @@ import { linesToArray, linesToTuples, str, strOrNull } from "@/lib/adminParsing"
 import { LSQ_PROGRAMMES, LSQ_VERTICALS } from "@/lib/leadDrop";
 import { maybeUploadImage } from "@/lib/blob";
 import { requireAddOnDescription } from "@/lib/addOnCertificate";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 /** Reads the optional "additional certificate" block; returns null when it's left entirely empty. */
 async function additionalCertificateFrom(formData: FormData) {
@@ -38,6 +39,7 @@ function lsqCodes(formData: FormData) {
 }
 
 export async function createProgram(formData: FormData) {
+  await requireAdmin();
   const name = str(formData.get("name"));
   const certs = linesToTuples(formData.get("certifications"), 3);
   const modules = linesToTuples(formData.get("modules"), 2);
@@ -79,6 +81,7 @@ export async function createProgram(formData: FormData) {
 }
 
 export async function updateProgram(id: string, formData: FormData) {
+  await requireAdmin();
   const certs = linesToTuples(formData.get("certifications"), 3);
   const modules = linesToTuples(formData.get("modules"), 2);
   const uploadedBrochure = await maybeUploadImage(formData, "brochureFile", "brochures");
@@ -122,6 +125,7 @@ export async function updateProgram(id: string, formData: FormData) {
 }
 
 export async function deleteProgram(id: string) {
+  await requireAdmin();
   await prisma.program.delete({ where: { id } });
   revalidatePath("/admin/courses");
   revalidatePath("/console");

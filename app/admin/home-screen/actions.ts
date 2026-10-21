@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { str } from "@/lib/adminParsing";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 export async function updateHomeScreenSettings(formData: FormData) {
+  await requireAdmin();
   const data = {
     headline: str(formData.get("headline")),
     subheadline: str(formData.get("subheadline")),

@@ -4,8 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { str } from "@/lib/adminParsing";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 export async function createEvent(formData: FormData) {
+  await requireAdmin();
   await prisma.event.create({
     data: {
       name: str(formData.get("name")),
@@ -19,18 +21,21 @@ export async function createEvent(formData: FormData) {
 }
 
 export async function toggleEvent(id: string, isEnabled: boolean) {
+  await requireAdmin();
   await prisma.event.update({ where: { id }, data: { isEnabled: !isEnabled } });
   revalidatePath("/admin/events");
   revalidatePath("/console");
 }
 
 export async function deleteEvent(id: string) {
+  await requireAdmin();
   await prisma.event.delete({ where: { id } });
   revalidatePath("/admin/events");
   revalidatePath("/console");
 }
 
 export async function addOccurrence(eventId: string, formData: FormData) {
+  await requireAdmin();
   await prisma.eventOccurrence.create({
     data: {
       eventId,
@@ -43,6 +48,7 @@ export async function addOccurrence(eventId: string, formData: FormData) {
 }
 
 export async function deleteOccurrence(eventId: string, id: string) {
+  await requireAdmin();
   await prisma.eventOccurrence.delete({ where: { id } });
   revalidatePath(`/admin/events/${eventId}`);
   revalidatePath("/console");

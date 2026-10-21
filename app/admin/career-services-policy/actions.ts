@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { str } from "@/lib/adminParsing";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 export async function updateCareerServicesPolicy(formData: FormData) {
+  await requireAdmin();
   const data = {
     title: str(formData.get("title")),
     version: str(formData.get("version")),

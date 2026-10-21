@@ -4,8 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { str } from "@/lib/adminParsing";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 export async function createFaq(formData: FormData) {
+  await requireAdmin();
   await prisma.faq.create({
     data: {
       question: str(formData.get("question")),
@@ -19,6 +21,7 @@ export async function createFaq(formData: FormData) {
 }
 
 export async function updateFaq(id: string, formData: FormData) {
+  await requireAdmin();
   await prisma.faq.update({
     where: { id },
     data: {
@@ -33,12 +36,14 @@ export async function updateFaq(id: string, formData: FormData) {
 }
 
 export async function deleteFaq(id: string) {
+  await requireAdmin();
   await prisma.faq.delete({ where: { id } });
   revalidatePath("/admin/faqs");
   revalidatePath("/console");
 }
 
 export async function approveSuggestion(id: string, formData: FormData) {
+  await requireAdmin();
   const answer = str(formData.get("answer"));
   const categoryId = str(formData.get("categoryId"));
   const suggestion = await prisma.suggestedQuestion.findUnique({ where: { id } });
@@ -57,6 +62,7 @@ export async function approveSuggestion(id: string, formData: FormData) {
 }
 
 export async function dismissSuggestion(id: string) {
+  await requireAdmin();
   await prisma.suggestedQuestion.update({ where: { id }, data: { status: "dismissed" } });
   revalidatePath("/admin/faqs/suggested");
 }

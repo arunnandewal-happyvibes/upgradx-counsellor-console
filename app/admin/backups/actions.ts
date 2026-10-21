@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 import { buildSnapshot, restoreSnapshot, type Snapshot } from "@/lib/snapshot";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 function requireBlobToken() {
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
@@ -11,6 +12,7 @@ function requireBlobToken() {
 }
 
 export async function createBackup() {
+  await requireAdmin();
   requireBlobToken();
   const snapshot = await buildSnapshot();
   const filename = `snapshot-${snapshot.capturedAt.replace(/[:.]/g, "-")}.json`;
@@ -25,6 +27,7 @@ export async function createBackup() {
 }
 
 export async function restoreBackup(url: string) {
+  await requireAdmin();
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`Couldn't fetch backup: ${res.status}`);
   const snapshot = (await res.json()) as Snapshot;

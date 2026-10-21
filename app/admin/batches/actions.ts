@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { str } from "@/lib/adminParsing";
 import { parseBatchUpload, type BatchUploadResult } from "@/lib/batchImport";
 import { normalizeBatchMode } from "@/lib/batchMode";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 function data(formData: FormData) {
   const mode = normalizeBatchMode(formData.get("mode"));
@@ -26,6 +27,7 @@ function data(formData: FormData) {
 }
 
 export async function createBatch(formData: FormData) {
+  await requireAdmin();
   await prisma.batch.create({ data: data(formData) });
   revalidatePath("/admin/batches");
   revalidatePath("/console");
@@ -33,6 +35,7 @@ export async function createBatch(formData: FormData) {
 }
 
 export async function updateBatch(id: string, formData: FormData) {
+  await requireAdmin();
   await prisma.batch.update({ where: { id }, data: data(formData) });
   revalidatePath("/admin/batches");
   revalidatePath("/console");
@@ -40,12 +43,14 @@ export async function updateBatch(id: string, formData: FormData) {
 }
 
 export async function deleteBatch(id: string) {
+  await requireAdmin();
   await prisma.batch.delete({ where: { id } });
   revalidatePath("/admin/batches");
   revalidatePath("/console");
 }
 
 export async function uploadBatchesExcel(formData: FormData): Promise<BatchUploadResult> {
+  await requireAdmin();
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) {
     return { inserted: 0, skippedDuplicates: 0, errors: ["No file was selected."], totalDataRows: 0 };

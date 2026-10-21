@@ -6,6 +6,7 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { str, strOrNull } from "@/lib/adminParsing";
 import { maybeUploadImage } from "@/lib/blob";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 function slugify(name: string) {
   return name
@@ -22,6 +23,7 @@ async function data(formData: FormData) {
 }
 
 export async function createCity(formData: FormData) {
+  await requireAdmin();
   const name = str(formData.get("name"));
   await prisma.city.create({
     data: { name, slug: slugify(name), ...(await data(formData)) },
@@ -32,6 +34,7 @@ export async function createCity(formData: FormData) {
 }
 
 export async function updateCity(id: string, formData: FormData) {
+  await requireAdmin();
   await prisma.city.update({
     where: { id },
     data: { name: str(formData.get("name")), ...(await data(formData)) },
@@ -42,6 +45,7 @@ export async function updateCity(id: string, formData: FormData) {
 }
 
 export async function deleteCity(id: string) {
+  await requireAdmin();
   try {
     await prisma.city.delete({ where: { id } });
     revalidatePath("/admin/cities");

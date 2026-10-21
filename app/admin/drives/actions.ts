@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { str } from "@/lib/adminParsing";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 function data(formData: FormData) {
   return {
@@ -15,6 +16,7 @@ function data(formData: FormData) {
 }
 
 export async function createDrive(formData: FormData) {
+  await requireAdmin();
   await prisma.placementDrive.create({ data: data(formData) });
   revalidatePath("/admin/drives");
   revalidatePath("/console");
@@ -22,6 +24,7 @@ export async function createDrive(formData: FormData) {
 }
 
 export async function updateDrive(id: string, formData: FormData) {
+  await requireAdmin();
   await prisma.placementDrive.update({ where: { id }, data: data(formData) });
   revalidatePath("/admin/drives");
   revalidatePath("/console");
@@ -29,6 +32,7 @@ export async function updateDrive(id: string, formData: FormData) {
 }
 
 export async function deleteDrive(id: string) {
+  await requireAdmin();
   await prisma.placementDrive.delete({ where: { id } });
   revalidatePath("/admin/drives");
   revalidatePath("/console");

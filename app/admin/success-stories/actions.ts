@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { str, strOrNull } from "@/lib/adminParsing";
 import { maybeUploadImage } from "@/lib/blob";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 async function data(formData: FormData) {
   const uploadedAvatar = await maybeUploadImage(formData, "avatarFile", "success-stories");
@@ -22,6 +23,7 @@ async function data(formData: FormData) {
 }
 
 export async function createStory(formData: FormData) {
+  await requireAdmin();
   await prisma.successStory.create({ data: await data(formData) });
   revalidatePath("/admin/success-stories");
   revalidatePath("/console");
@@ -29,6 +31,7 @@ export async function createStory(formData: FormData) {
 }
 
 export async function updateStory(id: string, formData: FormData) {
+  await requireAdmin();
   await prisma.successStory.update({ where: { id }, data: await data(formData) });
   revalidatePath("/admin/success-stories");
   revalidatePath("/console");
@@ -36,6 +39,7 @@ export async function updateStory(id: string, formData: FormData) {
 }
 
 export async function deleteStory(id: string) {
+  await requireAdmin();
   await prisma.successStory.delete({ where: { id } });
   revalidatePath("/admin/success-stories");
   revalidatePath("/console");

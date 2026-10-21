@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { linesToArray, str, strOrNull } from "@/lib/adminParsing";
 import { maybeUploadImage } from "@/lib/blob";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 async function data(formData: FormData) {
   const uploadedPhoto = await maybeUploadImage(formData, "photoFile", "instructors");
@@ -21,6 +22,7 @@ async function data(formData: FormData) {
 }
 
 export async function createInstructor(isIndustryLeader: boolean, formData: FormData) {
+  await requireAdmin();
   await prisma.instructor.create({
     data: { ...(await data(formData)), isIndustryLeader },
   });
@@ -32,6 +34,7 @@ export async function createInstructor(isIndustryLeader: boolean, formData: Form
 }
 
 export async function updateInstructor(id: string, isIndustryLeader: boolean, formData: FormData) {
+  await requireAdmin();
   await prisma.instructor.update({
     where: { id },
     data: await data(formData),
@@ -44,6 +47,7 @@ export async function updateInstructor(id: string, isIndustryLeader: boolean, fo
 }
 
 export async function deleteInstructor(id: string, isIndustryLeader: boolean) {
+  await requireAdmin();
   await prisma.instructor.delete({ where: { id } });
   const path = isIndustryLeader ? "/admin/industry-leaders" : "/admin/instructors";
   revalidatePath(path);
