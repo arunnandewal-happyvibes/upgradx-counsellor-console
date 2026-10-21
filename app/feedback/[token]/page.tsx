@@ -23,27 +23,30 @@ export default async function FeedbackPage({
   const preselected = Number.isInteger(fromEmail) && fromEmail >= 1 && fromEmail <= 5 ? fromEmail : 0;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
-      <div className="w-full max-w-md rounded-2xl border-t-4 border-t-primary bg-surface-container-lowest p-8 text-center shadow-xl">
-        <div className="mb-6 flex justify-center">
-          <Logo height={34} />
+    <div className="flex min-h-screen flex-col bg-white">
+      <header className="mx-auto flex h-[72px] w-full max-w-[1440px] items-center px-container-margin lg:px-12">
+        <Logo height={34} />
+      </header>
+      <main className="flex flex-grow items-center justify-center px-container-margin pb-20">
+        <div className="w-full max-w-xl">
+          {lead ? (
+            <FeedbackForm
+              token={params.token}
+              firstName={lead.name.trim().split(/\s+/)[0] || lead.name}
+              initialRating={lead.rating ?? preselected}
+              alreadyRated={lead.rating !== null}
+            />
+          ) : (
+            <div className="flex flex-col gap-4">
+              <span className="eyebrow">Rate your session</span>
+              <h1 className="font-display text-[clamp(36px,5vw,56px)] font-extrabold leading-[1.02] tracking-[-0.04em] text-ink">
+                This link isn&apos;t valid.
+              </h1>
+              <p className="text-body-lg text-on-surface-variant">Please use the rating link from your session summary email.</p>
+            </div>
+          )}
         </div>
-        {lead ? (
-          <FeedbackForm
-            token={params.token}
-            firstName={lead.name.trim().split(/\s+/)[0] || lead.name}
-            initialRating={lead.rating ?? preselected}
-            alreadyRated={lead.rating !== null}
-          />
-        ) : (
-          <>
-            <h1 className="mb-2 text-headline-md text-on-surface">This link isn&apos;t valid</h1>
-            <p className="text-body-md text-on-surface-variant">
-              Please use the rating link from your session summary email.
-            </p>
-          </>
-        )}
-      </div>
+      </main>
     </div>
   );
 }

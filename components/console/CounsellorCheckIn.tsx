@@ -40,16 +40,16 @@ export function CounsellorCheckIn() {
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-on-surface/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-ink/50 backdrop-blur-md"
       role="dialog"
       aria-modal="true"
       aria-label="Counsellor check-in"
     >
-      <div className="relative w-[92vw] sm:w-[36vw] sm:min-w-[420px] max-w-lg bg-surface-container-lowest rounded-2xl border-t-4 border-t-primary shadow-2xl p-10 text-center">
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white">
+      <div className="relative w-[92vw] sm:w-[36vw] sm:min-w-[420px] max-w-lg bg-white rounded-[32px] shadow-float p-9 sm:p-10 text-left">
+        <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-white">
           <Icon name="badge" size={30} fill />
         </div>
-        <h2 className="text-display-lg text-on-surface mb-2">Counsellor Check-In</h2>
+        <h2 className="font-display text-[40px] font-extrabold leading-[1] tracking-[-0.04em] text-ink mb-3">Check in</h2>
         <p className="text-body-md text-on-surface-variant mb-6">
           Enter your work email to start today's sessions.
         </p>
@@ -58,10 +58,12 @@ export function CounsellorCheckIn() {
             required
             autoFocus
             type="email"
+            autoComplete="email"
+            aria-label="Your work email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@upgrad.com"
-            className="h-14 w-full rounded-lg border-2 border-surface-variant bg-white px-4 text-center text-body-lg text-on-surface transition-colors focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary"
+            className="h-14 w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 text-[17px] text-ink transition-[border-color,box-shadow,background-color] placeholder:text-[#8a8a8a] focus:border-primary focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary/15"
           />
           {error && <p className="text-body-sm font-semibold text-primary">{error}</p>}
           <Button type="submit" disabled={submitting} size="lg" className="mt-2 w-full">
