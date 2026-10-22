@@ -38,7 +38,7 @@ export default async function OnboardingPage() {
         <div className="w-full max-w-[880px]">
           <p className="mb-10 flex items-start gap-2.5 rounded-2xl bg-surface-container-low px-4 py-3 text-[14px] leading-relaxed text-on-surface-variant">
             <Icon name="lock" size={18} className="mt-0.5 flex-shrink-0 text-ink" />
-            Your counsellor is asking these on your behalf to personalise today&apos;s session. It takes about a minute.
+            Your counsellor is asking these on your behalf to personalise today&apos;s session. It takes about two minutes.
           </p>
           <OnboardingForm cities={cities} />
         </div>

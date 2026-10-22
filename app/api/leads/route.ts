@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { COLLEGE_TIERS } from "@/lib/learnerInsights";
+
+function intInRange(v: unknown, lo: number, hi: number): number | null {
+  if (v === "" || v === null || v === undefined) return null;
+  const n = Number(v);
+  return Number.isInteger(n) && n >= lo && n <= hi ? n : null;
+}
+const bool = (v: unknown) => (typeof v === "boolean" ? v : null);
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { name, graduation, graduationCategory, cgpa, skills, interests, cityId, occupation, yearsOfExperience } = body ?? {};
+  const { name, graduation, graduationCategory, cgpa, skills, interests, cityId, occupation, yearsOfExperience,
+    graduationYear, age, collegeName, collegeTier, hasCertifications, hasInternships, hasPortfolio } = body ?? {};
+  const thisYear = new Date().getFullYear();
 
   if (!name) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -29,6 +39,13 @@ export async function POST(req: NextRequest) {
         Number(yearsOfExperience) <= 60
           ? Number(yearsOfExperience)
           : null,
+      graduationYear: intInRange(graduationYear, 1970, thisYear + 6),
+      age: intInRange(age, 15, 70),
+      collegeName: typeof collegeName === "string" && collegeName.trim() ? collegeName.trim().slice(0, 160) : null,
+      collegeTier: COLLEGE_TIERS.some((t) => t.value === collegeTier) ? collegeTier : null,
+      hasCertifications: bool(hasCertifications),
+      hasInternships: bool(hasInternships),
+      hasPortfolio: bool(hasPortfolio),
     },
   });
 

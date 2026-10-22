@@ -81,7 +81,7 @@ export function SuccessStoriesSection() {
 
   return (
     <section id="success-stories">
-      <SectionHeader eyebrow="Success stories" title="People who sat in this chair." />
+      <SectionHeader eyebrow="Success stories" title="Similar people who sat in this chair." />
       <div className="flex flex-col gap-5">
         <StoryCarousel stories={topRow} />
         {bottomRow.length > 0 && <StoryCarousel stories={bottomRow} reverse />}

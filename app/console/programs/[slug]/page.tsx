@@ -7,6 +7,8 @@ import { CurriculumAccordion } from "@/components/programs/CurriculumAccordion";
 import { InstructorMiniGrid } from "@/components/programs/InstructorMiniGrid";
 import { BatchList } from "@/components/console/BatchList";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { ProgramBadgeRow } from "@/components/programs/ProgramBadges";
+import { isIitCertified } from "@/lib/iitBadge";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { SectionLink } from "@/components/ui/SectionLink";
 import { Icon } from "@/components/ui/Icon";
@@ -92,6 +94,8 @@ export default async function ProgramDetailPage({ params }: { params: { slug: st
             </a>
           )}
         </PageHeader>
+
+        <ProgramBadgeRow slug={program.slug} iit={isIitCertified(program)} className="-mt-4" />
 
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Fact label="Duration" value={program.duration} />

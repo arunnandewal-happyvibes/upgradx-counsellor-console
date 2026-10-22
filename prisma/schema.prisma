@@ -46,6 +46,14 @@ model Lead {
   // Up to 4 domain interests (see lib/domainTags.ts) picked during onboarding —
   // used to show the student hiring partners relevant to what they're into.
   interests          String[]
+  // Profiling questions (all required in onboarding) — feed lib/learnerInsights.ts.
+  graduationYear     Int?
+  age                Int?
+  collegeName        String?
+  collegeTier        String? // "Tier 1" | "Tier 2" | "Tier 3" | "Tier 4"
+  hasCertifications  Boolean?
+  hasInternships     Boolean?
+  hasPortfolio       Boolean? // projects live on GitHub / a portfolio
   createdAt DateTime @default(now())
 
   // Captured when a counsellor clicks "Close Session" at the end of a call —

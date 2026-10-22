@@ -7,6 +7,14 @@ export type LeadProfile = {
   interests: string[];
   occupation?: string | null; // "Student" | "Working Professional"
   yearsOfExperience?: number | null; // only for working professionals
+  cgpa?: string | null;
+  graduationYear?: number | null;
+  age?: number | null;
+  collegeName?: string | null;
+  collegeTier?: string | null;
+  hasCertifications?: boolean | null;
+  hasInternships?: boolean | null;
+  hasPortfolio?: boolean | null;
 };
 
 const KEY = "upgradx.leadProfile";

@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Icon } from "@/components/ui/Icon";
 import { LinkButton } from "@/components/ui/Button";
+import { ProgramBadges } from "@/components/programs/ProgramBadges";
+import { isIitCertified } from "@/lib/iitBadge";
 
 const MODE_BADGE: Record<string, string> = {
   Offline: "bg-primary text-white",
@@ -36,6 +38,7 @@ export async function ProgramsSection() {
                 <span className="rounded-full bg-surface-container px-3 py-1 text-[13px] font-semibold text-ink">
                   {p.duration}
                 </span>
+                <ProgramBadges slug={p.slug} iit={isIitCertified(p)} />
               </div>
 
               <div>

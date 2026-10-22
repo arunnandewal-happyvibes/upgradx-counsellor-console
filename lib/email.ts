@@ -1,4 +1,65 @@
 import { Resend } from "resend";
+import type { LearnerInsights } from "@/lib/learnerInsights";
+
+export type EmailProgram = { name: string; duration: string | null };
+
+/** One-page profile snapshot: readiness score, strengths, gaps, and the top 1–2 programs. */
+function diagnosticHtml(insights: LearnerInsights, programs: EmailProgram[]) {
+  const list = (items: string[], mark: string, color: string) =>
+    items.length === 0
+      ? `<div style="font-size:13px;color:#9a9a9a;">Nothing major.</div>`
+      : items
+          .map(
+            (t) => `<div style="font-size:14px;line-height:1.45;color:#1a1c1c;padding:4px 0;"><span style="color:${color};font-weight:800;">${mark}</span>&nbsp; ${escapeHtml(t)}</div>`,
+          )
+          .join("");
+  const pct = Math.max(0, Math.min(100, insights.score));
+  return `
+                <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:#1a1c1c;text-transform:uppercase;margin-bottom:10px;">
+                  Your profile snapshot
+                </div>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e3e3e3;border-radius:10px;margin-bottom:28px;">
+                  <tr>
+                    <td style="padding:22px 24px;border-bottom:1px solid #e3e3e3;">
+                      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#603e3a;text-transform:uppercase;">Placement readiness</div>
+                      <div style="margin:6px 0 10px 0;">
+                        <span style="font-size:32px;font-weight:800;color:#1a1c1c;">${pct}</span><span style="font-size:15px;color:#9a9a9a;"> / 100</span>
+                        <span style="display:inline-block;margin-left:10px;background-color:#1a1c1c;color:#ffffff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;vertical-align:middle;">${escapeHtml(insights.band)}</span>
+                      </div>
+                      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eeeeee;border-radius:999px;">
+                        <tr><td width="${pct}%" style="background-color:#e41f26;height:8px;border-radius:999px;font-size:0;line-height:0;">&nbsp;</td><td style="font-size:0;line-height:0;">&nbsp;</td></tr>
+                      </table>
+                      <div style="font-size:12px;color:#9a9a9a;margin-top:8px;">A rough guide based on what you shared today — not a test result.</div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:20px 24px;border-bottom:1px solid #e3e3e3;">
+                      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#1a7f45;text-transform:uppercase;margin-bottom:6px;">Strengths</div>
+                      ${list(insights.strengths, "&#10003;", "#1a7f45")}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:20px 24px;${programs.length ? "border-bottom:1px solid #e3e3e3;" : ""}">
+                      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#e41f26;text-transform:uppercase;margin-bottom:6px;">Gaps to close</div>
+                      ${list(insights.gaps, "&#8226;", "#e41f26")}
+                    </td>
+                  </tr>
+                  ${
+                    programs.length
+                      ? `<tr>
+                    <td style="padding:20px 24px;">
+                      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:#603e3a;text-transform:uppercase;margin-bottom:8px;">Programs that fit you</div>
+                      ${programs
+                        .map(
+                          (p, i) => `<div style="padding:6px 0;font-size:15px;color:#1a1c1c;"><span style="color:#e41f26;">${i === 0 ? "&#9733;" : "&#9734;"}</span>&nbsp; <strong>${escapeHtml(p.name)}</strong>${p.duration ? ` <span style="color:#9a9a9a;font-size:13px;">· ${escapeHtml(p.duration)}</span>` : ""}${i === 0 ? ` <span style="color:#e41f26;font-size:12px;font-weight:700;">Top pick</span>` : ""}</div>`,
+                        )
+                        .join("")}
+                    </td>
+                  </tr>`
+                      : ""
+                  }
+                </table>`;
+}
 
 export function sessionSummaryHtml({
   studentName,
@@ -6,12 +67,18 @@ export function sessionSummaryHtml({
   programDuration,
   counsellorName,
   feedbackUrl,
+  insights = null,
+  programs = [],
+  brochureAttached = false,
 }: {
   studentName: string;
   programName: string | null;
   programDuration: string | null;
   counsellorName: string | null;
   feedbackUrl: string | null;
+  insights?: LearnerInsights | null;
+  programs?: EmailProgram[];
+  brochureAttached?: boolean;
 }) {
   const firstName = studentName.trim().split(/\s+/)[0] || studentName;
   return `<!doctype html>
@@ -57,12 +124,12 @@ export function sessionSummaryHtml({
                     </td>
                   </tr>
                 </table>
-
+${insights ? diagnosticHtml(insights, programs) : ""}
                 <div style="font-size:12px;font-weight:700;letter-spacing:1px;color:#1a1c1c;text-transform:uppercase;margin-bottom:10px;">
                   What happens next
                 </div>
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
-                  ${["Our team will reach out to you shortly with the next steps.", "You'll receive the detailed program brochure and batch schedule.", "Keep an eye on your phone and inbox for a call from our admissions team."]
+                  ${["Our team will reach out to you shortly with the next steps.", brochureAttached ? "The program brochure is attached to this email — have a look." : "You'll receive the detailed program brochure and batch schedule.", "Keep an eye on your phone and inbox for a call from our admissions team."]
                     .map(
                       (line, i) => `
                   <tr>
@@ -126,6 +193,9 @@ export async function sendSessionSummaryEmail(params: {
   programDuration: string | null;
   counsellorName: string | null;
   feedbackUrl: string | null;
+  insights?: LearnerInsights | null;
+  programs?: EmailProgram[];
+  brochure?: { url: string; filename: string } | null;
 }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;
@@ -136,12 +206,20 @@ export async function sendSessionSummaryEmail(params: {
 
   try {
     const resend = new Resend(apiKey);
-    const { error } = await resend.emails.send({
-      from,
-      to: params.to,
-      subject: `Your upGrad X counselling session — ${params.programName ?? "recap"}`,
-      html: sessionSummaryHtml(params),
-    });
+    const send = (withBrochure: boolean) =>
+      resend.emails.send({
+        from,
+        to: params.to,
+        subject: `Your upGrad X counselling session — ${params.programName ?? "recap"}`,
+        html: sessionSummaryHtml({ ...params, brochureAttached: withBrochure }),
+        attachments: withBrochure && params.brochure ? [{ filename: params.brochure.filename, path: params.brochure.url }] : undefined,
+      });
+    let { error } = await send(!!params.brochure);
+    // A brochure that can't be fetched shouldn't cost the learner their recap.
+    if (error && params.brochure) {
+      console.error("sendSessionSummaryEmail with brochure failed, retrying without:", error);
+      ({ error } = await send(false));
+    }
     if (error) {
       console.error("sendSessionSummaryEmail failed:", error);
       return false;

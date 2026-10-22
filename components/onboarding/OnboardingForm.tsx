@@ -9,6 +9,7 @@ import { cn } from "@/lib/cn";
 import { setWelcomeName } from "@/lib/welcome";
 import { setLeadProfile } from "@/lib/leadProfile";
 import { DOMAIN_TAGS, MAX_STUDENT_INTERESTS } from "@/lib/domainTags";
+import { COLLEGE_TIERS } from "@/lib/learnerInsights";
 
 const DEGREE_TAGS = ["B.Tech", "B.Com", "BCA", "BSc - CS", "BBA", "MSc - CS"];
 const SKILL_TAGS = [
@@ -27,7 +28,11 @@ const SKILL_TAGS = [
   "Artificial Intelligence",
 ];
 
-const STEP_COUNT = 7;
+// Step order. Every step is mandatory — profiling can't be skipped.
+const S = { name: 0, age: 1, status: 2, degree: 3, college: 4, year: 5, cgpa: 6, proof: 7, skills: 8, interests: 9, city: 10 } as const;
+const STEP_LABELS = ["Name", "Age", "Status", "Degree", "College", "Graduation year", "CGPA", "Experience", "Skills", "Interests", "City"];
+const STEP_COUNT = STEP_LABELS.length;
+const THIS_YEAR = new Date().getFullYear();
 const OUT_DURATION = 220;
 
 type CityOption = { id: string; name: string; slug: string };
@@ -44,7 +49,48 @@ type FormState = {
   customSkillInput: string;
   interests: string[];
   cityId: string;
+  age: string;
+  collegeName: string;
+  collegeTier: string;
+  graduationYear: string;
+  hasInternships: boolean | null;
+  hasCertifications: boolean | null;
+  hasPortfolio: boolean | null;
 };
+
+/** Tier tile: the tier in bold with who belongs in it underneath. */
+function TierTile({ label, hint, selected, onClick }: { label: string; hint: string; selected: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={selected}
+      className={cn(
+        "btn-3d flex min-h-[84px] flex-col items-start justify-center gap-1 rounded-2xl border px-5 py-3 text-left",
+        selected ? "border-ink bg-ink text-white" : "border-outline-variant bg-white text-ink hover:border-ink",
+      )}
+    >
+      <span className="inline-flex items-center gap-2 text-[18px] font-bold">
+        {selected && <Icon name="check" size={20} />}
+        {label}
+      </span>
+      <span className={cn("text-[14px]", selected ? "text-white/75" : "text-on-surface-variant")}>{hint}</span>
+    </button>
+  );
+}
+
+/** One yes/no question as a row of two tiles. */
+function YesNoRow({ question, value, onChange }: { question: string; value: boolean | null; onChange: (v: boolean) => void }) {
+  return (
+    <div className="flex flex-col gap-3 border-b border-outline-variant pb-5 last:border-0 sm:flex-row sm:items-center sm:justify-between">
+      <span className="text-[20px] font-semibold leading-snug text-ink">{question}</span>
+      <div className="flex flex-shrink-0 gap-3">
+        <TagChip label="Yes" selected={value === true} onClick={() => onChange(true)} />
+        <TagChip label="No" selected={value === false} onClick={() => onChange(false)} />
+      </div>
+    </div>
+  );
+}
 
 function TagChip({
   label,
@@ -103,8 +149,6 @@ function ContinueRow({ disabled, onClick, label = "Continue" }: { disabled: bool
   );
 }
 
-const STEP_LABELS = ["Name", "Status", "Degree", "CGPA", "Skills", "Interests", "City"];
-
 export function OnboardingForm({ cities }: { cities: CityOption[] }) {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -124,7 +168,21 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
     customSkillInput: "",
     interests: [],
     cityId: "",
+    age: "",
+    collegeName: "",
+    collegeTier: "",
+    graduationYear: "",
+    hasInternships: null,
+    hasCertifications: null,
+    hasPortfolio: null,
   });
+
+  const ageNum = Number(form.age);
+  const ageValid = Number.isInteger(ageNum) && ageNum >= 15 && ageNum <= 70;
+  const yearNum = Number(form.graduationYear);
+  const yearValid = Number.isInteger(yearNum) && yearNum >= 1970 && yearNum <= THIS_YEAR + 6;
+  const collegeValid = !!form.collegeName.trim() && !!form.collegeTier;
+  const proofValid = form.hasInternships !== null && form.hasCertifications !== null && form.hasPortfolio !== null;
 
   const experience = Number(form.yearsOfExperience);
   const experienceValid = form.yearsOfExperience.trim() !== "" && Number.isFinite(experience) && experience >= 0 && experience <= 60;
@@ -140,7 +198,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
   const selectDegreeTag = (tag: string) => {
     setForm((f) => ({ ...f, degree: tag, degreeCategory: "", customDegree: "" }));
     setShowOtherDegree(false);
-    goTo(3);
+    goTo(S.college);
   };
 
   const selectOtherDegree = () => {
@@ -150,7 +208,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
   const confirmCustomDegree = () => {
     if (!form.customDegree.trim() || !form.degreeCategory) return;
     setForm((f) => ({ ...f, degree: f.customDegree.trim() }));
-    goTo(3);
+    goTo(S.college);
   };
 
   const toggleSkill = (skill: string) => {
@@ -180,12 +238,10 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
     });
   };
 
-  const skip = () => router.push("/console");
-
   // Step back; the degree step resets to the preset list so it's never a dead end.
   const back = () => {
     if (step === 0) return;
-    if (step === 2 && showOtherDegree) return setShowOtherDegree(false);
+    if (step === S.degree && showOtherDegree) return setShowOtherDegree(false);
     goTo(step - 1);
   };
 
@@ -211,6 +267,13 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
           skills: form.skills,
           interests: form.interests,
           cityId: cityId || null,
+          age: ageNum,
+          collegeName: form.collegeName.trim(),
+          collegeTier: form.collegeTier,
+          graduationYear: yearNum,
+          hasInternships: form.hasInternships,
+          hasCertifications: form.hasCertifications,
+          hasPortfolio: form.hasPortfolio,
         }),
       });
       if (!res.ok) throw new Error("Could not save details");
@@ -227,6 +290,14 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
           form.occupation === "Working Professional" && form.yearsOfExperience !== ""
             ? Number(form.yearsOfExperience)
             : null,
+        cgpa: form.cgpa,
+        age: ageNum,
+        collegeName: form.collegeName.trim(),
+        collegeTier: form.collegeTier,
+        graduationYear: yearNum,
+        hasInternships: form.hasInternships,
+        hasCertifications: form.hasCertifications,
+        hasPortfolio: form.hasPortfolio,
       });
       const selectedCity = cities.find((c) => c.id === cityId);
       if (selectedCity) {
@@ -262,13 +333,6 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
             Step <span className="font-bold text-ink">{step + 1}</span> of {STEP_COUNT}
             <span className="hidden sm:inline"> · {STEP_LABELS[step]}</span>
           </span>
-          <button
-            type="button"
-            onClick={skip}
-            className="inline-flex h-11 items-center gap-1 whitespace-nowrap rounded-xl px-3 text-[15px] font-semibold text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-ink"
-          >
-            Skip for now
-          </button>
         </div>
         <div className="flex gap-1.5" aria-hidden="true">
           {Array.from({ length: STEP_COUNT }).map((_, i) => (
@@ -295,22 +359,42 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
               placeholder="Type your name"
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-              onKeyDown={(e) => e.key === "Enter" && form.name.trim() && goTo(1)}
+              onKeyDown={(e) => e.key === "Enter" && form.name.trim() && goTo(S.age)}
             />
-            <ContinueRow disabled={!form.name.trim()} onClick={() => goTo(1)} />
+            <ContinueRow disabled={!form.name.trim()} onClick={() => goTo(S.age)} />
           </div>
         )}
 
-        {step === 1 && (
-          <div key="step-1" className={stepWrap}>
-            <Question title={`Nice to meet you${form.name.trim() ? `, ${form.name.trim().split(/\s+/)[0]}` : ""}. Are you studying or working?`} />
+        {step === S.age && (
+          <div key="step-age" className={stepWrap}>
+            <Question title={`Nice to meet you${form.name.trim() ? `, ${form.name.trim().split(/\s+/)[0]}` : ""}. How old are you?`} />
+            <input
+              autoFocus
+              type="number"
+              inputMode="numeric"
+              min={15}
+              max={70}
+              aria-label="Age"
+              className={inputClass}
+              placeholder="e.g. 23"
+              value={form.age}
+              onChange={(e) => setForm((f) => ({ ...f, age: e.target.value }))}
+              onKeyDown={(e) => e.key === "Enter" && ageValid && goTo(S.status)}
+            />
+            <ContinueRow disabled={!ageValid} onClick={() => goTo(S.status)} />
+          </div>
+        )}
+
+        {step === S.status && (
+          <div key="step-status" className={stepWrap}>
+            <Question title="Are you studying or working?" />
             <div className="flex flex-wrap gap-3">
               <TagChip
                 label="Student"
                 selected={form.occupation === "Student"}
                 onClick={() => {
                   setForm((f) => ({ ...f, occupation: "Student", yearsOfExperience: "" }));
-                  goTo(2);
+                  goTo(S.degree);
                 }}
               />
               <TagChip
@@ -333,16 +417,16 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
                   placeholder="Years of experience, e.g. 3"
                   value={form.yearsOfExperience}
                   onChange={(e) => setForm((f) => ({ ...f, yearsOfExperience: e.target.value }))}
-                  onKeyDown={(e) => e.key === "Enter" && experienceValid && goTo(2)}
+                  onKeyDown={(e) => e.key === "Enter" && experienceValid && goTo(S.degree)}
                 />
-                <ContinueRow disabled={!experienceValid} onClick={() => goTo(2)} />
+                <ContinueRow disabled={!experienceValid} onClick={() => goTo(S.degree)} />
               </div>
             )}
           </div>
         )}
 
-        {step === 2 && (
-          <div key="step-2" className={stepWrap}>
+        {step === S.degree && (
+          <div key="step-degree" className={stepWrap}>
             <Question title="What did you graduate in?" hint={showOtherDegree ? "Tell us the degree and whether it's tech or non-tech." : "Tap one to continue."} />
             {!showOtherDegree ? (
               <div className="flex flex-wrap gap-3">
@@ -380,8 +464,55 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
           </div>
         )}
 
-        {step === 3 && (
-          <div key="step-3" className={stepWrap}>
+        {step === S.college && (
+          <div key="step-college" className={stepWrap}>
+            <Question title="Which college did you study at?" hint="Type the name, then pick the tier that fits best." />
+            <input
+              autoFocus
+              aria-label="College name"
+              className={inputClass}
+              placeholder="College name"
+              value={form.collegeName}
+              onChange={(e) => setForm((f) => ({ ...f, collegeName: e.target.value }))}
+              onKeyDown={(e) => e.key === "Enter" && collegeValid && goTo(S.year)}
+            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {COLLEGE_TIERS.map((t) => (
+                <TierTile
+                  key={t.value}
+                  label={t.label}
+                  hint={t.hint}
+                  selected={form.collegeTier === t.value}
+                  onClick={() => setForm((f) => ({ ...f, collegeTier: t.value }))}
+                />
+              ))}
+            </div>
+            <ContinueRow disabled={!collegeValid} onClick={() => goTo(S.year)} />
+          </div>
+        )}
+
+        {step === S.year && (
+          <div key="step-year" className={stepWrap}>
+            <Question title="Which year did you graduate?" hint="Still studying? Enter the year you'll graduate." />
+            <input
+              autoFocus
+              type="number"
+              inputMode="numeric"
+              min={1970}
+              max={THIS_YEAR + 6}
+              aria-label="Year of graduation"
+              className={inputClass}
+              placeholder={`e.g. ${THIS_YEAR - 1}`}
+              value={form.graduationYear}
+              onChange={(e) => setForm((f) => ({ ...f, graduationYear: e.target.value }))}
+              onKeyDown={(e) => e.key === "Enter" && yearValid && goTo(S.cgpa)}
+            />
+            <ContinueRow disabled={!yearValid} onClick={() => goTo(S.cgpa)} />
+          </div>
+        )}
+
+        {step === S.cgpa && (
+          <div key="step-cgpa" className={stepWrap}>
             <Question title="What was your CGPA?" hint="On a 10-point scale. An estimate is okay." />
             <input
               autoFocus
@@ -395,14 +526,38 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
               placeholder="e.g. 8.2"
               value={form.cgpa}
               onChange={(e) => setForm((f) => ({ ...f, cgpa: e.target.value }))}
-              onKeyDown={(e) => e.key === "Enter" && form.cgpa.trim() && goTo(4)}
+              onKeyDown={(e) => e.key === "Enter" && form.cgpa.trim() && goTo(S.proof)}
             />
-            <ContinueRow disabled={!form.cgpa.trim()} onClick={() => goTo(4)} />
+            <ContinueRow disabled={!form.cgpa.trim()} onClick={() => goTo(S.proof)} />
           </div>
         )}
 
-        {step === 4 && (
-          <div key="step-4" className={stepWrap}>
+        {step === S.proof && (
+          <div key="step-proof" className={stepWrap}>
+            <Question title="What have you done beyond the classroom?" hint="Answer all three." />
+            <div className="flex flex-col gap-5">
+              <YesNoRow
+                question="Done any internships?"
+                value={form.hasInternships}
+                onChange={(v) => setForm((f) => ({ ...f, hasInternships: v }))}
+              />
+              <YesNoRow
+                question="Completed any certifications?"
+                value={form.hasCertifications}
+                onChange={(v) => setForm((f) => ({ ...f, hasCertifications: v }))}
+              />
+              <YesNoRow
+                question="Any projects live on GitHub or a portfolio?"
+                value={form.hasPortfolio}
+                onChange={(v) => setForm((f) => ({ ...f, hasPortfolio: v }))}
+              />
+            </div>
+            <ContinueRow disabled={!proofValid} onClick={() => goTo(S.skills)} />
+          </div>
+        )}
+
+        {step === S.skills && (
+          <div key="step-skills" className={stepWrap}>
             <Question title="Which skills are you confident in?" hint="Pick as many as you like, or add your own." />
             <div className="flex flex-wrap gap-3">
               {SKILL_TAGS.map((tag) => (
@@ -451,12 +606,12 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
                 <Icon name="add" size={24} />
               </button>
             </div>
-            <ContinueRow disabled={form.skills.length === 0} onClick={() => goTo(5)} />
+            <ContinueRow disabled={form.skills.length === 0} onClick={() => goTo(S.interests)} />
           </div>
         )}
 
-        {step === 5 && (
-          <div key="step-5" className={stepWrap}>
+        {step === S.interests && (
+          <div key="step-interests" className={stepWrap}>
             <Question
               title="Where do you see yourself working?"
               hint={
@@ -477,12 +632,12 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
                 );
               })}
             </div>
-            <ContinueRow disabled={form.interests.length === 0} onClick={() => goTo(6)} />
+            <ContinueRow disabled={form.interests.length === 0} onClick={() => goTo(S.city)} />
           </div>
         )}
 
-        {step === 6 && (
-          <div key="step-6" className={stepWrap}>
+        {step === S.city && (
+          <div key="step-city" className={stepWrap}>
             <Question title="Last one — which city works best?" hint="We'll show batches and centres there first." />
             <div className="flex flex-wrap gap-3">
               {cities.map((c) => (
@@ -502,7 +657,7 @@ export function OnboardingForm({ cities }: { cities: CityOption[] }) {
             )}
             <div className="flex items-center gap-4">
               <Button type="button" variant="ghost" disabled={submitting} onClick={() => selectCity("")}>
-                No preference — skip
+                No preference
               </Button>
               {submitting && (
                 <span className="inline-flex items-center gap-2 text-[15px] font-medium text-on-surface-variant">

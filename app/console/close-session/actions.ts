@@ -9,6 +9,8 @@ import { leadDropEnabled } from "@/lib/leadDrop";
 import { sendToLsq } from "@/lib/lsqSend";
 import { getCentre } from "@/lib/centres";
 import { normalizeMobile, validateCloseSession } from "@/lib/closeSessionRules";
+import { computeInsights } from "@/lib/learnerInsights";
+import { findRecommendationForDegree } from "@/lib/recommendationMatch";
 
 export type CloseSessionInput = {
   leadId: string | null;
@@ -99,15 +101,47 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
   const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
   const feedbackUrl = host && feedbackToken ? `${proto}://${host}/feedback/${feedbackToken}` : null;
 
-  let programName: string | null = null;
-  let programDuration: string | null = null;
-  if (savedLead.recommendedProgramId) {
-    const program = await prisma.program.findUnique({
-      where: { id: savedLead.recommendedProgramId },
-      select: { name: true, duration: true },
+  const selected = await prisma.program.findUnique({
+    where: { id: program.id },
+    select: { name: true, slug: true, duration: true, brochureUrl: true, certifications: { select: { brochureUrl: true }, take: 1 } },
+  });
+  const programName = selected?.name ?? null;
+  const programDuration = selected?.duration ?? null;
+  const brochureUrl = selected?.brochureUrl ?? selected?.certifications[0]?.brochureUrl ?? null;
+  const brochure = brochureUrl && selected ? { url: brochureUrl, filename: `${selected.slug}-brochure.pdf` } : null;
+
+  // Diagnostic one-pager, only when onboarding captured a profile for this learner.
+  const profiled = !!(savedLead.graduation || savedLead.collegeTier || savedLead.graduationYear);
+  const insights = profiled
+    ? computeInsights({
+        degree: savedLead.graduation,
+        collegeTier: savedLead.collegeTier,
+        graduationYear: savedLead.graduationYear,
+        age: savedLead.age,
+        cgpa: savedLead.cgpa,
+        occupation: savedLead.occupation,
+        yearsOfExperience: savedLead.yearsOfExperience,
+        hasCertifications: savedLead.hasCertifications,
+        hasInternships: savedLead.hasInternships,
+        hasPortfolio: savedLead.hasPortfolio,
+        skills: savedLead.skills,
+      })
+    : null;
+  const programs = selected ? [{ name: selected.name, duration: selected.duration }] : [];
+  if (insights && savedLead.graduation) {
+    const recs = await prisma.degreeRecommendation.findMany({
+      orderBy: { order: "asc" },
+      select: {
+        degree: true,
+        choice1ProgramId: true,
+        choice1Program: { select: { name: true, duration: true } },
+        choice2Program: { select: { name: true, duration: true } },
+        choice3Program: { select: { name: true, duration: true } },
+      },
     });
-    programName = program?.name ?? null;
-    programDuration = program?.duration ?? null;
+    const rec = findRecommendationForDegree(recs, savedLead.graduation);
+    const next = rec && [rec.choice1Program, rec.choice2Program, rec.choice3Program].find((p) => p && p.name !== programName);
+    if (next) programs.push({ name: next.name, duration: next.duration });
   }
 
   const emailSent = await sendSessionSummaryEmail({
@@ -117,6 +151,9 @@ export async function closeSession(input: CloseSessionInput): Promise<CloseSessi
     programDuration,
     counsellorName: data.counsellorName,
     feedbackUrl,
+    insights,
+    programs,
+    brochure,
   });
 
   // Send the learner to LeadSquared (only when LEAD_DROP_ENABLED=true — every call is a

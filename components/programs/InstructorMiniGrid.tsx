@@ -11,11 +11,24 @@ type Instructor = {
   photoUrl?: string | null;
 };
 
+const SHELL = "card-red-3d flex flex-col gap-4 rounded-[24px] border border-outline-variant bg-white p-6";
+
+/** Whole card opens the LinkedIn profile when there is one. */
+function Shell({ href, name, children }: { href: string | null; name: string; children: React.ReactNode }) {
+  return href ? (
+    <a href={href} target="_blank" rel="noreferrer" aria-label={`${name} — open LinkedIn profile`} className={SHELL}>
+      {children}
+    </a>
+  ) : (
+    <article className={SHELL}>{children}</article>
+  );
+}
+
 export function InstructorMiniGrid({ instructors }: { instructors: Instructor[] }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {instructors.map((ins) => (
-        <article key={ins.id} className="card-red-3d flex flex-col gap-4 rounded-[24px] border border-outline-variant bg-white p-6">
+        <Shell key={ins.id} href={ins.linkedinUrl} name={ins.name}>
           <div className="flex items-center gap-3.5">
             <Avatar src={ins.photoUrl} name={ins.name} size={56} rounded="rounded-2xl" />
             <div className="min-w-0">
@@ -31,7 +44,7 @@ export function InstructorMiniGrid({ instructors }: { instructors: Instructor[] 
               </span>
             ))}
           </div>
-        </article>
+        </Shell>
       ))}
     </div>
   );

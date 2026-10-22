@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
 import { Button, LinkButton } from "@/components/ui/Button";
@@ -10,8 +10,11 @@ import { useCity } from "@/lib/city-context";
 import { getLeadProfile, type LeadProfile } from "@/lib/leadProfile";
 import { findRecommendationForDegree } from "@/lib/recommendationMatch";
 import { openAssistant } from "@/lib/sessionDock";
+import { computeInsights } from "@/lib/learnerInsights";
+import { setRecommendedSlugs } from "@/lib/recommendedPrograms";
+import { IitSeal } from "@/components/programs/ProgramBadges";
 
-type ProgramRef = { name: string; slug: string; duration: string; mode: string } | null;
+type ProgramRef = { name: string; slug: string; duration: string; mode: string; iit: boolean } | null;
 
 type Recommendation = {
   id: string;
@@ -77,56 +80,108 @@ function CentresStat({ count }: { count: number }) {
   );
 }
 
-type StepState = "done" | "now" | "next";
+/** Generic head-and-shoulders silhouette — deliberately not gendered. */
+function Silhouette() {
+  return (
+    <svg viewBox="0 0 64 64" className="h-full w-full" aria-hidden="true">
+      <circle cx="32" cy="23" r="11" fill="currentColor" />
+      <path d="M10 58c0-12.2 9.8-20 22-20s22 7.8 22 20" fill="currentColor" />
+    </svg>
+  );
+}
 
-function JourneyCard({ profile, cityCount }: { profile: LeadProfile; cityCount: number }) {
-  const focus = profile.skills[0] ?? profile.interests[0];
-  const steps: { title: string; sub: string; state: StepState }[] = [
-    { title: profile.degree ? `${profile.degree} graduate` : "Graduate", sub: "Foundation in place", state: "done" },
-    { title: focus ? `${focus} interest` : "Interests captured", sub: "Matched to programs", state: "done" },
-    { title: "Career ready", sub: "Pick a program and batch", state: "now" },
-    { title: "Success", sub: "Placement support", state: "next" },
-  ];
+function ReadinessRing({ score }: { score: number }) {
+  const r = 34;
+  const c = 2 * Math.PI * r;
+  return (
+    <div className="relative h-[92px] w-[92px] flex-shrink-0">
+      <svg viewBox="0 0 80 80" className="h-full w-full -rotate-90" aria-hidden="true">
+        <circle cx="40" cy="40" r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="8" />
+        <circle
+          cx="40"
+          cy="40"
+          r={r}
+          fill="none"
+          stroke="#E41F26"
+          strokeWidth="8"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={c * (1 - score / 100)}
+          className="transition-[stroke-dashoffset] duration-700 ease-out"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
+        <span className="font-display text-[28px] font-extrabold tracking-[-0.03em]">{score}</span>
+        <span className="mt-0.5 text-[11px] text-white/50">/ 100</span>
+      </div>
+    </div>
+  );
+}
+
+function ProfileCard({ profile }: { profile: LeadProfile }) {
+  const insights = useMemo(() => computeInsights(profile), [profile]);
+  const meta = [
+    profile.collegeTier,
+    profile.graduationYear ? `Class of ${profile.graduationYear}` : null,
+    profile.age ? `Age ${profile.age}` : null,
+    profile.cgpa ? `CGPA ${profile.cgpa}` : null,
+  ].filter(Boolean);
 
   return (
     <aside
-      aria-label="Learner journey"
+      aria-label="Learner profile"
       className="flex h-full animate-rise flex-col gap-7 rounded-[28px] bg-ink p-8 text-white md:p-10"
       style={{ animationDelay: "120ms" }}
     >
-      <div className="flex items-center justify-between">
-        <span className="text-label-bold uppercase text-white/50">Your path</span>
-        <span className="text-[13px] text-white/50">Step 3 of 4</span>
+      <span className="text-label-bold uppercase text-white/50">Learner profile</span>
+
+      <div className="flex items-center gap-4">
+        <div className="grid h-16 w-16 flex-shrink-0 place-items-end overflow-hidden rounded-full bg-white/10 pt-2 text-white/60">
+          <Silhouette />
+        </div>
+        <div className="min-w-0">
+          <div className="truncate text-[20px] font-bold leading-snug">{profile.name}</div>
+          <div className="truncate text-[14px] text-white/60">
+            {[profile.degree, profile.collegeName].filter(Boolean).join(" · ") || "Graduate"}
+          </div>
+          {meta.length > 0 && <div className="mt-0.5 text-[13px] text-white/45">{meta.join(" · ")}</div>}
+        </div>
       </div>
-      <ol className="flex flex-col">
-        {steps.map((s, i) => (
-          <li key={s.title} className="flex gap-4">
-            <div className="flex flex-col items-center">
-              <span
-                className={cn(
-                  "grid h-[34px] w-[34px] flex-shrink-0 place-items-center rounded-full text-[14px] font-bold",
-                  s.state === "done" && "bg-white text-ink",
-                  s.state === "now" && "bg-primary text-white shadow-[0_0_0_6px_rgba(228,31,38,0.25)]",
-                  s.state === "next" && "border-[1.5px] border-white/30 text-white/50",
-                )}
-              >
-                {s.state === "done" ? <Icon name="check" size={18} /> : i + 1}
-              </span>
-              {i < steps.length - 1 && (
-                <span className={cn("my-1.5 w-0.5 flex-1 min-h-[34px]", s.state === "done" ? "bg-white" : "bg-white/20")} />
-              )}
-            </div>
-            <div className="pb-7 pt-1">
-              <div className={cn("text-[18px] font-bold leading-snug", s.state === "next" && "text-white/50")}>{s.title}</div>
-              <div className="mt-0.5 text-[14px] text-white/50">{s.sub}</div>
-            </div>
-          </li>
-        ))}
-      </ol>
-      <div className="mt-auto">
-        <CentresStat count={cityCount} />
+
+      <div className="flex items-center gap-5 rounded-2xl bg-white/5 p-4">
+        <ReadinessRing score={insights.score} />
+        <div>
+          <div className="text-label-bold uppercase text-white/50">Placement readiness</div>
+          <div className="mt-1 text-[22px] font-bold leading-tight">{insights.band}</div>
+          <div className="mt-1 text-[13px] text-white/50">A rough guide from today&apos;s answers</div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 2xl:grid-cols-2">
+        <InsightList title="Strengths" items={insights.strengths} icon="check_circle" tone="text-[#5fd38d]" />
+        <InsightList title="Gaps to close" items={insights.gaps} icon="error" tone="text-[#ff5c61]" />
       </div>
     </aside>
+  );
+}
+
+function InsightList({ title, items, icon, tone }: { title: string; items: string[]; icon: string; tone: string }) {
+  return (
+    <div>
+      <div className="mb-3 text-label-bold uppercase text-white/50">{title}</div>
+      {items.length === 0 ? (
+        <p className="text-[14px] text-white/50">Nothing major.</p>
+      ) : (
+        <ul className="flex flex-col gap-2.5">
+          {items.map((t) => (
+            <li key={t} className="flex items-start gap-2 text-[15px] leading-snug">
+              <Icon name={icon} size={18} fill className={cn("mt-0.5 flex-shrink-0", tone)} />
+              <span>{t}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 
@@ -142,7 +197,10 @@ function RecommendationCard({ rank, program, why }: { rank: number; program: Non
       style={{ animationDelay: `${rank * 110}ms` }}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className={cn("text-label-bold uppercase", best ? "text-white" : "text-primary")}>{MATCH_LABELS[rank]}</span>
+        <span className={cn("inline-flex items-center gap-1.5 text-label-bold uppercase", best ? "text-white" : "text-primary")}>
+          {best && <Icon name="star" size={18} fill />}
+          {MATCH_LABELS[rank]}
+        </span>
         <span
           className={cn(
             "rounded-full px-3 py-1.5 text-[13px] font-semibold",
@@ -153,6 +211,11 @@ function RecommendationCard({ rank, program, why }: { rank: number; program: Non
         </span>
       </div>
       <h3 className="font-display text-[26px] font-bold leading-[1.12] tracking-[-0.02em] md:text-[28px]">{program.name}</h3>
+      {program.iit && (
+        <div className="flex flex-wrap gap-2">
+          <IitSeal onDark={best} />
+        </div>
+      )}
       {why && (
         <p className={cn("editable-field text-[15px] leading-relaxed", best ? "text-white/85" : "text-on-surface-variant")}>
           {why}
@@ -169,11 +232,9 @@ function RecommendationCard({ rank, program, why }: { rank: number; program: Non
 function PersonalizedHero({
   profile,
   recommendations,
-  cityCount,
 }: {
   profile: LeadProfile;
   recommendations: Recommendation[];
-  cityCount: number;
 }) {
   const { selectedCity } = useCity();
   const [greeting, setGreeting] = useState("Welcome");
@@ -189,6 +250,10 @@ function PersonalizedHero({
         { program: rec.choice3Program, why: rec.choice3Why },
       ].filter((c): c is { program: NonNullable<ProgramRef>; why: string | null } => !!c.program)
     : [];
+  const choiceSlugs = choices.map((c) => c.program.slug).join(",");
+  useEffect(() => {
+    setRecommendedSlugs(choiceSlugs ? choiceSlugs.split(",") : []);
+  }, [choiceSlugs]);
   const occupation =
     profile.occupation === "Working Professional"
       ? profile.yearsOfExperience != null
@@ -229,7 +294,7 @@ function PersonalizedHero({
         </div>
         <div className="flex min-w-0 flex-[1_1_440px]">
           <div className="w-full">
-            <JourneyCard profile={profile} cityCount={cityCount} />
+            <ProfileCard profile={profile} />
           </div>
         </div>
       </div>
@@ -348,7 +413,7 @@ export function HeroClient({
   return (
     <section id="hero" className="flex flex-col gap-16 pb-4 pt-6 md:pt-10">
       {profile ? (
-        <PersonalizedHero profile={profile} recommendations={recommendations} cityCount={cityCount} />
+        <PersonalizedHero profile={profile} recommendations={recommendations} />
       ) : (
         <DefaultHero settings={resolvedSettings} topCtc={topCtc} cityCount={cityCount} />
       )}
