@@ -1,10 +1,12 @@
 "use server";
 
+import { requireAdmin } from "@/lib/requireAdmin";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { str } from "@/lib/adminParsing";
 
 export async function upsertCityContact(cityId: string, formData: FormData) {
+  await requireAdmin();
   const data = {
     address: str(formData.get("address")),
     phone: str(formData.get("phone")),

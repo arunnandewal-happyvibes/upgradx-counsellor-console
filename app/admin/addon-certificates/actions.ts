@@ -1,5 +1,6 @@
 "use server";
 
+import { requireAdmin } from "@/lib/requireAdmin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -12,6 +13,7 @@ function programIdsFrom(formData: FormData) {
 }
 
 export async function createAddOnCertificate(formData: FormData) {
+  await requireAdmin();
   const uploadedPdf = await maybeUploadImage(formData, "pdfFile", "addon-certificates");
   const pdfUrl = uploadedPdf ?? strOrNull(formData.get("pdfUrl"));
   if (!pdfUrl) throw new Error("A certificate PDF (file upload or URL) is required.");
@@ -31,6 +33,7 @@ export async function createAddOnCertificate(formData: FormData) {
 }
 
 export async function updateAddOnCertificate(id: string, formData: FormData) {
+  await requireAdmin();
   const uploadedPdf = await maybeUploadImage(formData, "pdfFile", "addon-certificates");
   const pdfUrl = uploadedPdf ?? strOrNull(formData.get("pdfUrl"));
   if (!pdfUrl) throw new Error("A certificate PDF (file upload or URL) is required.");
@@ -51,6 +54,7 @@ export async function updateAddOnCertificate(id: string, formData: FormData) {
 }
 
 export async function deleteAddOnCertificate(id: string) {
+  await requireAdmin();
   await prisma.addOnCertificate.delete({ where: { id } });
   revalidatePath("/admin/addon-certificates");
   revalidatePath("/console");

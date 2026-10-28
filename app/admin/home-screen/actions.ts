@@ -1,10 +1,12 @@
 "use server";
 
+import { requireAdmin } from "@/lib/requireAdmin";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { str } from "@/lib/adminParsing";
 
 export async function updateHomeScreenSettings(formData: FormData) {
+  await requireAdmin();
   const data = {
     headline: str(formData.get("headline")),
     subheadline: str(formData.get("subheadline")),

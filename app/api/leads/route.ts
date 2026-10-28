@@ -8,6 +8,9 @@ function intInRange(v: unknown, lo: number, hi: number): number | null {
   return Number.isInteger(n) && n >= lo && n <= hi ? n : null;
 }
 const bool = (v: unknown) => (typeof v === "boolean" ? v : null);
+const capStr = (v: unknown, max: number) => (typeof v === "string" && v.trim() ? v.trim().slice(0, max) : null);
+const capArr = (v: unknown, maxItems: number, maxLen: number) =>
+  Array.isArray(v) ? v.filter((x): x is string => typeof x === "string").map((x) => x.slice(0, maxLen)).slice(0, maxItems) : [];
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -15,19 +18,20 @@ export async function POST(req: NextRequest) {
     graduationYear, age, collegeName, collegeTier, hasCertifications, hasInternships, hasPortfolio } = body ?? {};
   const thisYear = new Date().getFullYear();
 
-  if (!name) {
+  const nameClean = capStr(name, 160);
+  if (!nameClean) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
   const lead = await prisma.lead.create({
     data: {
-      name,
-      graduation: graduation || null,
-      graduationCategory: graduationCategory || null,
-      cgpa: cgpa || null,
-      skills: Array.isArray(skills) ? skills : [],
-      interests: Array.isArray(interests) ? interests : [],
-      cityId: cityId || null,
+      name: nameClean,
+      graduation: capStr(graduation, 120),
+      graduationCategory: capStr(graduationCategory, 40),
+      cgpa: capStr(cgpa, 20),
+      skills: capArr(skills, 50, 80),
+      interests: capArr(interests, 10, 60),
+      cityId: typeof cityId === "string" ? cityId : null,
       occupation: occupation === "Working Professional" ? "Working Professional" : occupation === "Student" ? "Student" : null,
       // Experience only makes sense for working professionals; keep it a sane non-negative number.
       yearsOfExperience:

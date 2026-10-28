@@ -1,10 +1,12 @@
 "use server";
 
+import { requireAdmin } from "@/lib/requireAdmin";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { strOrNull } from "@/lib/adminParsing";
 
 export async function updateRecommendations(formData: FormData) {
+  await requireAdmin();
   const ids = formData.getAll("recId").map(String);
 
   await prisma.$transaction(

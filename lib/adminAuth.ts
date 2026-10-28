@@ -43,11 +43,23 @@ export async function createSessionToken(): Promise<string> {
   return `${payload}.${sig}`;
 }
 
+/** Length-independent-content compare, so a byte-by-byte string `===` can't leak, via timing,
+ * how much of a signature or password matched. Edge-safe (no Node `crypto.timingSafeEqual`). */
+function timingSafeEqual(a: string, b: string): boolean {
+  const enc = new TextEncoder();
+  const ab = enc.encode(a);
+  const bb = enc.encode(b);
+  if (ab.length !== bb.length) return false;
+  let diff = 0;
+  for (let i = 0; i < ab.length; i++) diff |= ab[i] ^ bb[i];
+  return diff === 0;
+}
+
 export async function verifySessionToken(token: string): Promise<boolean> {
   const [payload, sig] = token.split(".");
   if (!payload || !sig) return false;
   const expectedSig = await sign(payload);
-  if (expectedSig !== sig) return false;
+  if (!timingSafeEqual(expectedSig, sig)) return false;
   try {
     const { exp } = JSON.parse(new TextDecoder().decode(fromBase64Url(payload)));
     return typeof exp === "number" && exp > Date.now();
@@ -60,5 +72,7 @@ export function checkAdminCredentials(email: string, password: string): boolean 
   const adminEmail = process.env.ADMIN_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD;
   if (!adminEmail || !adminPassword) return false;
-  return email.trim().toLowerCase() === adminEmail.trim().toLowerCase() && password === adminPassword;
+  const emailOk = email.trim().toLowerCase() === adminEmail.trim().toLowerCase();
+  const passwordOk = timingSafeEqual(password, adminPassword);
+  return emailOk && passwordOk;
 }
