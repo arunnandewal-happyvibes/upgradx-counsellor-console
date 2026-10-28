@@ -1,5 +1,6 @@
 "use server";
 
+import { requireAdmin } from "@/lib/requireAdmin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -38,6 +39,7 @@ function lsqCodes(formData: FormData) {
 }
 
 export async function createProgram(formData: FormData) {
+  await requireAdmin();
   const name = str(formData.get("name"));
   const certs = linesToTuples(formData.get("certifications"), 3);
   const modules = linesToTuples(formData.get("modules"), 2);
@@ -79,6 +81,7 @@ export async function createProgram(formData: FormData) {
 }
 
 export async function updateProgram(id: string, formData: FormData) {
+  await requireAdmin();
   const certs = linesToTuples(formData.get("certifications"), 3);
   const modules = linesToTuples(formData.get("modules"), 2);
   const uploadedBrochure = await maybeUploadImage(formData, "brochureFile", "brochures");
@@ -122,6 +125,7 @@ export async function updateProgram(id: string, formData: FormData) {
 }
 
 export async function deleteProgram(id: string) {
+  await requireAdmin();
   await prisma.program.delete({ where: { id } });
   revalidatePath("/admin/courses");
   revalidatePath("/console");

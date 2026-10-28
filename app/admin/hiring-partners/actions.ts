@@ -1,5 +1,6 @@
 "use server";
 
+import { requireAdmin } from "@/lib/requireAdmin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -17,6 +18,7 @@ async function data(formData: FormData) {
 }
 
 export async function createHiringPartner(formData: FormData) {
+  await requireAdmin();
   await prisma.hiringPartner.create({ data: await data(formData) });
   revalidatePath("/admin/hiring-partners");
   revalidatePath("/console");
@@ -24,6 +26,7 @@ export async function createHiringPartner(formData: FormData) {
 }
 
 export async function updateHiringPartner(id: string, formData: FormData) {
+  await requireAdmin();
   await prisma.hiringPartner.update({ where: { id }, data: await data(formData) });
   revalidatePath("/admin/hiring-partners");
   revalidatePath("/console");
@@ -31,6 +34,7 @@ export async function updateHiringPartner(id: string, formData: FormData) {
 }
 
 export async function deleteHiringPartner(id: string) {
+  await requireAdmin();
   await prisma.hiringPartner.delete({ where: { id } });
   revalidatePath("/admin/hiring-partners");
   revalidatePath("/console");
