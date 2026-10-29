@@ -417,3 +417,16 @@ model CareerServicesPolicy {
   body          String
   updatedAt     DateTime @updatedAt
 }
+
+// Additional admins. The env ADMIN_EMAIL / ADMIN_PASSWORD login stays as the owner account,
+// which is the only one allowed to manage this list. passwordHash is scrypt (lib/adminPasswords.ts);
+// null means the owner hasn't set a password yet, so the person can't sign in.
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String?
+  active       Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+}

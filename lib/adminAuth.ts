@@ -37,25 +37,39 @@ async function sign(data: string): Promise<string> {
   return toBase64Url(new Uint8Array(sig));
 }
 
-export async function createSessionToken(): Promise<string> {
-  const payload = toBase64Url(new TextEncoder().encode(JSON.stringify({ exp: Date.now() + SESSION_TTL_MS })));
+export async function createSessionToken(email: string): Promise<string> {
+  const payload = toBase64Url(
+    new TextEncoder().encode(JSON.stringify({ exp: Date.now() + SESSION_TTL_MS, email: email.trim().toLowerCase() })),
+  );
   const sig = await sign(payload);
   return `${payload}.${sig}`;
 }
 
-export async function verifySessionToken(token: string): Promise<boolean> {
+/** The signed-in admin's email, or null when the token is missing, forged or expired.
+ * Tokens issued before admins had emails carry none — only the owner could sign in then. */
+export async function readSessionToken(token: string): Promise<{ email: string } | null> {
   const [payload, sig] = token.split(".");
-  if (!payload || !sig) return false;
+  if (!payload || !sig) return null;
   const expectedSig = await sign(payload);
-  if (expectedSig !== sig) return false;
+  if (expectedSig !== sig) return null;
   try {
-    const { exp } = JSON.parse(new TextDecoder().decode(fromBase64Url(payload)));
-    return typeof exp === "number" && exp > Date.now();
+    const { exp, email } = JSON.parse(new TextDecoder().decode(fromBase64Url(payload)));
+    if (typeof exp !== "number" || exp <= Date.now()) return null;
+    return { email: typeof email === "string" ? email : ownerEmail() ?? "" };
   } catch {
-    return false;
+    return null;
   }
 }
 
+export async function verifySessionToken(token: string): Promise<boolean> {
+  return (await readSessionToken(token)) !== null;
+}
+
+export function ownerEmail(): string | null {
+  return process.env.ADMIN_EMAIL?.trim().toLowerCase() || null;
+}
+
+/** The owner account from ADMIN_EMAIL / ADMIN_PASSWORD. */
 export function checkAdminCredentials(email: string, password: string): boolean {
   const adminEmail = process.env.ADMIN_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD;

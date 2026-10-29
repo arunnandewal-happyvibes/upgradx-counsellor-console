@@ -66,6 +66,7 @@ const GROUPS: { title: string; items: Item[] }[] = [
   {
     title: "System",
     items: [
+      { href: "/admin/admins", label: "Admins", icon: "admin_panel_settings" },
       { href: "/admin/backups", label: "Backups", icon: "backup" },
       { href: "/admin/ui-kit", label: "UI Kit", icon: "palette" },
     ],
